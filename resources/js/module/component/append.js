@@ -1,7 +1,6 @@
-export const appendDiv = (className, type, msg, file_name) =>{
+export const appendDiv = (className, type, msg, file_name, sender_id) =>{
     const parentElement = document.querySelector(`.${className}`)
 
-    console.log(`タイプは${type}`);
 
 
 
@@ -16,7 +15,8 @@ export const appendDiv = (className, type, msg, file_name) =>{
     if(type == "user"){
         if(file_name == "user"){
             appendRight(msg, parentElement)
-        }else if(file_name == "admin"){
+        }else if(file_name == "admin" && sender_id == parentElement.getAttribute("data-id")){
+            console.log("ey");
             appendLeft(msg, parentElement)
         }
     }
@@ -69,4 +69,30 @@ const appendLeft = (msg, parentElement) =>{
 
     const scroll_el = document.querySelector(".chat__message-main")
    scroll_el.scrollTop = scroll_el.scrollHeight
+}
+
+
+
+export const increateMessageCount = (sender_id, type) =>{
+
+    if(type == "user") {
+        const parentElement = document.querySelector(".js_append_admin")
+
+        const count_elements =document.querySelectorAll(".js_mesage_count")
+        count_elements.forEach((count)=>{
+            let id = count.getAttribute("data-id");
+            console.log(`id: ${id}`);
+            console.log(`sender_id: ${sender_id}`);
+            console.log(Number(id) == Number(sender_id));
+
+            if(Number(id) == Number(sender_id)){
+                let currentCount = Number(count.innerHTML) || 0
+
+                if(currentCount == 0) count.style.display = "flex"
+                count.innerHTML = `${currentCount + 1}`;
+                console.log(count);
+            }
+        })
+    }
+  
 }

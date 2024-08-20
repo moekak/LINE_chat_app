@@ -16,7 +16,7 @@ body{
       width: 100vw;
       height: 100vh;
       background-color: #fff;
-      /* overflow: hidden; */
+      overflow: hidden;
 }
 
 .contents{
@@ -153,6 +153,7 @@ main{
  }
  .chat__message-main-time{
       color: gray;
+      font-size: 11px;
  }
  .chat_users-icon-message{
       width: 30px;

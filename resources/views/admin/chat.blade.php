@@ -24,7 +24,7 @@
                                           </div>  
                                           <div class="chat__users-list-msg">
                                                 <small class="chat_message">{{$data["message"]}}</small>
-                                                <div class="message_count">12</div>
+                                                <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display: none"></div>
                                           </div>
                                     </div>
                               </div>
@@ -35,11 +35,9 @@
       </div>
 </section> 
 @endsection
-@section('icon')
-      <img src="https://i.pravatar.cc/300" alt="" class="chat_users-icon"> 
-@endsection
+
 @section('icon-msg')
-      <img src="https://i.pravatar.cc/300" alt="" class="chat_users-icon-message" id="icon_msg"> 
+      <img src="{{$chat_user->user_picture}}" alt="" class="chat_users-icon-message" id="icon_msg"> 
 @endsection
 @section('script')
     <script src="{{mix("js/adminChat.js")}}"></script>
@@ -54,13 +52,14 @@
 
 
 @section('chat-message')
+<div class="chat__message-top">
+      <img src="{{$chat_user->user_picture}}" alt="" class="chat_users-icon"> 
+      <p class="chat_message_name">{{$chat_user->line_name}}</p>
+</div>
 <div class="chat__message-main">
-      <small class="chat__message-main-time">November 11.2018</small>
-      <div class="chat__message-wrapper js_append_admin">
+      <div class="chat__message-wrapper js_append_admin" data-id="{{$chat_user->id}}">
            @foreach ($group_message as $date => $messages)
-
-                  <h3>{{ $date }}</h3>
-                  
+                  <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)
 
                         @if ($message->type == "user")

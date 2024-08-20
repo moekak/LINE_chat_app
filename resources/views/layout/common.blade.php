@@ -12,10 +12,7 @@
             <main>
                   @yield('user-list')
                   <section class="chat__message-area">
-                        <div class="chat__message-top">
-                              @yield('icon')
-                              <p class="chat_message_name">Moeka Kido</p>
-                        </div>
+                      
                         @yield('chat-message')
                         
                   </section>

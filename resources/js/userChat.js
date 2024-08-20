@@ -1,7 +1,13 @@
 import io from 'socket.io-client';
 import { appendDiv } from './module/component/append.js';
 
-const socket = io('https://line-chat.tokyo:3000');
+
+const socket = io('https://line-chat.tokyo:3000', {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+  });
 const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
@@ -45,7 +51,7 @@ function sendMessage(msg, sender_id, receiver_id, sender_type) {
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type) {
       console.log(msg);
-      appendDiv("js_append_user", sender_type, msg, "user")
+      appendDiv("js_append_user", sender_type, msg, "user", "")
   });
 
 
