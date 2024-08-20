@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminMessageRequest;
-use App\Models\AdminMessage;
+use App\Http\Requests\UserMessageRequest;
+use App\Models\UserMessage;
 use Illuminate\Http\Request;
 
-class AdminMessageController extends Controller
+class UserMessageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -52,14 +52,13 @@ class AdminMessageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AdminMessageRequest $request)
+    public function update(UserMessageRequest $request)
     {
-
         try {
             $validated = $request->validated();
-            $validated["type"]= "admin";
+            $validated["type"]= "user";
     
-            AdminMessage::create($validated);
+            UserMessage::create($validated);
     
             return response()->json(['message' => 'Message saved successfully'], 200);
         } catch (\Exception $e) {

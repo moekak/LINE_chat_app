@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminMessage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
+use App\Models\UserMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
@@ -18,9 +21,21 @@ class ChatController extends Controller
         
         $admin_info = LineAccount::where("account_id", $adminId)->first();
         $user_id = ChatUser::where("user_id", $userId)->first();
+        $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $admin_info["id"])->where("user_id", $user_id["id"])->get();
+        $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_info["id"])->where("user_id", $user_id["id"])->get();
+    
+        $messages = $adminMessages->merge($userMessages)->sortBy("created_at");
+        $group_message = $this->formatMessage($messages);
 
+        return view("user.chat", ["admin_info" => $admin_info, "user_id" => $user_id, "group_message" => $group_message]);
+    }
 
-        return view("user.chat", ["admin_info" => $admin_info, "user_id" => $user_id]);
+    public function formatMessage($messages){
+        $groupMessages = $messages->groupBy(function($message){
+            return Carbon::parse($message->created_at)->format("Y-m-d");
+        });
+
+        return $groupMessages;
     }
 
     /**

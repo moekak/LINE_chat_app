@@ -91,13 +91,19 @@ io.on('connection', (socket) => {
     })
     // メッセージの受信とブロードキャスト
     socket.on('chat message', (data) => {
+        console.log(data);
 
 
-        const {msg, receiver_id} = data
-        console.log(`Message: ${msg}, Recipient ID: ${receiver_id}`);
+        const {msg, receiver_id, sender_id, sender_type} = data
+        console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}`);
         const recipientSocket  = userSockets.get(receiver_id);
+        const senderSocket = userSockets.get(sender_id);
         if(recipientSocket){
-            recipientSocket.emit("chat message", msg)
+            recipientSocket.emit("chat message", msg, sender_type)
+        }
+         // 送信者のソケットが存在する場合
+         if (senderSocket) {
+            senderSocket.emit("chat message", msg, sender_type);
         }
 
     });

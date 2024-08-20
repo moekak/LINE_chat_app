@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LineAccount extends Model
+class UserMessage extends Model
 {
     use HasFactory;
 
-    public function adminMessage(){
-        return $this->hasMany(AdminMessage::class, "sender_id");
-    }
+    protected $fillable = [
+        "admin_id",
+        "user_id",
+        "content",
+        "type"
+    ];
 }

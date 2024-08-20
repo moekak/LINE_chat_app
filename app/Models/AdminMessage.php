@@ -12,6 +12,8 @@ class AdminMessage extends Model
     protected $fillable=[
         "admin_id",
         "user_id",
-        "content"
+        "content",
+        "type"
     ];
+   
 }
