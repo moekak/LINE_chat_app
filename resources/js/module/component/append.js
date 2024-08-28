@@ -1,12 +1,6 @@
 export const appendDiv = (className, type, msg, file_name, sender_id) =>{
     const parentElement = document.querySelector(`.${className}`)
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> c31d8813c9d90b9691a8cbbe8608a6b52398b8d4
     if(type == "admin"){
         if(file_name == "user"){
             appendLeft(msg, parentElement)
@@ -81,11 +75,7 @@ const appendLeft = (msg, parentElement) =>{
 export const increateMessageCount = (sender_id, type) =>{
 
     if(type == "user") {
-<<<<<<< HEAD
         // const parentElement = document.querySelector(".js_append_admin")
-=======
-        const parentElement = document.querySelector(".js_append_admin")
->>>>>>> c31d8813c9d90b9691a8cbbe8608a6b52398b8d4
 
         const count_elements =document.querySelectorAll(".js_mesage_count")
         count_elements.forEach((count)=>{
