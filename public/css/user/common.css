@@ -1,0 +1,36 @@
+.chat__mesgae-main-right {
+    gap: 11px !important;
+}
+.chat__message-main{
+height: 84vh;
+}
+.chat__mesgae-main-right {
+    width: 84% !important;
+}
+.chat__mesgae-main-left {
+    width: 84% !important;
+}
+
+.chat__form{
+    width: -webkit-fill-available !important;
+}
+
+@media (max-width: 450px){
+    .chat__message-area {
+        padding: 20px 4px;
+    }
+    .chat__message-time-txt {
+        font-size: 7px;
+    }
+    .chat__mesgae-main-right {
+        gap: 5px !important;
+    }
+    .chat__mesgae-main-left {
+        gap: 7px;
+    }
+    .chat__message-main {
+        margin-top: 0 !important;
+        height: 86vh !important;
+        padding: 3px 5px !important;
+    }
+}

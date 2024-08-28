@@ -1,9 +1,5 @@
-export const appendDiv = (className, type, msg, file_name) =>{
+export const appendDiv = (className, type, msg, file_name, sender_id) =>{
     const parentElement = document.querySelector(`.${className}`)
-
-    console.log(`タイプは${type}`);
-
-
 
     if(type == "admin"){
         if(file_name == "user"){
@@ -16,7 +12,8 @@ export const appendDiv = (className, type, msg, file_name) =>{
     if(type == "user"){
         if(file_name == "user"){
             appendRight(msg, parentElement)
-        }else if(file_name == "admin"){
+        }else if(file_name == "admin" && sender_id == parentElement.getAttribute("data-id")){
+            console.log("ey");
             appendLeft(msg, parentElement)
         }
     }
@@ -35,7 +32,8 @@ const appendRight = (msg, parentElement) =>{
     newThirdDiv.classList.add("chat__message-box-right")
     newThirdDiv.classList.add("chat-margin5")
 
-    newThirdDiv.innerHTML = msg
+    const formattedMsg = msg.replace(/\n/g, '<br>'); 
+    newThirdDiv.innerHTML = formattedMsg
 
     newSecondDiv.appendChild(newThirdDiv);
     newFirstDiv.appendChild(newSecondDiv)
@@ -60,7 +58,8 @@ const appendLeft = (msg, parentElement) =>{
     newThirdDiv.classList.add("chat__message-box-left")
     newThirdDiv.classList.add("chat-margin5")
 
-    newThirdDiv.innerHTML = msg
+    const formattedMsg = msg.replace(/\n/g, '<br>'); 
+    newThirdDiv.innerHTML = formattedMsg
     newSecondDiv.appendChild(iconMsg)
     newSecondDiv.appendChild(newThirdDiv);
     newFirstDiv.appendChild(newSecondDiv)
@@ -69,4 +68,55 @@ const appendLeft = (msg, parentElement) =>{
 
     const scroll_el = document.querySelector(".chat__message-main")
    scroll_el.scrollTop = scroll_el.scrollHeight
+}
+
+
+
+export const increateMessageCount = (sender_id, type) =>{
+
+    if(type == "user") {
+        // const parentElement = document.querySelector(".js_append_admin")
+
+        const count_elements =document.querySelectorAll(".js_mesage_count")
+        count_elements.forEach((count)=>{
+            let id = count.getAttribute("data-id");
+            console.log(`id: ${id}`);
+            console.log(`sender_id: ${sender_id}`);
+            console.log(Number(id) == Number(sender_id));
+
+            if(Number(id) == Number(sender_id)){
+                let currentCount = Number(count.innerHTML) || 0
+
+                if(currentCount == 0) count.style.display = "flex"
+                count.innerHTML = `${currentCount + 1}`;
+                console.log(count);
+            }
+        })
+    }
+  
+}
+
+
+export const displayMessage = (sender_id, msg) =>{
+
+        const elements = document.querySelectorAll(".js_chatMessage_elment")
+        elements.forEach((element)=>{
+            let id = element.getAttribute("data-id")
+
+            if (id == sender_id){
+
+                element.innerHTML = msg
+            }
+        })
+
+}
+
+
+export const adjustMesageLength = () =>{
+    const elements = document.querySelectorAll(".js_chatMessage_elment")
+    elements.forEach((element)=>{
+        if(element.innerHTML.length >= 40){
+            element.innerHTML = element.innerHTML.substring(0, 40) + "..."
+        }
+    })
 }

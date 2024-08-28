@@ -6,16 +6,14 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <link rel="stylesheet" href="{{asset("css/admin/common.css")}}">
       <title>Document</title>
+      @yield('style')
 </head>
 <body>
       <div class="contents">
             <main>
                   @yield('user-list')
                   <section class="chat__message-area">
-                        <div class="chat__message-top">
-                              @yield('icon')
-                              <p class="chat_message_name">Moeka Kido</p>
-                        </div>
+                      
                         @yield('chat-message')
                         
                   </section>

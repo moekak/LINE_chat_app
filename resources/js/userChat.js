@@ -1,14 +1,21 @@
 import io from 'socket.io-client';
 import { appendDiv } from './module/component/append.js';
+import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 
-const socket = io('https://line-chat.tokyo:3000');
+
+const socket = io('https://line-chat.tokyo:3000', {
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+  });
 const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
-function sendMessage(msg, sender_id, receiver_id, sender_type) {
+function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
     socket.emit('chat message', {msg, receiver_id, sender_id,sender_type});
       const data = {
-            content:msg,
+            content:msg2,
             user_id: sender_id,
             admin_id: receiver_id
       }
@@ -45,18 +52,28 @@ function sendMessage(msg, sender_id, receiver_id, sender_type) {
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type) {
       console.log(msg);
-      appendDiv("js_append_user", sender_type, msg, "user")
+      appendDiv("js_append_user", sender_type, msg, "user", "")
   });
 
 
 //   formからメッセージを送信する
 document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
       e.preventDefault();
+      document.getElementById('js_msg').style.height = "19px"
       const msg = document.getElementById("js_msg").value
+      const formattedMsg = msg.replace(/\n/g, '<br>');
       const receiver_id = document.getElementById("js_receiver_id").value
       const sender_id = document.getElementById("js_sender_id").value
       const sender_type = document.getElementById("js_sender_type").value
 
-      sendMessage(msg, sender_id, receiver_id, sender_type)
+      
+      document.querySelector(".chat__form-submit").classList.add("disable_btn")
+
+      sendMessage(formattedMsg, sender_id, receiver_id, sender_type, msg)
       document.getElementById("js_msg").value = "";
 })
+
+
+
+changeTextareaHeight()
+disableSubmitBtn()

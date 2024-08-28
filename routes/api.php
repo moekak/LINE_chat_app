@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminMessageController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\User\UserMessageController;
 use Illuminate\Http\Request;

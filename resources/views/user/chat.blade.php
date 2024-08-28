@@ -1,13 +1,14 @@
 @extends('layout.common')
+@section('style')
+<link rel="stylesheet" href="{{asset("css/user/common.css")}}">
+@endsection
 
 
 @section('icon')
-    {{-- <img src="<?//= $admin_info["user_picture"]?>" alt="" class="chat_users-icon">  --}}
-    <img src="https://i.pravatar.cc/300" alt="" class="chat_users-icon"> 
+    <img src="<?= $admin_info["user_picture"]?>" alt="" class="chat_users-icon"> 
 @endsection
 @section('icon-msg')
-<img src="https://i.pravatar.cc/300" alt="" class="chat_users-icon-message" id="icon_msg"> 
-      {{-- <img src="<?//=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message">  --}}
+      <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message"> 
 @endsection
 @section('script')
     <script src="{{mix("js/userChat.js")}}"></script>
@@ -22,11 +23,10 @@
 
 @section('chat-message')
 <div class="chat__message-main">
-      <small class="chat__message-main-time">November 11.2018</small>
       <div class="chat__message-wrapper js_append_user">
             @foreach ($group_message as $date => $messages)
 
-                    <h3>{{ $date }}</h3>
+            <small class="chat__message-main-time">{{ $date }}</small>
                     
                     @foreach ($messages as $message)
 
@@ -35,13 +35,16 @@
                                 <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
                                     
-                                    <div class="chat__message-box-left chat-margin5">{{$message->content}}</div>
+                                    <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                    <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                                 </div> 
                         </div>
                         @else
                                 <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
-                                            <div class="chat__message-box-right chat-margin5">{{$message->content}}</div>
+                                          <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
+                                            <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                            
                                     </div>
                                 </div>
                         @endif
@@ -54,10 +57,10 @@
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
             <img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon">
-            <input type="text" placeholder="Type a message" id="js_msg">   
+            <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
           
-            <button class="chat__form-submit" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
+            <button class="chat__form-submit disable_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
 
       </form>
       

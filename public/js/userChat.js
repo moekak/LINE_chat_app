@@ -1,6 +1,135 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./resources/js/module/component/append.js":
+/*!*************************************************!*\
+  !*** ./resources/js/module/component/append.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   adjustMesageLength: () => (/* binding */ adjustMesageLength),
+/* harmony export */   appendDiv: () => (/* binding */ appendDiv),
+/* harmony export */   displayMessage: () => (/* binding */ displayMessage),
+/* harmony export */   increateMessageCount: () => (/* binding */ increateMessageCount)
+/* harmony export */ });
+var appendDiv = function appendDiv(className, type, msg, file_name, sender_id) {
+  var parentElement = document.querySelector(".".concat(className));
+  if (type == "admin") {
+    if (file_name == "user") {
+      appendLeft(msg, parentElement);
+    } else if (file_name == "admin") {
+      appendRight(msg, parentElement);
+    }
+  }
+  if (type == "user") {
+    if (file_name == "user") {
+      appendRight(msg, parentElement);
+    } else if (file_name == "admin" && sender_id == parentElement.getAttribute("data-id")) {
+      console.log("ey");
+      appendLeft(msg, parentElement);
+    }
+  }
+};
+var appendRight = function appendRight(msg, parentElement) {
+  var newFirstDiv = document.createElement("div");
+  newFirstDiv.classList.add("chat__message-container-right");
+  var newSecondDiv = document.createElement("div");
+  newSecondDiv.classList.add("chat__mesgae-main-right");
+  var newThirdDiv = document.createElement("div");
+  newThirdDiv.classList.add("chat__message-box-right");
+  newThirdDiv.classList.add("chat-margin5");
+  newThirdDiv.innerHTML = msg;
+  newSecondDiv.appendChild(newThirdDiv);
+  newFirstDiv.appendChild(newSecondDiv);
+  parentElement.appendChild(newFirstDiv);
+  var scroll_el = document.querySelector(".chat__message-main");
+  scroll_el.scrollTop = scroll_el.scrollHeight;
+};
+var appendLeft = function appendLeft(msg, parentElement) {
+  var newFirstDiv = document.createElement("div");
+  newFirstDiv.classList.add("chat__message-container-left");
+  var newSecondDiv = document.createElement("div");
+  newSecondDiv.classList.add("chat__mesgae-main-left");
+  var iconMsg = document.getElementById("icon_msg").cloneNode(true);
+  var newThirdDiv = document.createElement("div");
+  newThirdDiv.classList.add("chat__message-box-left");
+  newThirdDiv.classList.add("chat-margin5");
+  newThirdDiv.innerHTML = msg;
+  newSecondDiv.appendChild(iconMsg);
+  newSecondDiv.appendChild(newThirdDiv);
+  newFirstDiv.appendChild(newSecondDiv);
+  parentElement.appendChild(newFirstDiv);
+  var scroll_el = document.querySelector(".chat__message-main");
+  scroll_el.scrollTop = scroll_el.scrollHeight;
+};
+var increateMessageCount = function increateMessageCount(sender_id, type) {
+  if (type == "user") {
+    // const parentElement = document.querySelector(".js_append_admin")
+
+    var count_elements = document.querySelectorAll(".js_mesage_count");
+    count_elements.forEach(function (count) {
+      var id = count.getAttribute("data-id");
+      console.log("id: ".concat(id));
+      console.log("sender_id: ".concat(sender_id));
+      console.log(Number(id) == Number(sender_id));
+      if (Number(id) == Number(sender_id)) {
+        var currentCount = Number(count.innerHTML) || 0;
+        if (currentCount == 0) count.style.display = "flex";
+        count.innerHTML = "".concat(currentCount + 1);
+        console.log(count);
+      }
+    });
+  }
+};
+var displayMessage = function displayMessage(sender_id, msg) {
+  var elements = document.querySelectorAll(".js_chatMessage_elment");
+  elements.forEach(function (element) {
+    var id = element.getAttribute("data-id");
+    if (id == sender_id) {
+      element.innerHTML = msg;
+    }
+  });
+};
+var adjustMesageLength = function adjustMesageLength() {
+  var elements = document.querySelectorAll(".js_chatMessage_elment");
+  elements.forEach(function (element) {
+    if (element.innerHTML.length >= 40) {
+      element.innerHTML = element.innerHTML.substring(0, 40) + "...";
+    }
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/module/component/changeStyle.js":
+/*!******************************************************!*\
+  !*** ./resources/js/module/component/changeStyle.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   changeTextareaHeight: () => (/* binding */ changeTextareaHeight)
+/* harmony export */ });
+var changeTextareaHeight = function changeTextareaHeight() {
+  var textarea = document.getElementById('js_msg');
+  var height = textarea.clientHeight;
+  textarea.addEventListener('input', autoResize, false);
+  function autoResize() {
+    if (this.scrollHeight > height) {
+      console.log(this.scrollHeight);
+      this.style.height = 'auto'; // 高さをリセット
+      this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./node_modules/base64-js/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/base64-js/index.js ***!
@@ -6704,20 +6833,31 @@ var __webpack_exports__ = {};
   \**********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
+/* harmony import */ var _module_component_append_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/component/append.js */ "./resources/js/module/component/append.js");
+/* harmony import */ var _module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./module/component/changeStyle.js */ "./resources/js/module/component/changeStyle.js");
 
-var socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])('https://line-chat.tokyo:3000');
+
+
+var socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])('https://line-chat.tokyo:3000', {
+  transports: ['websocket'],
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000
+});
 var sender_id = document.getElementById("js_sender_id").value;
 registerUser(sender_id);
 // メッセージをサーバーに送信
-function sendMessage(msg, sender_id, receiver_id) {
+function sendMessage(msg, sender_id, receiver_id, sender_type) {
   socket.emit('chat message', {
     msg: msg,
-    receiver_id: receiver_id
+    receiver_id: receiver_id,
+    sender_id: sender_id,
+    sender_type: sender_type
   });
   var data = {
     content: msg,
-    sender_id: sender_id,
-    receiver_id: receiver_id
+    user_id: sender_id,
+    admin_id: receiver_id
   };
   fetch("/api/user/messages", {
     method: "POST",
@@ -6745,19 +6885,24 @@ function registerUser(sender_id) {
 }
 
 // サーバーからのメッセージを受信
-socket.on('chat message', function (msg) {
+socket.on('chat message', function (msg, sender_type) {
   console.log(msg);
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_user", sender_type, msg, "user", "");
 });
 
 //   formからメッセージを送信する
 document.getElementById("js_chat_form").addEventListener("submit", function (e) {
   e.preventDefault();
+  document.getElementById('js_msg').style.height = "19px";
   var msg = document.getElementById("js_msg").value;
+  var formattedMsg = msg.replace(/\n/g, '<br>');
   var receiver_id = document.getElementById("js_receiver_id").value;
   var sender_id = document.getElementById("js_sender_id").value;
-  sendMessage(msg, sender_id, receiver_id);
+  var sender_type = document.getElementById("js_sender_type").value;
+  sendMessage(formattedMsg, sender_id, receiver_id, sender_type);
   document.getElementById("js_msg").value = "";
 });
+(0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.changeTextareaHeight)();
 })();
 
 /******/ })()

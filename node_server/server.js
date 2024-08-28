@@ -99,11 +99,11 @@ io.on('connection', (socket) => {
         const recipientSocket  = userSockets.get(receiver_id);
         const senderSocket = userSockets.get(sender_id);
         if(recipientSocket){
-            recipientSocket.emit("chat message", msg, sender_type)
+            recipientSocket.emit("chat message", msg, sender_type, sender_id)
         }
          // 送信者のソケットが存在する場合
          if (senderSocket) {
-            senderSocket.emit("chat message", msg, sender_type);
+            senderSocket.emit("chat message", msg, sender_type, sender_id);
         }
 
     });
@@ -122,6 +122,8 @@ server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+
+server.setTimeout(0);  // これでタイムアウトを無効化します
 
 
 
