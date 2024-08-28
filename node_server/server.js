@@ -71,7 +71,8 @@ const io = socketIo(server, {
     cors: {
         origin: 'https://line-chat.tokyo',
         methods: ['GET', 'POST']
-    }
+    },
+    transports: ['websocket'] // WebSocketを使用
 });
 
 
@@ -111,7 +112,7 @@ io.on('connection', (socket) => {
 
     // ソケットの切断処理
     socket.on('disconnect', () => {
-        console.log('User disconnected');
+        console.log(`User ${socket.userId} disconnected`);
         userSockets.delete(socket.userId); 
     });
 });

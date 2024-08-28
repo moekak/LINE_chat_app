@@ -1,7 +1,11 @@
 import io from 'socket.io-client';
+<<<<<<< HEAD
 import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength } from './module/component/append.js';
 import { fetchPostOperation } from './module/util/fetch.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
+=======
+import { appendDiv, increateMessageCount } from './module/component/append.js';
+>>>>>>> c31d8813c9d90b9691a8cbbe8608a6b52398b8d4
 
 const socket = io('https://line-chat.tokyo:3000', {
       transports: ['websocket'],
@@ -59,7 +63,10 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             "sender_id" : sender_id
       });
       appendDiv("js_append_admin", sender_type, msg, "admin", sender_id)
+<<<<<<< HEAD
       displayMessage(sender_id, msg)
+=======
+>>>>>>> c31d8813c9d90b9691a8cbbe8608a6b52398b8d4
       increateMessageCount(sender_id, sender_type)
   });
 
