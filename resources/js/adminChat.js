@@ -3,12 +3,54 @@ import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength } f
 import { fetchPostOperation } from './module/util/fetch.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 
-const socket = io('https://line-chat.tokyo:3000', {
-      transports: ['websocket'],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000
+
+
+// Socket.IOサーバーへの接続を設定
+let socket = io('https://line-chat.tokyo:3000', {
+      reconnection: true,         // 自動再接続を有効にする
+      reconnectionDelay: 1000,    // 再接続の遅延時間 (ミリ秒)
+      reconnectionDelayMax : 5000, // 再接続の最大遅延時間 (ミリ秒)
+      reconnectionAttempts: Infinity // 再接続の試行回数 (無限に設定)
   });
+
+
+
+// ページの可視性が変更されたときのイベントリスナー
+document.addEventListener("visibilitychange", function() {
+      if (document.visibilityState === 'visible') {
+          console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
+          checkOrReconnectSocket();
+      }
+  });
+  
+  function checkOrReconnectSocket() {
+      if (!socket.connected) {
+          console.log("Socket.IOは接続されていません。再接続を試みます。");
+          socket.connect();
+      }
+  }
+
+  // 再接続試行イベント
+socket.on('reconnect_attempt', () => {
+      console.log('Attempting to reconnect');
+  });
+  
+  // 再接続エラーイベント
+  socket.on('reconnect_error', (error) => {
+      console.log('Reconnection failed:', error);
+  });
+  
+  // サーバーから切断されたときのイベント
+  socket.on('disconnect', (reason) => {
+      if (reason === 'io server disconnect') {
+          // サーバー側で接続が強制切断された場合
+          console.log('Disconnected by the server');
+      } else {
+          // その他の理由で切断された場合
+          console.log('Disconnected:', reason);
+      }
+  });
+  
 
 const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)

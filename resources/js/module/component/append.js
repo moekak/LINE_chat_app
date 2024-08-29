@@ -94,7 +94,6 @@ export const increateMessageCount = (sender_id, type) =>{
         })
     }
   
-<<<<<<< HEAD
 }
 
 
@@ -120,6 +119,4 @@ export const adjustMesageLength = () =>{
             element.innerHTML = element.innerHTML.substring(0, 40) + "..."
         }
     })
-=======
->>>>>>> c31d8813c9d90b9691a8cbbe8608a6b52398b8d4
 }

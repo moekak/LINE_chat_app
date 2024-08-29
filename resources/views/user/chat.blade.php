@@ -8,7 +8,7 @@
     <img src="<?= $admin_info["user_picture"]?>" alt="" class="chat_users-icon"> 
 @endsection
 @section('icon-msg')
-      <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message"> 
+      <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message" id="icon_msg"> 
 @endsection
 @section('script')
     <script src="{{mix("js/userChat.js")}}"></script>

@@ -41,7 +41,8 @@ var appendRight = function appendRight(msg, parentElement) {
   var newThirdDiv = document.createElement("div");
   newThirdDiv.classList.add("chat__message-box-right");
   newThirdDiv.classList.add("chat-margin5");
-  newThirdDiv.innerHTML = msg;
+  var formattedMsg = msg.replace(/\n/g, '<br>');
+  newThirdDiv.innerHTML = formattedMsg;
   newSecondDiv.appendChild(newThirdDiv);
   newFirstDiv.appendChild(newSecondDiv);
   parentElement.appendChild(newFirstDiv);
@@ -57,7 +58,8 @@ var appendLeft = function appendLeft(msg, parentElement) {
   var newThirdDiv = document.createElement("div");
   newThirdDiv.classList.add("chat__message-box-left");
   newThirdDiv.classList.add("chat-margin5");
-  newThirdDiv.innerHTML = msg;
+  var formattedMsg = msg.replace(/\n/g, '<br>');
+  newThirdDiv.innerHTML = formattedMsg;
   newSecondDiv.appendChild(iconMsg);
   newSecondDiv.appendChild(newThirdDiv);
   newFirstDiv.appendChild(newSecondDiv);
@@ -113,7 +115,8 @@ var adjustMesageLength = function adjustMesageLength() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   changeTextareaHeight: () => (/* binding */ changeTextareaHeight)
+/* harmony export */   changeTextareaHeight: () => (/* binding */ changeTextareaHeight),
+/* harmony export */   disableSubmitBtn: () => (/* binding */ disableSubmitBtn)
 /* harmony export */ });
 var changeTextareaHeight = function changeTextareaHeight() {
   var textarea = document.getElementById('js_msg');
@@ -126,6 +129,18 @@ var changeTextareaHeight = function changeTextareaHeight() {
       this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定
     }
   }
+};
+var disableSubmitBtn = function disableSubmitBtn() {
+  var field = document.getElementById("js_msg");
+  var btn = document.querySelector(".chat__form-submit");
+  field.addEventListener("input", function (e) {
+    var value = e.currentTarget.value;
+    if (value.length > 0) {
+      btn.classList.remove("disable_btn");
+    } else {
+      btn.classList.add("disable_btn");
+    }
+  });
 };
 
 /***/ }),
@@ -6847,7 +6862,7 @@ var socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])('https
 var sender_id = document.getElementById("js_sender_id").value;
 registerUser(sender_id);
 // メッセージをサーバーに送信
-function sendMessage(msg, sender_id, receiver_id, sender_type) {
+function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   socket.emit('chat message', {
     msg: msg,
     receiver_id: receiver_id,
@@ -6855,7 +6870,7 @@ function sendMessage(msg, sender_id, receiver_id, sender_type) {
     sender_type: sender_type
   });
   var data = {
-    content: msg,
+    content: msg2,
     user_id: sender_id,
     admin_id: receiver_id
   };
@@ -6885,8 +6900,13 @@ function registerUser(sender_id) {
 }
 
 // サーバーからのメッセージを受信
-socket.on('chat message', function (msg, sender_type) {
-  console.log(msg);
+socket.on('chat message', function (msg, sender_type, sender_id) {
+  console.log({
+    "msg": msg,
+    "sender_type": sender_type,
+    "sender_id": sender_id
+  });
+  console.log("wowowowwowow");
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_user", sender_type, msg, "user", "");
 });
 
@@ -6899,10 +6919,12 @@ document.getElementById("js_chat_form").addEventListener("submit", function (e) 
   var receiver_id = document.getElementById("js_receiver_id").value;
   var sender_id = document.getElementById("js_sender_id").value;
   var sender_type = document.getElementById("js_sender_type").value;
-  sendMessage(formattedMsg, sender_id, receiver_id, sender_type);
+  document.querySelector(".chat__form-submit").classList.add("disable_btn");
+  sendMessage(formattedMsg, sender_id, receiver_id, sender_type, msg);
   document.getElementById("js_msg").value = "";
 });
 (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.changeTextareaHeight)();
+(0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.disableSubmitBtn)();
 })();
 
 /******/ })()
