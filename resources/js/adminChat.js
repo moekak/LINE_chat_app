@@ -27,6 +27,9 @@ document.addEventListener("visibilitychange", function() {
         console.log("Socket.IOの現在の接続状態:", socket.connected);
       if (!socket.connected) {
           console.log("Socket.IOは接続されていません。再接続を試みます。");
+          const sender_id = document.getElementById("js_sender_id").value
+          console.log(sender_id + "sender_id, reconnecting websocket")
+          registerUser(sender_id)
           socket.connect();
       }
   }
