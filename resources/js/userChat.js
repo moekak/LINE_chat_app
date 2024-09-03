@@ -24,13 +24,15 @@ document.addEventListener("visibilitychange", function() {
   
   function checkOrReconnectSocket() {
     alert(`Socket.IOの現在の接続状態:",${socket.connected} `);
+    const sender_id = document.getElementById("js_sender_id").value
       if (!socket.connected) {
             alert("Socket.IOは接続されていません。再接続を試みます。")
-            const sender_id = document.getElementById("js_sender_id").value
             alert(sender_id)
             registerUser(sender_id)
           console.log("Socket.IOは接続されていません。再接続を試みます。");
           socket.connect();
+      }else{
+        registerUser(sender_id)
       }
   }
     

@@ -32,9 +32,21 @@ class UserMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserMessageRequest $request)
     {
-        //
+        try {
+            $validated = $request->validated();
+            $validated["type"]= "user";
+    
+            $userMessage = UserMessage::create($validated);
+            $createdAt = $userMessage->created_at->format('H:i');
+            $message_id = $userMessage->id;
+    
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
+        } catch (\Exception $e) {
+            // エラーが発生した場合にエラーメッセージを返す
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -56,45 +68,12 @@ class UserMessageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserMessageRequest $request)
+    public function update(Request $request)
     {
-        try {
-            $validated = $request->validated();
-            $validated["type"]= "user";
-    
-            $userMessage = UserMessage::create($validated);
-            $createdAt = $userMessage->created_at->format('H:i');
-            $message_id = $userMessage->id;
-    
-            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
-        } catch (\Exception $e) {
-            // エラーが発生した場合にエラーメッセージを返す
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        
     }
 
-    public function updateMessageRead(MessageReadUserRequest $request){
-        try{
-            $validated = $request->validated();
-            $validated["read_at"] = Carbon::now();
-            MessageReadUser::create($validated);
-            return response()->noContent();
 
-        }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-           
-    }
-
-    public function getUserData($id){
-        try{
-            $data = ChatUser::findOrFail($id);
-            return response()->json($data);
-
-        }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.

@@ -28,9 +28,22 @@ class AdminMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AdminMessageRequest $request)
     {
-        //
+        try {
+            $validated = $request->validated();
+            $validated["type"]= "admin";
+    
+            $adminMessage = AdminMessage::create($validated);
+            $createdAt = $adminMessage->created_at->format('H:i');
+            $message_id = $adminMessage->id;
+    
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
+
+        } catch (\Exception $e) {
+            // エラーが発生した場合にエラーメッセージを返す
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -55,20 +68,7 @@ class AdminMessageController extends Controller
     public function update(AdminMessageRequest $request)
     {
 
-        try {
-            $validated = $request->validated();
-            $validated["type"]= "admin";
-    
-            $adminMessage = AdminMessage::create($validated);
-            $createdAt = $adminMessage->created_at->format('H:i');
-            $message_id = $adminMessage->id;
-    
-            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
-
-        } catch (\Exception $e) {
-            // エラーが発生した場合にエラーメッセージを返す
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+ 
     }
 
     /**

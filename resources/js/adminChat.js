@@ -25,13 +25,17 @@ document.addEventListener("visibilitychange", function() {
   
   function checkOrReconnectSocket() {
         console.log("Socket.IOの現在の接続状態:", socket.connected);
+        const sender_id = document.getElementById("js_sender_id").value
       if (!socket.connected) {
           console.log("Socket.IOは接続されていません。再接続を試みます。");
-          const sender_id = document.getElementById("js_sender_id").value
           console.log(sender_id + "sender_id, reconnecting websocket")
           registerUser(sender_id)
           socket.connect();
+      }else{
+        registerUser(sender_id)
       }
+        
+      
   }
 
   // 再接続試行イベント
@@ -66,7 +70,7 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             user_id: receiver_id
       }
 
-      fetch("/api/messages", {
+      fetch("/api/admin/messages", {
             method: "POST",
             headers: {
                   'Content-Type': 'application/json',// リクエストボディが JSON フォーマットであることを示す
@@ -136,7 +140,7 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
 
 
       if(sender_id == document.getElementById("js_chatuser_id").value){
-        fetchPostOperation(data, "/api/messages/update")
+        fetchPostOperation(data, "/api/user/messages/read")
       }
       
 

@@ -4,13 +4,10 @@ use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\User\ChatController as UserChatController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/{id}', function () {
-    return view('welcome');
-});
 
 
+// 管理者用チャット画面
 Route::get("/{id}/{account_id}", [ChatController::class, "index"])->name("admin.chat");
 
-
-// user
+// ユーザー用チャット画面
 Route::get("/chat/{adminId}/{userId}", [UserChatController::class, "index"]);

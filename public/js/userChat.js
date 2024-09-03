@@ -17,7 +17,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime),
 /* harmony export */   updateUserDataElement: () => (/* binding */ updateUserDataElement)
 /* harmony export */ });
+/* harmony import */ var _util_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch */ "./resources/js/module/util/fetch.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+
 var appendDiv = function appendDiv(className, type, msg, file_name, sender_id, time) {
   var parentElement = document.querySelector(".".concat(className));
   if (type == "admin") {
@@ -44,7 +46,7 @@ var appendRight = function appendRight(msg, parentElement, time) {
   var newThirdDiv = document.createElement("div");
   newThirdDiv.classList.add("chat__message-box-right");
   newThirdDiv.classList.add("chat-margin5");
-  var formattedMsg = msg.replace(/\n/g, '<br>');
+  var formattedMsg = msg.replace(/\n/g, "<br>");
   newThirdDiv.innerHTML = formattedMsg;
   var newTimeDiv = document.createElement("div");
   newTimeDiv.classList.add("chat__message-time-txt");
@@ -81,7 +83,7 @@ var appendLeft = function appendLeft(msg, parentElement, time) {
   var newTimeDiv = document.createElement("div");
   newTimeDiv.classList.add("chat__message-time-txt");
   newTimeDiv.innerHTML = time;
-  var formattedMsg = msg.replace(/\n/g, '<br>');
+  var formattedMsg = msg.replace(/\n/g, "<br>");
   newThirdDiv.innerHTML = formattedMsg;
   newSecondDiv.appendChild(iconMsg);
   newSecondDiv.appendChild(newThirdDiv);
@@ -152,74 +154,93 @@ var updateMessageTime = function updateMessageTime(time, sender_id, sender_type,
     }
   });
 };
-var createDivElement = function createDivElement(id, receiver_id, msg, time) {
-  var parentNewDiv = document.createElement("div");
-  parentNewDiv.classList.add("chat__users-list-wraper");
-  parentNewDiv.classList.add("js_chat_wrapper");
-  parentNewDiv.setAttribute("data-id", id);
-  parentNewDiv.setAttribute("data-admin-id", receiver_id);
-  parentNewDiv.style.marginTop = "0";
+var createDivElement = function createDivElement(id, receiver_id, msg, time, message_id, sender_id) {
+  return new Promise(function (resolve) {
+    console.log(sender_id);
+    var parentNewDiv = document.createElement("div");
+    parentNewDiv.classList.add("chat__users-list-wraper");
+    parentNewDiv.classList.add("js_chat_wrapper");
+    parentNewDiv.setAttribute("data-id", id);
+    parentNewDiv.setAttribute("data-admin-id", receiver_id);
+    parentNewDiv.style.marginTop = "0";
+    (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(sender_id)).then(function (res) {
+      console.log(res);
+      // アイコン
+      var img = document.createElement("img");
+      img.classList.add("chat_users-icon");
+      img.setAttribute("src", res["user_picture"]);
+      img.setAttribute("alt", "");
 
-  // アイコン
-  var img = document.createElement("img");
-  img.classList.add("chat_users-icon");
+      //
+      var chileDiv = document.createElement("div");
+      chileDiv.classList.add("chat_users-list-flex");
+      var grandChildDiv1 = document.createElement("div");
+      grandChildDiv1.classList.add("chat_users-list-box");
+      var p = document.createElement("p");
+      p.innerHTML = res["line_name"];
+      p.classList.add("chat_name_txt");
+      var small = document.createElement("small");
+      small.classList.add("chat_time");
+      small.classList.add("js_update_message_time");
+      small.setAttribute("data-id", id);
+      small.innerHTML = "17:20";
 
-  // 
-  var chileDiv = document.createElement("div");
-  chileDiv.classList.add("chat_users-list-flex");
-  var grandChildDiv1 = document.createElement("div");
-  grandChildDiv1.classList.add("chat_users-list-box");
-  var p = document.createElement("p");
-  p.innerHTML = "ユーザーネーム";
-  p.classList.add("chat_name_txt");
-  var small = document.createElement("small");
-  small.classList.add("chat_time js_update_message_time");
-  small.setAttribute("data-id", id);
-  small.innerHTML = "17:20";
+      // append
+      grandChildDiv1.appendChild(p);
+      grandChildDiv1.appendChild(small);
 
-  // append
-  grandChildDiv1.appendChild(p);
-  grandChildDiv1.appendChild(small);
+      // #################
+      var grandChildDiv2 = document.createElement("div");
+      grandChildDiv2.classList.add("chat__users-list-msg");
+      var smalltag = document.createElement("small");
+      smalltag.classList.add("chat_message");
+      smalltag.classList.add("js_chatMessage_elment");
+      smalltag.setAttribute("data-id", id);
+      smalltag.innerHTML = msg;
+      var countDiv = document.createElement("div");
+      countDiv.classList.add("message_count");
+      countDiv.classList.add("js_mesage_count");
+      countDiv.setAttribute("data-id", id);
+      countDiv.style.display = "none";
+      countDiv.innerHTML = 0;
 
-  // #################
-  var grandChildDiv2 = document.createElement("div");
-  grandChildDiv2.classList.add("chat__users-list-msg");
-  var smalltag = document.createElement("small");
-  smalltag.classList.add("chat_message js_chatMessage_elment");
-  smalltag.setAttribute("data-id", id);
-  smalltag.innerHTML = msg;
-  var countDiv = document.createElement("div");
-  countDiv.classList.add("message_count js_mesage_count");
-  countDiv.setAttribute("data-id", id);
-  countDiv.style.display = "none";
-  countDiv.innerHTML = 0;
-
-  // append
-  grandChildDiv2.appendChild(smalltag);
-  grandChildDiv2.appendChild(countDiv);
-  chileDiv.appendChild(grandChildDiv1);
-  chileDiv.appendChild(grandChildDiv2);
-  parentNewDiv.appendChild(img, chileDiv);
-  return parentNewDiv;
+      // append
+      grandChildDiv2.appendChild(smalltag);
+      grandChildDiv2.appendChild(countDiv);
+      chileDiv.appendChild(grandChildDiv1);
+      chileDiv.appendChild(grandChildDiv2);
+      parentNewDiv.appendChild(img);
+      parentNewDiv.appendChild(chileDiv);
+      resolve(parentNewDiv);
+    });
+  });
 };
-var updateUserDataElement = function updateUserDataElement(id, receiver_id, msg, time) {
+var updateUserDataElement = function updateUserDataElement(id, receiver_id, msg, time, message_id, sender_id) {
+  console.log(sender_id);
   var wrappers = document.querySelectorAll(".js_chat_wrapper");
   var chat_wrapper = document.getElementById("js_chatUser_wrapper");
-  var firstChild = Array.from(wrappers)[0];
+  var firstChild = chat_wrapper.firstChild;
+  console.log(firstChild);
+
+  // createDivElement(id, receiver_id, msg, time, message_id, sender_id)
+  //     .then((wrapper) => {
+  //         if (firstChild) {
+  //             chat_wrapper.insertBefore(wrapper, firstChild);
+  //         } else {
+  //             chat_wrapper.appendChild(wrapper);
+  //         }
+  //     })
+  //     .catch(error => console.error("Failed to create element:", error));
+
+  var hasDiv = false;
   wrappers.forEach(function (wrapper) {
     var user_id = wrapper.getAttribute("data-id");
-    if (id == user_id) {
+    if (id == user_id && Array.from(wrappers.length > 0)) {
+      hasDiv = true;
       var newDiv = wrapper.cloneNode(true);
       chat_wrapper.insertBefore(newDiv, firstChild);
       if (wrapper.parentNode == chat_wrapper) {
         chat_wrapper.removeChild(wrapper);
-      }
-    } else {
-      var _wrapper = createDivElement(id, receiver_id, msg, time);
-      if (firstChild == undefined) {
-        chat_wrapper.appendChild(_wrapper);
-      } else {
-        chat_wrapper.insertBefore(_wrapper, firstChild);
       }
     }
     var chat_btns = document.querySelectorAll(".js_chat_wrapper");
@@ -231,6 +252,14 @@ var updateUserDataElement = function updateUserDataElement(id, receiver_id, msg,
       });
     });
   });
+  console.log(hasDiv);
+  if (!hasDiv && firstChild !== undefined) {
+    createDivElement(id, receiver_id, msg, time, message_id, sender_id).then(function (wrapper) {
+      chat_wrapper.insertBefore(wrapper, firstChild);
+    })["catch"](function (error) {
+      return console.error("Failed to create element:", error);
+    });
+  }
 };
 
 /***/ }),
@@ -269,6 +298,52 @@ var disableSubmitBtn = function disableSubmitBtn() {
     } else {
       btn.classList.add("disable_btn");
     }
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/module/util/fetch.js":
+/*!*******************************************!*\
+  !*** ./resources/js/module/util/fetch.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fetchGetOperation: () => (/* binding */ fetchGetOperation),
+/* harmony export */   fetchPostOperation: () => (/* binding */ fetchPostOperation)
+/* harmony export */ });
+var fetchPostOperation = function fetchPostOperation(data, url) {
+  return fetch("".concat(url), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("サーバーエラーが発生しました。");
+    }
+    return response.json();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+};
+var fetchGetOperation = function fetchGetOperation(url) {
+  return fetch("".concat(url), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("サーバーエラーが発生しました。");
+    }
+    return response.json();
+  })["catch"](function (error) {
+    console.log(error);
   });
 };
 
@@ -7004,10 +7079,15 @@ document.addEventListener("visibilitychange", function () {
 });
 function checkOrReconnectSocket() {
   alert("Socket.IO\u306E\u73FE\u5728\u306E\u63A5\u7D9A\u72B6\u614B:\",".concat(socket.connected, " "));
+  var sender_id = document.getElementById("js_sender_id").value;
   if (!socket.connected) {
     alert("Socket.IOは接続されていません。再接続を試みます。");
+    alert(sender_id);
+    registerUser(sender_id);
     console.log("Socket.IOは接続されていません。再接続を試みます。");
     socket.connect();
+  } else {
+    registerUser(sender_id);
   }
 }
 
@@ -7061,12 +7141,14 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   }).then(function (data) {
     console.log(data);
     var time = data["created_at"];
+    var message_id = data["message_id"];
     socket.emit('chat message', {
       msg: msg,
       receiver_id: receiver_id,
       sender_id: sender_id,
       sender_type: sender_type,
-      time: time
+      time: time,
+      message_id: message_id
     });
   });
 }

@@ -179,7 +179,7 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
         parentNewDiv.setAttribute("data-admin-id", receiver_id);
         parentNewDiv.style.marginTop = "0";
 
-        fetchGetOperation(`/api/userData/${sender_id}`).then((res) => {
+        fetchGetOperation(`/api/users/${sender_id}`).then((res) => {
             console.log(res);
             // アイコン
             const img = document.createElement("img");
