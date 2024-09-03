@@ -14,8 +14,6 @@ export const fetchPostOperation = (data, url) => {
       })
       .catch((error)=>{
           console.log(error);
-          
-  
       })
     };
 export const fetchGetOperation = (url) => {

@@ -13,27 +13,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   adjustMesageLength: () => (/* binding */ adjustMesageLength),
 /* harmony export */   appendDiv: () => (/* binding */ appendDiv),
 /* harmony export */   displayMessage: () => (/* binding */ displayMessage),
-/* harmony export */   increateMessageCount: () => (/* binding */ increateMessageCount)
+/* harmony export */   increateMessageCount: () => (/* binding */ increateMessageCount),
+/* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime),
+/* harmony export */   updateUserDataElement: () => (/* binding */ updateUserDataElement)
 /* harmony export */ });
-var appendDiv = function appendDiv(className, type, msg, file_name, sender_id) {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+var appendDiv = function appendDiv(className, type, msg, file_name, sender_id, time) {
   var parentElement = document.querySelector(".".concat(className));
   if (type == "admin") {
     if (file_name == "user") {
-      appendLeft(msg, parentElement);
+      appendLeft(msg, parentElement, time);
     } else if (file_name == "admin") {
-      appendRight(msg, parentElement);
+      appendRight(msg, parentElement, time);
     }
   }
   if (type == "user") {
     if (file_name == "user") {
-      appendRight(msg, parentElement);
+      appendRight(msg, parentElement, time);
     } else if (file_name == "admin" && sender_id == parentElement.getAttribute("data-id")) {
       console.log("ey");
-      appendLeft(msg, parentElement);
+      appendLeft(msg, parentElement, time);
     }
   }
 };
-var appendRight = function appendRight(msg, parentElement) {
+var appendRight = function appendRight(msg, parentElement, time) {
   var newFirstDiv = document.createElement("div");
   newFirstDiv.classList.add("chat__message-container-right");
   var newSecondDiv = document.createElement("div");
@@ -43,25 +46,46 @@ var appendRight = function appendRight(msg, parentElement) {
   newThirdDiv.classList.add("chat-margin5");
   var formattedMsg = msg.replace(/\n/g, '<br>');
   newThirdDiv.innerHTML = formattedMsg;
+  var newTimeDiv = document.createElement("div");
+  newTimeDiv.classList.add("chat__message-time-txt");
+  newTimeDiv.innerHTML = time;
+  newSecondDiv.appendChild(newTimeDiv);
   newSecondDiv.appendChild(newThirdDiv);
   newFirstDiv.appendChild(newSecondDiv);
   parentElement.appendChild(newFirstDiv);
   var scroll_el = document.querySelector(".chat__message-main");
   scroll_el.scrollTop = scroll_el.scrollHeight;
 };
-var appendLeft = function appendLeft(msg, parentElement) {
+var appendLeft = function appendLeft(msg, parentElement, time) {
   var newFirstDiv = document.createElement("div");
   newFirstDiv.classList.add("chat__message-container-left");
   var newSecondDiv = document.createElement("div");
   newSecondDiv.classList.add("chat__mesgae-main-left");
-  var iconMsg = document.getElementById("icon_msg").cloneNode(true);
+  var iconMsg;
+  if (document.getElementById("icon_msg") !== null) {
+    iconMsg = document.getElementById("icon_msg").cloneNode(true);
+    console.log(iconMsg);
+    console.log(_typeof(iconMsg));
+  } else {
+    iconMsg = document.createElement("img");
+    // 画像のURLとその他の属性を設定
+    var src = document.getElementById("js_user_icon_img").value;
+    iconMsg.setAttribute("src", src);
+    iconMsg.setAttribute("alt", "");
+    iconMsg.setAttribute("class", "chat_users-icon-message");
+    iconMsg.setAttribute("id", "icon_msg");
+  }
   var newThirdDiv = document.createElement("div");
   newThirdDiv.classList.add("chat__message-box-left");
   newThirdDiv.classList.add("chat-margin5");
+  var newTimeDiv = document.createElement("div");
+  newTimeDiv.classList.add("chat__message-time-txt");
+  newTimeDiv.innerHTML = time;
   var formattedMsg = msg.replace(/\n/g, '<br>');
   newThirdDiv.innerHTML = formattedMsg;
   newSecondDiv.appendChild(iconMsg);
   newSecondDiv.appendChild(newThirdDiv);
+  newSecondDiv.appendChild(newTimeDiv);
   newFirstDiv.appendChild(newSecondDiv);
   parentElement.appendChild(newFirstDiv);
   var scroll_el = document.querySelector(".chat__message-main");
@@ -72,12 +96,10 @@ var increateMessageCount = function increateMessageCount(sender_id, type) {
     // const parentElement = document.querySelector(".js_append_admin")
 
     var count_elements = document.querySelectorAll(".js_mesage_count");
+    var chat_user_id = document.getElementById("js_chatuser_id").value;
     count_elements.forEach(function (count) {
       var id = count.getAttribute("data-id");
-      console.log("id: ".concat(id));
-      console.log("sender_id: ".concat(sender_id));
-      console.log(Number(id) == Number(sender_id));
-      if (Number(id) == Number(sender_id)) {
+      if (Number(id) == Number(sender_id) && Number(id) !== Number(chat_user_id)) {
         var currentCount = Number(count.innerHTML) || 0;
         if (currentCount == 0) count.style.display = "flex";
         count.innerHTML = "".concat(currentCount + 1);
@@ -86,12 +108,19 @@ var increateMessageCount = function increateMessageCount(sender_id, type) {
     });
   }
 };
-var displayMessage = function displayMessage(sender_id, msg) {
+var displayMessage = function displayMessage(sender_id, msg, sender_type, receiver_id) {
   var elements = document.querySelectorAll(".js_chatMessage_elment");
   elements.forEach(function (element) {
     var id = element.getAttribute("data-id");
-    if (id == sender_id) {
-      element.innerHTML = msg;
+    if (sender_type == "user") {
+      if (id == sender_id) {
+        element.innerHTML = msg;
+      }
+      // 管理者からメッセージが送信された場合
+    } else {
+      if (id == receiver_id) {
+        element.innerHTML = msg;
+      }
     }
   });
 };
@@ -101,6 +130,106 @@ var adjustMesageLength = function adjustMesageLength() {
     if (element.innerHTML.length >= 40) {
       element.innerHTML = element.innerHTML.substring(0, 40) + "...";
     }
+  });
+};
+
+// 管理者用チャット画面の左側の各メッセージの時間を更新する
+var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id) {
+  var elements = document.querySelectorAll(".js_update_message_time");
+  elements.forEach(function (element) {
+    var id = element.getAttribute("data-id");
+
+    // ユーザーからメッセージが送信された場合
+    if (sender_type == "user") {
+      if (id == sender_id) {
+        element.innerHTML = time;
+      }
+      // 管理者からメッセージが送信された場合
+    } else {
+      if (id == receiver_id) {
+        element.innerHTML = time;
+      }
+    }
+  });
+};
+var createDivElement = function createDivElement(id, receiver_id, msg, time) {
+  var parentNewDiv = document.createElement("div");
+  parentNewDiv.classList.add("chat__users-list-wraper");
+  parentNewDiv.classList.add("js_chat_wrapper");
+  parentNewDiv.setAttribute("data-id", id);
+  parentNewDiv.setAttribute("data-admin-id", receiver_id);
+  parentNewDiv.style.marginTop = "0";
+
+  // アイコン
+  var img = document.createElement("img");
+  img.classList.add("chat_users-icon");
+
+  // 
+  var chileDiv = document.createElement("div");
+  chileDiv.classList.add("chat_users-list-flex");
+  var grandChildDiv1 = document.createElement("div");
+  grandChildDiv1.classList.add("chat_users-list-box");
+  var p = document.createElement("p");
+  p.innerHTML = "ユーザーネーム";
+  p.classList.add("chat_name_txt");
+  var small = document.createElement("small");
+  small.classList.add("chat_time js_update_message_time");
+  small.setAttribute("data-id", id);
+  small.innerHTML = "17:20";
+
+  // append
+  grandChildDiv1.appendChild(p);
+  grandChildDiv1.appendChild(small);
+
+  // #################
+  var grandChildDiv2 = document.createElement("div");
+  grandChildDiv2.classList.add("chat__users-list-msg");
+  var smalltag = document.createElement("small");
+  smalltag.classList.add("chat_message js_chatMessage_elment");
+  smalltag.setAttribute("data-id", id);
+  smalltag.innerHTML = msg;
+  var countDiv = document.createElement("div");
+  countDiv.classList.add("message_count js_mesage_count");
+  countDiv.setAttribute("data-id", id);
+  countDiv.style.display = "none";
+  countDiv.innerHTML = 0;
+
+  // append
+  grandChildDiv2.appendChild(smalltag);
+  grandChildDiv2.appendChild(countDiv);
+  chileDiv.appendChild(grandChildDiv1);
+  chileDiv.appendChild(grandChildDiv2);
+  parentNewDiv.appendChild(img, chileDiv);
+  return parentNewDiv;
+};
+var updateUserDataElement = function updateUserDataElement(id, receiver_id, msg, time) {
+  var wrappers = document.querySelectorAll(".js_chat_wrapper");
+  var chat_wrapper = document.getElementById("js_chatUser_wrapper");
+  var firstChild = Array.from(wrappers)[0];
+  wrappers.forEach(function (wrapper) {
+    var user_id = wrapper.getAttribute("data-id");
+    if (id == user_id) {
+      var newDiv = wrapper.cloneNode(true);
+      chat_wrapper.insertBefore(newDiv, firstChild);
+      if (wrapper.parentNode == chat_wrapper) {
+        chat_wrapper.removeChild(wrapper);
+      }
+    } else {
+      var _wrapper = createDivElement(id, receiver_id, msg, time);
+      if (firstChild == undefined) {
+        chat_wrapper.appendChild(_wrapper);
+      } else {
+        chat_wrapper.insertBefore(_wrapper, firstChild);
+      }
+    }
+    var chat_btns = document.querySelectorAll(".js_chat_wrapper");
+    chat_btns.forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        var id = e.currentTarget.getAttribute("data-id");
+        var admin_id = e.currentTarget.getAttribute("data-admin-id");
+        window.location.href = "/".concat(admin_id, "/").concat(id);
+      });
+    });
   });
 };
 
@@ -6853,27 +6982,65 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+// Socket.IOサーバーへの接続を設定
 var socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])('https://line-chat.tokyo:3000', {
-  transports: ['websocket'],
   reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 1000
+  // 自動再接続を有効にする
+  reconnectionDelay: 1000,
+  // 再接続の遅延時間 (ミリ秒)
+  reconnectionDelayMax: 5000,
+  // 再接続の最大遅延時間 (ミリ秒)
+  reconnectionAttempts: Infinity // 再接続の試行回数 (無限に設定)
+});
+
+// ページの可視性が変更されたときのイベントリスナー
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === 'visible') {
+    alert("ページがアクティブです。Socket.IO接続を確認または再接続します。");
+    console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
+    checkOrReconnectSocket();
+  }
+});
+function checkOrReconnectSocket() {
+  alert("Socket.IO\u306E\u73FE\u5728\u306E\u63A5\u7D9A\u72B6\u614B:\",".concat(socket.connected, " "));
+  if (!socket.connected) {
+    alert("Socket.IOは接続されていません。再接続を試みます。");
+    console.log("Socket.IOは接続されていません。再接続を試みます。");
+    socket.connect();
+  }
+}
+
+// 再接続試行イベント
+socket.on('reconnect_attempt', function () {
+  console.log('Attempting to reconnect');
+});
+
+// 再接続エラーイベント
+socket.on('reconnect_error', function (error) {
+  console.log('Reconnection failed:', error);
+});
+
+// サーバーから切断されたときのイベント
+socket.on('disconnect', function (reason) {
+  if (reason === 'io server disconnect') {
+    // サーバー側で接続が強制切断された場合
+    console.log('Disconnected by the server');
+  } else {
+    // その他の理由で切断された場合
+    console.log('Disconnected:', reason);
+  }
 });
 var sender_id = document.getElementById("js_sender_id").value;
 registerUser(sender_id);
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-  socket.emit('chat message', {
-    msg: msg,
-    receiver_id: receiver_id,
-    sender_id: sender_id,
-    sender_type: sender_type
-  });
   var data = {
     content: msg2,
     user_id: sender_id,
     admin_id: receiver_id
   };
+  console.log(data);
   fetch("/api/user/messages", {
     method: "POST",
     headers: {
@@ -6893,6 +7060,14 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
     return response.json();
   }).then(function (data) {
     console.log(data);
+    var time = data["created_at"];
+    socket.emit('chat message', {
+      msg: msg,
+      receiver_id: receiver_id,
+      sender_id: sender_id,
+      sender_type: sender_type,
+      time: time
+    });
   });
 }
 function registerUser(sender_id) {
@@ -6900,14 +7075,16 @@ function registerUser(sender_id) {
 }
 
 // サーバーからのメッセージを受信
-socket.on('chat message', function (msg, sender_type, sender_id) {
+socket.on('chat message', function (msg, sender_type, sender_id, time) {
+  alert("msg: ".concat(msg, " \n\n sender_type: ").concat(sender_type, "  \n\nsender_id: ").concat(sender_id, " \n\n time: ").concat(time));
   console.log({
     "msg": msg,
     "sender_type": sender_type,
-    "sender_id": sender_id
+    "sender_id": sender_id,
+    "created_at": time
   });
   console.log("wowowowwowow");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_user", sender_type, msg, "user", "");
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_user", sender_type, msg, "user", "", time);
 });
 
 //   formからメッセージを送信する
@@ -6925,6 +7102,19 @@ document.getElementById("js_chat_form").addEventListener("submit", function (e) 
 });
 (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.changeTextareaHeight)();
 (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.disableSubmitBtn)();
+
+// チャットを開いたときに一番下までスクロールさせる
+var scroll_el = document.querySelector(".chat__message-main");
+scroll_el.scrollTop = scroll_el.scrollHeight;
+
+// ハートビートを送信する関数
+function sendHeartbeat() {
+  console.log('Sending heartbeat');
+  socket.emit('heartbeat');
+}
+
+// 30秒ごとにハートビートを送信
+setInterval(sendHeartbeat, 10000);
 })();
 
 /******/ })()

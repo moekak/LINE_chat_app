@@ -59,9 +59,12 @@ class AdminMessageController extends Controller
             $validated = $request->validated();
             $validated["type"]= "admin";
     
-            AdminMessage::create($validated);
+            $adminMessage = AdminMessage::create($validated);
+            $createdAt = $adminMessage->created_at->format('H:i');
+            $message_id = $adminMessage->id;
     
-            return response()->json(['message' => 'Message saved successfully'], 200);
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
+
         } catch (\Exception $e) {
             // エラーが発生した場合にエラーメッセージを返す
             return response()->json(['error' => $e->getMessage()], 500);

@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength } from './module/component/append.js';
+import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength, updateMessageTime, updateUserDataElement } from './module/component/append.js';
 import { fetchPostOperation } from './module/util/fetch.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 
@@ -24,6 +24,7 @@ document.addEventListener("visibilitychange", function() {
   });
   
   function checkOrReconnectSocket() {
+        console.log("Socket.IOの現在の接続状態:", socket.connected);
       if (!socket.connected) {
           console.log("Socket.IOは接続されていません。再接続を試みます。");
           socket.connect();
@@ -56,7 +57,6 @@ const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-      socket.emit('chat message', {msg, receiver_id,sender_id, sender_type});
       const data = {
             content:msg2,
             admin_id: sender_id,
@@ -83,7 +83,14 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
               return response.json();
       })
       .then((data)=>{
-            console.log(data);
+
+        console.log(data);
+        console.log("22222222222222222222222222222222222222222");
+        
+        
+        const time = data["created_at"]
+        const message_id = data["message_id"]
+        socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id});
       })
   }
 
@@ -94,15 +101,42 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   }
   
   // サーバーからのメッセージを受信
-  socket.on('chat message', function (msg, sender_type, sender_id) {
+  socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
+    console.log("received data");
+    
       console.log({
             "msg" : msg,
             "sender_type": sender_type,
-            "sender_id" : sender_id
+            "sender_id" : sender_id,
+            "receiver_id": receiver_id,
+            "created_at": time,
+            "message_id": message_id
       });
-      appendDiv("js_append_admin", sender_type, msg, "admin", sender_id)
-      displayMessage(sender_id, msg)
+      appendDiv("js_append_admin", sender_type, msg, "admin", sender_id, time)
+      updateMessageTime(time, sender_id, sender_type, receiver_id)
+
+      if(sender_type == "user"){
+        console.log(sender_id + "admnChat.js");
+        
+        updateUserDataElement(sender_id, receiver_id, msg, time, message_id, sender_id)
+      }
+      
+      displayMessage(sender_id, msg, sender_type, receiver_id)
+      
       increateMessageCount(sender_id, sender_type)
+
+      const data = {
+        "message_id": message_id,
+        "admin_id": receiver_id,
+        "chat_user_id": sender_id
+      }
+
+
+      if(sender_id == document.getElementById("js_chatuser_id").value){
+        fetchPostOperation(data, "/api/messages/update")
+      }
+      
+
   });
 
 
@@ -144,3 +178,22 @@ chat_btns.forEach((btn)=>{
             
       })
 })
+
+
+
+// チャットを開いたときに一番下までスクロールさせる
+const scroll_el = document.querySelector(".chat__message-main")
+scroll_el.scrollTop = scroll_el.scrollHeight
+
+
+
+
+
+// ハートビートを送信する関数
+function sendHeartbeat() {
+    console.log('Sending heartbeat');
+    socket.emit('heartbeat');
+}
+
+// 30秒ごとにハートビートを送信
+setInterval(sendHeartbeat, 10000);

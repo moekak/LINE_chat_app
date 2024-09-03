@@ -11,3 +11,5 @@ use App\Http\Controllers\YourController;
 // ルート定義の例
 Route::post('/messages', [AdminMessageController::class, 'update']);
 Route::post("/user/messages", [UserMessageController::class, "update"]);
+Route::post("/messages/update", [UserMessageController::class, "updateMessageRead"]);
+Route::get("/userData/{sender_id}", [UserMessageController::class, "getUserData"]);

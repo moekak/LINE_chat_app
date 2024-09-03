@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminMessage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
+use App\Models\MessageReadUser;
 use App\Models\UserMessage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Number;
 
 class ChatController extends Controller
 {
@@ -17,8 +19,22 @@ class ChatController extends Controller
      */
     public function index($id, $account_id)
     {   
+        $latestMessage = UserMessage::OrderBy("created_at", "desc")->where("user_id", $account_id)->where("admin_id", $id)->first();
 
+        if($latestMessage !== null){
+              $message_read_data = [
+                "message_id"=> $latestMessage->id,
+                "chat_user_id" => $account_id,
+                "admin_id" => $id,
+                "read_at" => Carbon::now()
+            ];
 
+            MessageReadUser::create($message_read_data);
+        }
+      
+
+    
+        
         // ユーザー情報を取り出す
         $chat_user = ChatUser::where("id", $account_id)->first();
         // 最新のメッセージを保持する配列
@@ -27,7 +43,7 @@ class ChatController extends Controller
         $users_info = ChatUser::where("account_id", $id)->get();
 
         foreach($users_info as $user){
-            $userMessages = UserMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
+            $userMessages = UserMessage::where("user_id", $user->id)->where("admin_id", $id)->orderBy("created_at", "desc")->get();
             $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
 
             if(count($userMessages) > 0 || count($adminMessages) > 0){
@@ -47,9 +63,24 @@ class ChatController extends Controller
             });
             foreach($latestMessages as $index => $message){
                 $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
-                $mergedData[$index]["message"] = $message->content;
+                $mergedData[$index]["message"] = $message;
+
+                $message_read = MessageReadUser::where("admin_id", $message->admin_id)->where("chat_user_id", $message->user_id)->orderBy("created_at", "desc")->first(["message_id"]);
+
+                if($message_read== null){
+                    $mergedData[$index]["count"] = UserMessage::where("user_id", $account_id)->where("admin_id", $id)->count();
+                }else if($message_read->message_id == $message->id){
+                    $mergedData[$index]["count"] = 0;
+                }else{
+                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('id', '>', $message_read->message_id)->count();
+                }
+
+    
+                
             }
+   
         }
+
 
         $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $account_id)->get();
         $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $account_id)->get();

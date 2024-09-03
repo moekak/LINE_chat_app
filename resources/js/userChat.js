@@ -16,13 +16,16 @@ let socket = io('https://line-chat.tokyo:3000', {
 // ページの可視性が変更されたときのイベントリスナー
 document.addEventListener("visibilitychange", function() {
       if (document.visibilityState === 'visible') {
-          console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
-          checkOrReconnectSocket();
+            alert("ページがアクティブです。Socket.IO接続を確認または再接続します。")
+            console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
+            checkOrReconnectSocket();
       }
   });
   
   function checkOrReconnectSocket() {
+    alert(`Socket.IOの現在の接続状態:",${socket.connected} `);
       if (!socket.connected) {
+            alert("Socket.IOは接続されていません。再接続を試みます。")
           console.log("Socket.IOは接続されていません。再接続を試みます。");
           socket.connect();
       }
@@ -53,7 +56,6 @@ const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-    socket.emit('chat message', {msg, receiver_id, sender_id,sender_type});
       const data = {
             content:msg2,
             user_id: sender_id,
@@ -61,6 +63,8 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
       }
 
     
+      console.log(data);
+      
       fetch("/api/user/messages", {
             method: "POST",
             headers: {
@@ -81,6 +85,11 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
       })
       .then((data)=>{
             console.log(data);
+            const time = data["created_at"]
+            const message_id = data["message_id"]
+            
+            socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id});
+
       })
   }
 
@@ -90,14 +99,16 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   }
   
   // サーバーからのメッセージを受信
-  socket.on('chat message', function (msg, sender_type, sender_id) {
+  socket.on('chat message', function (msg, sender_type, sender_id, time) {
+    alert(`msg: ${msg} \n\n sender_type: ${sender_type}  \n\nsender_id: ${sender_id} \n\n time: ${time}`)
       console.log({
             "msg" : msg,
             "sender_type": sender_type,
-            "sender_id" : sender_id
+            "sender_id" : sender_id,
+            "created_at": time
       });
       console.log("wowowowwowow");
-      appendDiv("js_append_user", sender_type, msg, "user", "")
+      appendDiv("js_append_user", sender_type, msg, "user", "", time)
   });
 
 
@@ -122,3 +133,21 @@ document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
 
 changeTextareaHeight()
 disableSubmitBtn()
+
+
+
+
+// チャットを開いたときに一番下までスクロールさせる
+const scroll_el = document.querySelector(".chat__message-main")
+scroll_el.scrollTop = scroll_el.scrollHeight
+
+
+
+// ハートビートを送信する関数
+function sendHeartbeat() {
+    console.log('Sending heartbeat');
+    socket.emit('heartbeat');
+}
+
+// 30秒ごとにハートビートを送信
+setInterval(sendHeartbeat, 10000);

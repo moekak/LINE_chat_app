@@ -13,18 +13,24 @@
       </div>
       <div class="chat__users-list-area">
             <input type="text" class="chat__users-list-area-input" placeholder="Search">
-            <div class="chat__users-list-container">
+            <div class="chat__users-list-container" id="js_chatUser_wrapper">
                        @foreach ($mergedData as $data)
                               <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
                                     <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
                                     <div class="chat_users-list-flex">
                                           <div class="chat_users-list-box"> 
+                                                @php
+                                                
+                                                @endphp
                                                 <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
-                                                <small class="chat_time">12:30</small>
+                                                <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["message"]->created_at->format("H:i")}}</small>
                                           </div>  
                                           <div class="chat__users-list-msg">
-                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]}}</small>
-                                                <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display: none"></div>
+                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content}}</small>
+                                                @php
+                                                    $count_style = $data["count"] <= 0 ? "none": "flex";
+                                                @endphp
+                                                <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display:{{$count_style}}">{{$data["count"]}}</div>
                                           </div>
                                     </div>
                               </div>
@@ -53,6 +59,8 @@
 
 @section('chat-message')
 <div class="chat__message-top">
+      <input type="hidden" value="{{$chat_user->id}}" id="js_chatuser_id">
+      <input type="hidden" value="{{$chat_user->user_picture}}" id="js_user_icon_img">
       <img src="{{$chat_user->user_picture}}" alt="" class="chat_users-icon"> 
       <p class="chat_message_name">{{$chat_user->line_name}}</p>
 </div>
@@ -67,7 +75,7 @@
                               <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
                                     
-                                    <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                    <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->id}}">{!! nl2br(e($message->content)) !!}</div>
                                     <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                               </div> 
                         </div>
@@ -75,7 +83,7 @@
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
                                           <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                          <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                          <div class="chat__message-box-right chat-margin5" >{!! nl2br(e($message->content)) !!}</div>
                                           
                                     </div>
                               </div>

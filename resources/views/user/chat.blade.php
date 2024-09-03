@@ -22,6 +22,7 @@
 
 
 @section('chat-message')
+<input type="hidden" value="{{$admin_info->user_picture}}" id="js_user_icon_img">
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_user">
             @foreach ($group_message as $date => $messages)
