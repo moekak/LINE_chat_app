@@ -114,9 +114,11 @@ io.on('connection', (socket) => {
    
 
     // ソケットの切断処理
-    socket.on('disconnect', () => {
-        console.log(`User ${socket.userId} disconnected`);
-        userSockets.delete(socket.userId); 
+    socket.on('disconnect', (reason) => {
+        console.log(`User ${socket.userId} disconnected due to ${reason}`);
+        // クライアントに切断理由を送信
+        socket.broadcast.emit('userDisconnected', { userId: socket.id, reason });
+        userSockets.delete(socket.userId);
     });
 });
 

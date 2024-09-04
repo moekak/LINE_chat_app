@@ -24,7 +24,7 @@ document.addEventListener("visibilitychange", function() {
   
   function checkOrReconnectSocket() {
     alert(`Socket.IOの現在の接続状態:",${socket.connected} `);
-    const sender_id = document.getElementById("js_sender_id").value
+   
       if (!socket.connected) {
             alert("Socket.IOは接続されていません。再接続を試みます。")
             alert(sender_id)
@@ -49,14 +49,20 @@ socket.on('reconnect_attempt', () => {
   
   // サーバーから切断されたときのイベント
   socket.on('disconnect', (reason) => {
-      if (reason === 'io server disconnect') {
-          // サーバー側で接続が強制切断された場合
-          console.log('Disconnected by the server');
-      } else {
-          // その他の理由で切断された場合
-          console.log('Disconnected:', reason);
-      }
-  });
+    alert(`Disconnected from the server due to ${reason}`);
+    // ここで接続状態を更新
+    // 再接続を試みる
+    socket.connect();
+    registerUser(sender_id)
+});
+
+socket.on('userDisconnected', (data) => {
+    alert(`User ${data.userId} disconnected due to ${data.reason}`);
+    if (data.userId === socket.id) {
+        // 自分自身の切断処理
+        alert('This is me, updating my connection status.');
+    }
+});
 const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
@@ -124,7 +130,6 @@ document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
       const msg = document.getElementById("js_msg").value
       const formattedMsg = msg.replace(/\n/g, '<br>');
       const receiver_id = document.getElementById("js_receiver_id").value
-      const sender_id = document.getElementById("js_sender_id").value
       const sender_type = document.getElementById("js_sender_type").value
 
       
