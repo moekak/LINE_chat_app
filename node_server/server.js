@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', (reason) => {
         console.log(`User ${socket.userId} disconnected due to ${reason}`);
         // クライアントに切断理由を送信
-        socket.broadcast.emit('userDisconnected', { userId: socket.id, reason });
+        socket.broadcast.emit('userDisconnected', { userId: socket.userId, reason });
         userSockets.delete(socket.userId);
     });
 });

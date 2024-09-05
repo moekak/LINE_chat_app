@@ -19,4 +19,4 @@ Route::post("/user/messages", [UserMessageController::class, "store"]);
 // ユーザーのメッセージに既読をつける
 Route::post("/user/messages/read", [MessageReadUserController::class, "store"]);
 // 特定のユーザー情報を取得する
-Route::get("/users/{user_id}", [ChatUserController::class, "getUserData"]);
+Route::get("/users/{user_id}/{receiver_id}", [ChatUserController::class, "getUserData"]);

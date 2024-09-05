@@ -55,8 +55,14 @@ class ChatController extends Controller
             if(count($userMessages) > 0 || count($adminMessages) > 0){
                 $allMessages = $userMessages->merge($adminMessages)->sortByDesc('created_at');
                 $latestMessages[] = $allMessages->first();
+
             }
             
+        }
+
+        // 最新メッセージの時間のフォーマット
+        foreach($latestMessages as $message){
+            $message["time"] = $messageService->formatTime($message->created_at);
         }
 
         $mergedData = [];
@@ -70,19 +76,19 @@ class ChatController extends Controller
             foreach($latestMessages as $index => $message){
                 $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
                 $mergedData[$index]["message"] = $message;
+                $mergedData[$index]["formatted_time"] = $message->time;
 
                 $message_read = MessageReadUser::where("admin_id", $message->admin_id)->where("chat_user_id", $message->user_id)->orderBy("created_at", "desc")->first(["message_id"]);
-
+        
                 if($message_read== null){
-                    $mergedData[$index]["count"] = UserMessage::where("user_id", $account_id)->where("admin_id", $id)->count();
+  
+                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->count();
                 }else if($message_read->message_id == $message->id){
                     $mergedData[$index]["count"] = 0;
                 }else{
                     $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('id', '>', $message_read->message_id)->count();
                 }
-
-    
-                
+     
             }
    
         }

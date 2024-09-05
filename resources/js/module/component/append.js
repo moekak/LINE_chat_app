@@ -1,4 +1,5 @@
 import { fetchGetOperation, fetchPostOperation } from "../util/fetch";
+import { chatNavigator } from "./chatNavigation.js";
 
 export const appendDiv = (className, type, msg, file_name, sender_id, time) => {
     const parentElement = document.querySelector(`.${className}`);
@@ -170,8 +171,8 @@ export const updateMessageTime = (
 
 const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
     return new Promise((resolve) => {
-        console.log(sender_id);
-
+        console.log("wowowowww");
+        
         const parentNewDiv = document.createElement("div");
         parentNewDiv.classList.add("chat__users-list-wraper");
         parentNewDiv.classList.add("js_chat_wrapper");
@@ -179,12 +180,15 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
         parentNewDiv.setAttribute("data-admin-id", receiver_id);
         parentNewDiv.style.marginTop = "0";
 
-        fetchGetOperation(`/api/users/${sender_id}`).then((res) => {
-            console.log(res);
+        
+
+
+        fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`).then((res) => {
+            console.log(res["totalCount"]);
             // アイコン
             const img = document.createElement("img");
             img.classList.add("chat_users-icon");
-            img.setAttribute("src", res["user_picture"]);
+            img.setAttribute("src", res["userInfo"]["user_picture"]);
             img.setAttribute("alt", "");
 
             //
@@ -195,7 +199,7 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
             grandChildDiv1.classList.add("chat_users-list-box");
 
             const p = document.createElement("p");
-            p.innerHTML = res["line_name"];
+            p.innerHTML = res["userInfo"]["line_name"];
             p.classList.add("chat_name_txt");
 
             const small = document.createElement("small");
@@ -222,8 +226,14 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
             countDiv.classList.add("message_count");
             countDiv.classList.add("js_mesage_count");
             countDiv.setAttribute("data-id", id);
-            countDiv.style.display = "none";
-            countDiv.innerHTML = 0;
+            if(document.getElementById("js_chatuser_id").value == sender_id){
+                countDiv.style.display = "none";
+                countDiv.innerHTML = 0;
+            }else{
+                countDiv.style.display = "flex";
+                countDiv.innerHTML = res["totalCount"];
+            }
+            
 
             // append
             grandChildDiv2.appendChild(smalltag);
@@ -253,23 +263,8 @@ export const updateUserDataElement = (
     const wrappers = document.querySelectorAll(".js_chat_wrapper");
     const chat_wrapper = document.getElementById("js_chatUser_wrapper");
     let firstChild = chat_wrapper.firstChild;
-
-    console.log(firstChild);
-
-    
-
-    // createDivElement(id, receiver_id, msg, time, message_id, sender_id)
-    //     .then((wrapper) => {
-    //         if (firstChild) {
-    //             chat_wrapper.insertBefore(wrapper, firstChild);
-    //         } else {
-    //             chat_wrapper.appendChild(wrapper);
-    //         }
-    //     })
-    //     .catch(error => console.error("Failed to create element:", error));
- 
-
     let hasDiv = false;
+
     wrappers.forEach((wrapper) => {
         let user_id = wrapper.getAttribute("data-id");
 
@@ -284,15 +279,7 @@ export const updateUserDataElement = (
             }
         }
 
-        const chat_btns = document.querySelectorAll(".js_chat_wrapper");
-
-        chat_btns.forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-                let id = e.currentTarget.getAttribute("data-id");
-                let admin_id = e.currentTarget.getAttribute("data-admin-id");
-                window.location.href = `/${admin_id}/${id}`;
-            });
-        });
+        chatNavigator()
     });
 
     console.log(hasDiv);
@@ -300,9 +287,8 @@ export const updateUserDataElement = (
     if (!hasDiv && firstChild !== undefined) {
         createDivElement(id, receiver_id, msg, time, message_id, sender_id)
         .then((wrapper) => {
-         
             chat_wrapper.insertBefore(wrapper, firstChild);
-           
+            chatNavigator()
         })
         .catch(error => console.error("Failed to create element:", error));
     }

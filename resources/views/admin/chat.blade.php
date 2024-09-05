@@ -23,7 +23,7 @@
                                                 
                                                 @endphp
                                                 <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
-                                                <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["message"]->created_at->format("H:i")}}</small>
+                                                <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
                                           </div>  
                                           <div class="chat__users-list-msg">
                                                 <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content}}</small>
