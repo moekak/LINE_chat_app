@@ -1,5 +1,6 @@
 import { fetchPostOperation } from "../util/fetch";
 
+// 特定のチャットユーザー画面を開く
 export const chatNavigator = () =>{
       const chat_btns = document.querySelectorAll(".js_chat_wrapper");
 
@@ -12,9 +13,12 @@ export const chatNavigator = () =>{
       });
 }
 
-export const fileOperation = (socket, sender_id)=>{
+export const fileOperation = (socket, sender_id, url, user_type)=>{
    const fileInput = document.getElementById("fileInput")
    fileInput.addEventListener("change", (e)=>{
+
+    console.log("moeka");
+    
         const file = fileInput.files[0]
         const reader = new FileReader();
         const maxSizeMB = 5;
@@ -46,19 +50,30 @@ export const fileOperation = (socket, sender_id)=>{
 
             const receiver_id = document.getElementById("js_receiver_id").value
             const sender_type = document.getElementById("js_sender_type").value
+            let data = {}
 
-            const data = {
-                "user_id" :  sender_id,
-                "admin_id":receiver_id,
-                "type" : sender_type,
-                "image":resizedImage
+            if(user_type == "user"){
+                data = {
+                    "user_id" :  sender_id,
+                    "admin_id":receiver_id,
+                    "type" : sender_type,
+                    "image":resizedImage
+                }
+            }else if(user_type == "admin"){
+                data = {
+                    "user_id" :  receiver_id,
+                    "admin_id":sender_id,
+                    "type" : sender_type,
+                    "image":resizedImage
+                }
             }
-                
+            console.log(url);
             
-
-            fetchPostOperation(data, "/api/user/messages/image")
+            fetchPostOperation(data, url)
             .then((res)=>{
+
                 console.log(res);
+                
                 const time = res["created_at"]
                 const message_id = res["message_id"]
                 // // ここでサーバーに送信

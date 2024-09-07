@@ -14,6 +14,7 @@ use App\Http\Controllers\YourController;
 
 // 管理者のメッセージをデータースに保存する
 Route::post('/admin/messages', [AdminMessageController::class, 'store']);
+Route::post("/admin/messages/image", [AdminMessageController::class, "storeImage"]);
 // ユーザーのメッセージをデータースに保存する
 Route::post("/user/messages", [UserMessageController::class, "store"]);
 Route::post("/user/messages/image", [UserMessageController::class, "storeImage"]);

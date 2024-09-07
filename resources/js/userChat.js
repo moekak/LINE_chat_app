@@ -109,20 +109,11 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type, sender_id, time) {
-    alert(`msg: ${msg} \n\n sender_type: ${sender_type}  \n\nsender_id: ${sender_id} \n\n time: ${time}`)
-      console.log({
-            "msg" : msg,
-            "sender_type": sender_type,
-            "sender_id" : sender_id,
-            "created_at": time
-      });
       appendDiv("js_append_user", sender_type, msg, "user", "", time, "text")
   });
 
 
   socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
-    console.log(resizedImage);
-    
     appendDiv("js_append_user", sender_type, resizedImage, "user", "", time, "image")
       
   })
@@ -167,5 +158,5 @@ function sendHeartbeat() {
 // 30秒ごとにハートビートを送信
 setInterval(sendHeartbeat, 10000);
 
-
-fileOperation(socket, sender_id)
+const user_type= "user"
+fileOperation(socket, sender_id, "/api/user/messages/image", user_type)

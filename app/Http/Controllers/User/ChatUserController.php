@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class ChatUserController extends Controller
 {
+
+    // チャットユーザーのデータを取得するAPI
     public function getUserData($id, $admin_id){
         try{
             $data = ChatUser::findOrFail($id);

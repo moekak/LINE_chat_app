@@ -3,12 +3,11 @@
 namespace App\Services;
 
 use App\Models\AdminMessage;
-use App\Models\MessageReadUser;
+use App\Models\AdminMessageImage;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\VarDumper\Caster\ClassStub;
+
 
 class MessageService{
       public function formatDate($createdAt){
@@ -99,7 +98,7 @@ class MessageService{
 
 
 
-      //   管理者メッセージとユーザーメッセーを取り出し、一つの配列に統合して、created_at 日付で昇順でソートする
+      //管理者メッセージとユーザーメッセーを取り出し、一つの配列に統合して、created_at 日付で昇順でソートする
       public function fetchAdminAndUserMessages($admin_id, $user_id) {
             $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
@@ -117,13 +116,52 @@ class MessageService{
       }
 
 
-      public function formatMessage($messages){
-            $groupMessages = $messages->groupBy(function($message){
-                return $this->formatDate($message->created_at);
-            });
-        
-            return $groupMessages;
-      }
+    //取得したメッセージを日付順にグループ化する(最新順)
+    public function formatMessage($messages){
+        $groupMessages = $messages->groupBy(function($message){
+            return $this->formatDate($message->created_at);
+        });
+    
+        return $groupMessages;
+    }
 
+
+    public function getLatesetUserMessageID($user_id, $admin_id){
+        $current_message_id = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->orderBy("created_at", "desc")->value("message_id");
+        $current_message_image_id = UserMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->orderBy("created_at", "desc")->value("message_id");
+        $latest_message_id = 0;
+
+        if ($current_message_id !== null && $current_message_image_id !== null) {
+            // 両方の値がある場合、大きい方を取得
+            $latest_message_id = max($current_message_id, $current_message_image_id);
+        } elseif ($current_message_id !== null) {
+            // `UserMessage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_id;
+        } elseif ($current_message_image_id !== null) {
+            // `UserMessageImage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_image_id;
+        }
+
+        return $latest_message_id;
+    }
+
+    public function getLatesetAdminMessageID($user_id, $admin_id){
+        $current_message_id = AdminMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->orderBy("created_at", "desc")->value("message_id");
+        $current_message_image_id = AdminMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->orderBy("created_at", "desc")->value("message_id");
+        $latest_message_id = 0;
+
+        if ($current_message_id !== null && $current_message_image_id !== null) {
+            // 両方の値がある場合、大きい方を取得
+            $latest_message_id = max($current_message_id, $current_message_image_id);
+        } elseif ($current_message_id !== null) {
+            // `UserMessage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_id;
+        } elseif ($current_message_image_id !== null) {
+            // `UserMessageImage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_image_id;
+        }
+
+        return $latest_message_id;
+    }
 
 }

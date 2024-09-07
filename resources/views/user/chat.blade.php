@@ -41,7 +41,7 @@
                                 </div> 
                         </div>
                         @else
-                                <div class="chat__message-container-right">
+                              <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
                                           <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                                           @if ($message->content)
@@ -50,10 +50,10 @@
                                                 <img src="{{ asset('storage/images/' . $message->image) }}" alt="" class="chat-margin5">
 
                                           @endif
-                                            
-                                            
+                                                
+                                                
                                     </div>
-                                </div>
+                              </div>
                         @endif
                     
                     @endforeach

@@ -10,6 +10,8 @@ use Illuminate\Support\Carbon;
 
 class MessageReadUserController extends Controller
 {
+
+    // 既読管理のテーブルに最新のメッセージIDを挿入する
     public function store(MessageReadUserRequest $request){
         try{
             $validated = $request->validated();

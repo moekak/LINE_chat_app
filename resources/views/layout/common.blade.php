@@ -13,9 +13,7 @@
             <main>
                   @yield('user-list')
                   <section class="chat__message-area">
-                      
                         @yield('chat-message')
-                        
                   </section>
             </main>
             

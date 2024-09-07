@@ -3,40 +3,32 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminMessageImageRequest;
 use App\Http\Requests\AdminMessageRequest;
 use App\Models\AdminMessage;
-use Illuminate\Http\Request;
+use App\Models\AdminMessageImage;
+use App\Services\ImageService;
+use App\Services\MessageService;
+use Illuminate\Support\Facades\Log;
 
 class AdminMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // 管理者メッセージをデータベースに保存し、作成日時とmessage_idを返すAPI
+    // リクエストで受け取ったデータをバリデート後、管理者メッセージとして保存
     public function store(AdminMessageRequest $request)
     {
         try {
+
+            $messageService = new MessageService();
             $validated = $request->validated();
             $validated["type"]= "admin";
+            $latestMessageID = $messageService->getLatesetAdminMessageID($validated["user_id"], $validated["admin_id"]);
+            $validated["message_id"] = $latestMessageID + 1;
     
             $adminMessage = AdminMessage::create($validated);
             $createdAt = $adminMessage->created_at->format('H:i');
-            $message_id = $adminMessage->id;
+            $message_id = $adminMessage->message_id;
     
             return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
 
@@ -46,36 +38,50 @@ class AdminMessageController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    // 画像をデータベースに保存する
+    public function storeImage(AdminMessageImageRequest $request){
+        try{
+            
+            $messageService = new MessageService();
+            $imageService   = new ImageService();
+            
+            $validated      = $request->validated();
+            $base64Image    = $validated["image"];
+            $imageName      = $imageService ->saveBase64Image($base64Image);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(AdminMessageRequest $request)
-    {
+            // エラーが起きたら早期リターンさせる
+            // if(isset($imageName["error"])){
+            //     return response()->json(["error" => $imageName["error"]]);
+            // }
+           
+            
+            $data = [
+                "user_id" => $validated["user_id"],
+                "admin_id" => $validated["admin_id"],
+                "message_id" => $messageService->getLatesetAdminMessageID($validated["user_id"], $validated["admin_id"]) + 1,
+                "type" => "admin",
+                "image" => $imageName
+            ];
 
- 
-    }
+            
+            // ユーザーチャット画像をデーターベースに保存する
+            $adminMessageImage = AdminMessageImage::create($data);
+            $createdAt = $adminMessageImage->created_at->format('H:i');
+            $message_id = $adminMessageImage->message_id;
+    
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            
+        } catch (\Exception $e) {
+            Log::debug("aa");
+            // エラーが発生した場合にエラーメッセージを返す
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()  // スタックトレースの文字列
+            ], 500);
+        }
     }
 }

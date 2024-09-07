@@ -1,39 +1,38 @@
 @extends('layout.common')
 
+{{-- チャット画面左側のチャットユーザー一覧 --}}
 @section('user-list')
 <section class="chat__users-list">
+      {{-- 管理者アカウントの情報を表示 --}}
       <div class="chat__users-list-top">
-            
             <img src="{{$admin_info->user_picture}}" alt="" class="chat_users-icon">  
             <div class="chat__users-list-top-detail">
                   <p class="user_name_txt">{{$admin_info->account_name}}</p>
                   <small class="user_id_txt">{{$admin_info->account_id}}</small>
             </div> 
-         
       </div>
+      {{-- チャットユーザーアカウントのリアルタイム表示 --}}
       <div class="chat__users-list-area">
             <input type="text" class="chat__users-list-area-input" placeholder="Search">
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
-                       @foreach ($mergedData as $data)
-                              <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
-                                    <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
-                                    <div class="chat_users-list-flex">
-                                          <div class="chat_users-list-box"> 
-                                                <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
-                                                <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
-                                          </div>  
-                                          <div class="chat__users-list-msg">
-                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
-                                                @php
-                                                    $count_style = $data["count"] <= 0 ? "none": "flex";
-                                                @endphp
-                                                <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display:{{$count_style}}">{{$data["count"]}}</div>
-                                          </div>
+                  @foreach ($mergedData as $data)
+                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
+                              <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
+                              <div class="chat_users-list-flex">
+                                    <div class="chat_users-list-box"> 
+                                          <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
+                                          <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
+                                    </div>  
+                                    <div class="chat__users-list-msg">
+                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
+                                          @php
+                                                $count_style = $data["count"] <= 0 ? "none": "flex";
+                                          @endphp
+                                          <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display:{{$count_style}}">{{$data["count"]}}</div>
                                     </div>
                               </div>
-                        @endforeach
-              
-                 
+                        </div>
+                  @endforeach
             </div>
       </div>
 </section> 
@@ -77,8 +76,6 @@
                                           <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->message_id}}">
                                                 <img src="{{ asset('storage/images/' . $message->image) }}">
                                           </div>
-                                          
-
                                     @endif
                                     <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                               </div> 
@@ -102,10 +99,9 @@
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
             <div class="attachment_container relative">
-                  <input type="file" name="image"  class="image" accept="image/*" capture="environment">
-                  <img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon">
+                  <label for="fileInput"><img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon js_attachment_icon"></label>
+                  <input type="file" name="image" class="hidden" accept="image/*" id="fileInput" style="display: none">
             </div>
-            
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
           

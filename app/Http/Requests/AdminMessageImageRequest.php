@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MessageReadUserRequest extends FormRequest
+class AdminMessageImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,9 @@ class MessageReadUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "message_id"=> ["required", "integer"],
             "admin_id" => ["required", "integer", "exists:line_accounts,id"],
-            "chat_user_id" => ["required", "integer", "exists:chat_users,id"],
+            "user_id" => ["required", "integer", "exists:chat_users,id"],
+            "image" => ["required", "string"]
         ];
     }
 }

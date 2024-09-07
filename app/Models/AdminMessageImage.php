@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AdminMessage extends Model
+class AdminMessageImage extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
-        "admin_id",
+    protected $fillable = [
         "user_id",
-        "content",
+        "admin_id",
+        "message_id",
         "type",
-        "message_id"
+        "image"
     ];
-   
 }

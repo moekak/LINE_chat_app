@@ -100,6 +100,7 @@ io.on('connection', (socket) => {
         console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
         const recipientSocket  = userSockets.get(receiver_id);
         const senderSocket = userSockets.get(sender_id);
+        // 受信者のソケットが存在する場合
         if(recipientSocket){
             recipientSocket.emit("chat message", msg, sender_type, sender_id, time, receiver_id, message_id)
         }
@@ -109,24 +110,20 @@ io.on('connection', (socket) => {
         }
 
     });
+    
    
-
+    // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
         const {resizedImage, receiver_id, sender_id, sender_type, time, message_id} = data
         const recipientSocket  = userSockets.get(receiver_id);
         const senderSocket = userSockets.get(sender_id);
 
-        console.log(data);
-        
-
-
+        // 受信者のソケットが存在する場合
         if(recipientSocket){
-            
             recipientSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
         }
          // 送信者のソケットが存在する場合
          if (senderSocket) {
-            
             senderSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
         }
     })
