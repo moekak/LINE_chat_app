@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import { appendDiv } from './module/component/append.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
+import { fileOperation } from './module/component/uiController.js';
 
 
 // Socket.IOサーバーへの接続を設定
@@ -72,9 +73,6 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             user_id: sender_id,
             admin_id: receiver_id
       }
-
-    
-      console.log(data);
       
       fetch("/api/user/messages", {
             method: "POST",
@@ -118,9 +116,16 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             "sender_id" : sender_id,
             "created_at": time
       });
-      console.log("wowowowwowow");
-      appendDiv("js_append_user", sender_type, msg, "user", "", time)
+      appendDiv("js_append_user", sender_type, msg, "user", "", time, "text")
   });
+
+
+  socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
+    console.log(resizedImage);
+    
+    appendDiv("js_append_user", sender_type, resizedImage, "user", "", time, "image")
+      
+  })
 
 
 //   formからメッセージを送信する
@@ -161,3 +166,6 @@ function sendHeartbeat() {
 
 // 30秒ごとにハートビートを送信
 setInterval(sendHeartbeat, 10000);
+
+
+fileOperation(socket, sender_id)

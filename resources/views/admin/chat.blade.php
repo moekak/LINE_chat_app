@@ -19,14 +19,11 @@
                                     <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
                                     <div class="chat_users-list-flex">
                                           <div class="chat_users-list-box"> 
-                                                @php
-                                                
-                                                @endphp
                                                 <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
                                                 <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
                                           </div>  
                                           <div class="chat__users-list-msg">
-                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content}}</small>
+                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
                                                 @php
                                                     $count_style = $data["count"] <= 0 ? "none": "flex";
                                                 @endphp
@@ -74,8 +71,15 @@
                         <div class="chat__message-container-left">
                               <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
-                                    
-                                    <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->id}}">{!! nl2br(e($message->content)) !!}</div>
+                                    @if ($message->content)
+                                          <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->message_id}}">{!! nl2br(e($message->content)) !!}</div>
+                                    @elseif($message->image)
+                                          <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->message_id}}">
+                                                <img src="{{ asset('storage/images/' . $message->image) }}">
+                                          </div>
+                                          
+
+                                    @endif
                                     <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                               </div> 
                         </div>
@@ -97,7 +101,11 @@
 </div>
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
-            <img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon">
+            <div class="attachment_container relative">
+                  <input type="file" name="image"  class="image" accept="image/*" capture="environment">
+                  <img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon">
+            </div>
+            
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
           

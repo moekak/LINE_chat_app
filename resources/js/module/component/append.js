@@ -1,31 +1,36 @@
 import { fetchGetOperation, fetchPostOperation } from "../util/fetch";
-import { chatNavigator } from "./chatNavigation.js";
+import { chatNavigator } from "./uiController.js";
 
-export const appendDiv = (className, type, msg, file_name, sender_id, time) => {
+export const appendDiv = (className, type, msg, file_name, sender_id, time, message_type) => {
     const parentElement = document.querySelector(`.${className}`);
 
     if (type == "admin") {
         if (file_name == "user") {
-            appendLeft(msg, parentElement, time);
+            appendLeft(msg, parentElement, time, message_type);
         } else if (file_name == "admin") {
-            appendRight(msg, parentElement, time);
+            appendRight(msg, parentElement, time, message_type);
         }
     }
 
     if (type == "user") {
         if (file_name == "user") {
-            appendRight(msg, parentElement, time);
+            appendRight(msg, parentElement, time, message_type);
         } else if (
             file_name == "admin" &&
             sender_id == parentElement.getAttribute("data-id")
         ) {
             console.log("ey");
-            appendLeft(msg, parentElement, time);
+            appendLeft(msg, parentElement, time, message_type);
         }
     }
 };
 
-const appendRight = (msg, parentElement, time) => {
+const appendRight = (msg, parentElement, time, message_type) => {
+
+    console.log("appendright");
+    
+
+
     const newFirstDiv = document.createElement("div");
     newFirstDiv.classList.add("chat__message-container-right");
 
@@ -33,11 +38,24 @@ const appendRight = (msg, parentElement, time) => {
     newSecondDiv.classList.add("chat__mesgae-main-right");
 
     const newThirdDiv = document.createElement("div");
-    newThirdDiv.classList.add("chat__message-box-right");
     newThirdDiv.classList.add("chat-margin5");
 
-    const formattedMsg = msg.replace(/\n/g, "<br>");
-    newThirdDiv.innerHTML = formattedMsg;
+    if(message_type == "text"){
+        newThirdDiv.classList.add("chat__message-box-right");
+        const formattedMsg = msg.replace(/\n/g, "<br>");
+        newThirdDiv.innerHTML = formattedMsg;
+    }else{
+        const img = document.createElement("img")
+        img.setAttribute("src",msg);
+        img.setAttribute("alt", "");
+        img.classList.add("chat-margin5")
+        // img.setAttribute("class", "chat_users-icon-message");
+        // img.setAttribute("id", "icon_msg");
+        newThirdDiv.appendChild(img)
+
+        
+    }
+    
 
     const newTimeDiv = document.createElement("div");
     newTimeDiv.classList.add("chat__message-time-txt");
@@ -52,7 +70,7 @@ const appendRight = (msg, parentElement, time) => {
     const scroll_el = document.querySelector(".chat__message-main");
     scroll_el.scrollTop = scroll_el.scrollHeight;
 };
-const appendLeft = (msg, parentElement, time) => {
+const appendLeft = (msg, parentElement, time, message_type) => {
     const newFirstDiv = document.createElement("div");
     newFirstDiv.classList.add("chat__message-container-left");
 
@@ -78,12 +96,22 @@ const appendLeft = (msg, parentElement, time) => {
     newThirdDiv.classList.add("chat__message-box-left");
     newThirdDiv.classList.add("chat-margin5");
 
+    if(message_type == "text"){
+        const formattedMsg = msg.replace(/\n/g, "<br>");
+        newThirdDiv.innerHTML = formattedMsg;
+    }else{
+        const img = document.createElement("img")
+        img.setAttribute("src",msg);
+        img.setAttribute("alt", "");
+        newThirdDiv.appendChild(img)
+    }
+
+
+
     const newTimeDiv = document.createElement("div");
     newTimeDiv.classList.add("chat__message-time-txt");
     newTimeDiv.innerHTML = time;
 
-    const formattedMsg = msg.replace(/\n/g, "<br>");
-    newThirdDiv.innerHTML = formattedMsg;
     newSecondDiv.appendChild(iconMsg);
     newSecondDiv.appendChild(newThirdDiv);
     newSecondDiv.appendChild(newTimeDiv);
@@ -117,13 +145,15 @@ export const increateMessageCount = (sender_id, type) => {
     }
 };
 
-export const displayMessage = (sender_id, msg, sender_type, receiver_id) => {
+export const displayMessage = (sender_id, msg, sender_type, receiver_id, message_type) => {
     const elements = document.querySelectorAll(".js_chatMessage_elment");
     elements.forEach((element) => {
         let id = element.getAttribute("data-id");
         if (sender_type == "user") {
             if (id == sender_id) {
-                element.innerHTML = msg;
+                if (message_type == "text") element.innerHTML = msg;
+                if (message_type == "image") element.innerHTML = "画像が送信されました";
+
             }
             // 管理者からメッセージが送信された場合
         } else {
@@ -169,9 +199,8 @@ export const updateMessageTime = (
     });
 };
 
-const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
+const createDivElement = (id,receiver_id,msg,time,message_id,sender_id,message_type) => {
     return new Promise((resolve) => {
-        console.log("wowowowww");
         
         const parentNewDiv = document.createElement("div");
         parentNewDiv.classList.add("chat__users-list-wraper");
@@ -180,11 +209,7 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
         parentNewDiv.setAttribute("data-admin-id", receiver_id);
         parentNewDiv.style.marginTop = "0";
 
-        
-
-
         fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`).then((res) => {
-            console.log(res["totalCount"]);
             // アイコン
             const img = document.createElement("img");
             img.classList.add("chat_users-icon");
@@ -220,7 +245,8 @@ const createDivElement = (id,receiver_id,msg,time,message_id,sender_id) => {
             smalltag.classList.add("chat_message");
             smalltag.classList.add("js_chatMessage_elment");
             smalltag.setAttribute("data-id", id);
-            smalltag.innerHTML = msg;
+            if(message_type == "text") smalltag.innerHTML = msg;
+            if(message_type == "image") smalltag.innerHTML = "画像が送信されました";
 
             const countDiv = document.createElement("div");
             countDiv.classList.add("message_count");
@@ -256,7 +282,8 @@ export const updateUserDataElement = (
     msg,
     time,
     message_id,
-    sender_id
+    sender_id,
+    message_type
 ) => {
     console.log(sender_id);
 
@@ -285,7 +312,7 @@ export const updateUserDataElement = (
     console.log(hasDiv);
 
     if (!hasDiv && firstChild !== undefined) {
-        createDivElement(id, receiver_id, msg, time, message_id, sender_id)
+        createDivElement(id, receiver_id, msg, time, message_id, sender_id, message_type)
         .then((wrapper) => {
             chat_wrapper.insertBefore(wrapper, firstChild);
             chatNavigator()

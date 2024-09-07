@@ -8,6 +8,7 @@ use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\MessageReadUser;
 use App\Models\UserMessage;
+use App\Models\UserMessageImage;
 use App\Services\MessageService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,12 +25,28 @@ class ChatController extends Controller
         // メッセージサービスクラスの初期化
         $messageService = new MessageService();
         // ユーザーの最新のメッセージを取得する
-        $latestMessage = UserMessage::OrderBy("created_at", "desc")->where("user_id", $account_id)->where("admin_id", $id)->first();
+        $current_message_id = UserMessage::OrderBy("created_at", "desc")->where("user_id", $account_id)->where("admin_id", $id)->first("message_id");
+        $current_message_image_id = UserMessageImage::OrderBy("created_at", "desc")->where("user_id", $account_id)->where("admin_id", $id)->first("message_id");
+
+        $latest_message_id = null;
+
+        if ($current_message_id !== null && $current_message_image_id !== null) {
+            // 両方の値がある場合、大きい方を取得
+            $latest_message_id = max($current_message_id, $current_message_image_id);
+        } elseif ($current_message_id !== null) {
+            // `UserMessage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_id;
+        } elseif ($current_message_image_id !== null) {
+            // `UserMessageImage`のIDがある場合、それを採用
+            $latest_message_id = $current_message_image_id;
+}       
+        // print($latest_message_id);
+        // exit;
 
         // 開いているメッセージを既読にするため、データベースに保存
-        if($latestMessage !== null){
+        if($latest_message_id !== null){
               $message_read_data = [
-                "message_id"=> $latestMessage->id,
+                "message_id"=> intval($latest_message_id["message_id"]),
                 "chat_user_id" => $account_id,
                 "admin_id" => $id,
                 "read_at" => Carbon::now()
@@ -50,12 +67,15 @@ class ChatController extends Controller
 
         foreach($users_info as $user){
             $userMessages = UserMessage::where("user_id", $user->id)->where("admin_id", $id)->orderBy("created_at", "desc")->get();
+            $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
+            $mergedUserMessages =  $userMessages->merge($userMessageImages);
+            $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
+
             $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
 
             if(count($userMessages) > 0 || count($adminMessages) > 0){
-                $allMessages = $userMessages->merge($adminMessages)->sortByDesc('created_at');
+                $allMessages = $sortedUserMessages->merge($adminMessages)->sortByDesc('created_at');
                 $latestMessages[] = $allMessages->first();
-
             }
             
         }
@@ -81,12 +101,12 @@ class ChatController extends Controller
                 $message_read = MessageReadUser::where("admin_id", $message->admin_id)->where("chat_user_id", $message->user_id)->orderBy("created_at", "desc")->first(["message_id"]);
         
                 if($message_read== null){
-  
+
                     $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->count();
-                }else if($message_read->message_id == $message->id){
+                }else if($message_read->message_id == $message->message_id){
                     $mergedData[$index]["count"] = 0;
                 }else{
-                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('id', '>', $message_read->message_id)->count();
+                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('message_id', '>', $message_read->message_id)->count();
                 }
      
             }

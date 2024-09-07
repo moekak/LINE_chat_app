@@ -95,10 +95,8 @@ io.on('connection', (socket) => {
     })
     // メッセージの受信とブロードキャスト
     socket.on('chat message', (data) => {
-        console.log(data);
-
-
         const {msg, receiver_id, sender_id, sender_type, time, message_id} = data
+
         console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
         const recipientSocket  = userSockets.get(receiver_id);
         const senderSocket = userSockets.get(sender_id);
@@ -112,6 +110,26 @@ io.on('connection', (socket) => {
 
     });
    
+
+    socket.on("send_image", (data)=>{
+        const {resizedImage, receiver_id, sender_id, sender_type, time, message_id} = data
+        const recipientSocket  = userSockets.get(receiver_id);
+        const senderSocket = userSockets.get(sender_id);
+
+        console.log(data);
+        
+
+
+        if(recipientSocket){
+            
+            recipientSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
+        }
+         // 送信者のソケットが存在する場合
+         if (senderSocket) {
+            
+            senderSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
+        }
+    })
 
     // ソケットの切断処理
     socket.on('disconnect', (reason) => {

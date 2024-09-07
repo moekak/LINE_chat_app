@@ -119,16 +119,16 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             "created_at": time,
             "message_id": message_id
       });
-      appendDiv("js_append_admin", sender_type, msg, "admin", sender_id, time)
+      appendDiv("js_append_admin", sender_type, msg, "admin", sender_id, time, "text")
       updateMessageTime(time, sender_id, sender_type, receiver_id)
 
       if(sender_type == "user"){
         console.log(sender_id + "admnChat.js");
         
-        updateUserDataElement(sender_id, receiver_id, msg, time, message_id, sender_id)
+        updateUserDataElement(sender_id, receiver_id, msg, time, message_id, sender_id, "text")
       }
       
-      displayMessage(sender_id, msg, sender_type, receiver_id)
+      displayMessage(sender_id, msg, sender_type, receiver_id, "text")
       
       increateMessageCount(sender_id, sender_type)
 
@@ -146,6 +146,13 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
 
   });
 
+  socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
+    appendDiv("js_append_admin", sender_type, resizedImage, "admin", sender_id, time, "image")
+    updateMessageTime(time, sender_id, sender_type, receiver_id)
+    displayMessage(sender_id, "", sender_type, receiver_id, "image")
+    updateUserDataElement(sender_id, receiver_id, resizedImage, time, message_id, sender_id, "image")
+      
+  })
 
 //   formからメッセージを送信する
 document.getElementById("js_chat_form").addEventListener("submit", (e)=>{

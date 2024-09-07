@@ -44,7 +44,13 @@
                                 <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
                                           <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                            <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                          @if ($message->content)
+                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                          @elseif($message->image)
+                                                <img src="{{ asset('storage/images/' . $message->image) }}" alt="" class="chat-margin5">
+
+                                          @endif
+                                            
                                             
                                     </div>
                                 </div>
@@ -57,7 +63,10 @@
 </div>
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
-            <img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon">
+            <div class="attachment_container relative">
+                  <label for="fileInput"><img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon js_attachment_icon"></label>
+                  <input type="file" name="image" class="hidden" accept="image/*" id="fileInput" style="display: none">
+            </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
           
@@ -67,4 +76,8 @@
       
       
 </div>
+
+
+{{-- test --}}
+
 @endsection

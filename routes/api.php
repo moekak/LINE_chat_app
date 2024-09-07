@@ -16,6 +16,7 @@ use App\Http\Controllers\YourController;
 Route::post('/admin/messages', [AdminMessageController::class, 'store']);
 // ユーザーのメッセージをデータースに保存する
 Route::post("/user/messages", [UserMessageController::class, "store"]);
+Route::post("/user/messages/image", [UserMessageController::class, "storeImage"]);
 // ユーザーのメッセージに既読をつける
 Route::post("/user/messages/read", [MessageReadUserController::class, "store"]);
 // 特定のユーザー情報を取得する
