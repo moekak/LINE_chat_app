@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdminMessage;
+use App\Models\AdminMessageImage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\MessageReadUser;
@@ -38,10 +39,7 @@ class ChatController extends Controller
 
             MessageReadUser::create($message_read_data);
         }
-      
-
     
-        
         // 特定のユーザー情報を取り出す
         $chat_user = ChatUser::where("id", $account_id)->first();
         $admin_info= LineAccount::where("id", $id)->first();
@@ -59,9 +57,12 @@ class ChatController extends Controller
             $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
 
             $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
+            $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
+            $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
+            $sortedAdminMessages = $mergedAdminMessages->sortByDesc("created_at");
 
-            if(count($sortedUserMessages) > 0 || count($adminMessages) > 0){
-                $allMessages = $sortedUserMessages->merge($adminMessages)->sortByDesc('created_at');
+            if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
+                $allMessages = $sortedUserMessages->merge($sortedAdminMessages)->sortByDesc('created_at');
                 $latestMessages[] = $allMessages->first();
             }
             

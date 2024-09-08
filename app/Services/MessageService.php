@@ -101,6 +101,7 @@ class MessageService{
       //管理者メッセージとユーザーメッセーを取り出し、一つの配列に統合して、created_at 日付で昇順でソートする
       public function fetchAdminAndUserMessages($admin_id, $user_id) {
             $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
+            $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
             $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
             $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
@@ -108,11 +109,12 @@ class MessageService{
            
 
             $mergedUserMessages =  $userMessages->merge($userMessageImages);
+            $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
             $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
+            $sortedAdminMessages = $mergedAdminMessages->sortByDesc("created_at");
 
-            $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
-            return $adminMessages->merge($sortedUserMessages)->sortBy("created_at");
+            return $sortedAdminMessages->merge($sortedUserMessages)->sortBy("created_at");
       }
 
 

@@ -71,11 +71,9 @@
                               <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
                                     @if ($message->content)
-                                          <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->message_id}}">{!! nl2br(e($message->content)) !!}</div>
+                                          <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
                                     @elseif($message->image)
-                                          <div class="chat__message-box-left chat-margin5" data-message-id="{{$message->message_id}}">
-                                                <img src="{{ asset('storage/images/' . $message->image) }}">
-                                          </div>
+                                          <img src="{{ asset('storage/images/' . $message->image) }}" class="chat-margin5">
                                     @endif
                                     <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
                               </div> 
@@ -84,8 +82,11 @@
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
                                           <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                          <div class="chat__message-box-right chat-margin5" >{!! nl2br(e($message->content)) !!}</div>
-                                          
+                                          @if ($message->content)
+                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                          @elseif($message->image)
+                                                <img src="{{ asset('storage/images/' . $message->image) }}" class="chat-margin5">
+                                          @endif
                                     </div>
                               </div>
                         @endif

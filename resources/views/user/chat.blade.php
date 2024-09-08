@@ -32,14 +32,17 @@
                     @foreach ($messages as $message)
 
                         @if ($message->type == "admin")
-                        <div class="chat__message-container-left">
-                                <div class="chat__mesgae-main-left">
-                                    @yield('icon-msg')
-                                    
-                                    <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
-                                    <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                </div> 
-                        </div>
+                              <div class="chat__message-container-left">
+                                    <div class="chat__mesgae-main-left">
+                                          @yield('icon-msg')
+                                          @if ($message->content)
+                                                <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
+                                          @elseif($message->image)
+                                                <img src="{{ asset('storage/images/' . $message->image) }}" alt="" class="chat-margin5">
+                                          @endif
+                                                <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
+                                    </div> 
+                              </div>
                         @else
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
