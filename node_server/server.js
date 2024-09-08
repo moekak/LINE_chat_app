@@ -155,7 +155,7 @@ io.on('connection', (socket) => {
                         // pushMessageを使用してプッシュ通知を送信
 
                         // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
-                        client.pushMessage("U57f5dcabb442242b09630725003e4185", templateMessage)
+                        client.pushMessage(userId, templateMessage)
                         .then(() => {
                             console.log('メッセージが送信されました');
                         })
@@ -222,7 +222,7 @@ io.on('connection', (socket) => {
                         // pushMessageを使用してプッシュ通知を送信
 
                         // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
-                        client.pushMessage("U57f5dcabb442242b09630725003e4185", templateMessage)
+                        client.pushMessage(userId, templateMessage)
                         .then(() => {
                             console.log('メッセージが送信されました');
                         })
