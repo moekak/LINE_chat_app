@@ -45,8 +45,25 @@
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
+
+const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
 const cors = require('cors');
+const { selectUserID, selectAdminID } = require('./database.js');
+const axios = require('axios');
+
+
+
+const config = {
+    channelAccessToken: 'SGhx03izYuFtsEaNT1UrvEYOqsxtronY1041KfyHNYtdVQMGTzrApsBLISvB74wehNfDE83Qgtg7lrkPKpAceWSBAln25bIypZ57FCemFQOro5+OnGF5/bm+11pg1z0wisbvymCvofsjcx+L53So2AdB04t89/1O/w1cDnyilFU=',
+    channelSecret: '91c7169b106ffda2bdca9e247eb5b552'
+};
+
+const client = new Client(config);
+
+
+
+
 
 // アプリケーションの初期化
 const app = express();
@@ -109,8 +126,57 @@ io.on('connection', (socket) => {
             senderSocket.emit("chat message", msg, sender_type, sender_id, time, receiver_id, message_id);
         }
 
+        if(sender_type == "admin"){
+            console.log("userID" + receiver_id);
+            
+            selectUserID(receiver_id, sender_id)
+            .then((userId)=>{
+                selectAdminID(sender_id)
+                .then((adminId)=>{
+                    console.log(userId);
+      
+                    const templateMessage = {
+                        type: 'template',
+                        altText: 'This is a buttons template',
+                        template: {
+                          type: 'buttons',
+                          text: 'チャットメッセージを受信しました',
+                          actions: [
+                            {
+                              type: 'uri',
+                              label: 'チャットを確認',
+                              uri: `https://line-chat.tokyo/chat/${adminId}/${userId}`
+                            }
+                          ]
+                        }
+                      };
+                      
+                          
+                        // pushMessageを使用してプッシュ通知を送信
+
+                        // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
+                        client.pushMessage("U57f5dcabb442242b09630725003e4185", templateMessage)
+                        .then(() => {
+                            console.log('メッセージが送信されました');
+                        })
+                        .catch((err) => {
+                            console.error('メッセージ送信エラー:', err);
+                        });
+
+                })
+            })
+            
+      
+                      
+           
+        }
+        
+
     });
     
+
+
+
    
     // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
@@ -126,6 +192,52 @@ io.on('connection', (socket) => {
          if (senderSocket) {
             senderSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
         }
+
+        if(sender_type == "admin"){
+            console.log("userID" + receiver_id);
+            
+            selectUserID(receiver_id, sender_id)
+            .then((userId)=>{
+                selectAdminID(sender_id)
+                .then((adminId)=>{
+                    console.log(userId);
+      
+                    const templateMessage = {
+                        type: 'template',
+                        altText: 'This is a buttons template',
+                        template: {
+                          type: 'buttons',
+                          text: 'チャットメッセージを受信しました',
+                          actions: [
+                            {
+                              type: 'uri',
+                              label: 'チャットを確認',
+                              uri: `https://line-chat.tokyo/chat/${adminId}/${userId}`
+                            }
+                          ]
+                        }
+                      };
+                      
+                          
+                        // pushMessageを使用してプッシュ通知を送信
+
+                        // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
+                        client.pushMessage("U57f5dcabb442242b09630725003e4185", templateMessage)
+                        .then(() => {
+                            console.log('メッセージが送信されました');
+                        })
+                        .catch((err) => {
+                            console.error('メッセージ送信エラー:', err);
+                        });
+
+                })
+            })
+            
+      
+                      
+           
+        }
+        
     })
 
     // ソケットの切断処理
