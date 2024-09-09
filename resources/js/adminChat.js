@@ -1,8 +1,9 @@
 import io from 'socket.io-client';
-import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength, updateMessageTime, updateUserDataElement } from './module/component/append.js';
+import { appendDiv, increateMessageCount, displayMessage, adjustMesageLength, updateMessageTime, updateUserDataElement, createDivForSearch } from './module/component/append.js';
 import { fetchPostOperation } from './module/util/fetch.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { fileOperation } from './module/component/uiController.js';
+import { message } from 'laravel-mix/src/Log.js';
 
 
 
@@ -200,3 +201,25 @@ function sendHeartbeat() {
 setInterval(sendHeartbeat, 10000);
 const user_type= "admin"
 fileOperation(socket, sender_id, "/api/admin/messages/image", user_type)
+
+
+// チャット画面検索機能
+
+const message_input = document.querySelector(".js_message_input")
+const receiver_id = document.getElementById("js_receiver_id").value
+const sender_type = document.getElementById("js_sender_type").value
+
+message_input.addEventListener("input", (e)=>{
+  let value = e.target.value
+
+  const data = {
+    admin_id : sender_id,
+    text: value
+  }
+
+  if(value.length > 0){
+    createDivForSearch(data,receiver_id, sender_id)
+  }
+  
+  
+})

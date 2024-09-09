@@ -13,7 +13,6 @@ use App\Models\UserMessageImage;
 use App\Services\MessageService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Number;
 
 class ChatController extends Controller
 {
@@ -57,9 +56,12 @@ class ChatController extends Controller
             $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
 
             $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
+    
             $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
             $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
             $sortedAdminMessages = $mergedAdminMessages->sortByDesc("created_at");
+
+       
 
             if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
                 $allMessages = $sortedUserMessages->merge($sortedAdminMessages)->sortByDesc('created_at');
@@ -80,78 +82,19 @@ class ChatController extends Controller
                 return $message->created_at;
             });
             foreach($latestMessages as $index => $message){
+                $totalMessageCount = $messageService->selectTotalMessageCount($message->admin_id, $message->user_id);
                 $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
                 $mergedData[$index]["message"] = $message;
                 $mergedData[$index]["formatted_time"] = $message->time;
+                $mergedData[$index]["count"] = $totalMessageCount;
 
-                $message_read = MessageReadUser::where("admin_id", $message->admin_id)->where("chat_user_id", $message->user_id)->orderBy("created_at", "desc")->first(["message_id"]);
-                $latest_message_id = $messageService->getLatesetUserMessageID($message->user_id, $message->admin_id);
-
-                if($message_read== null){
-                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->count() + UserMessageImage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->count();
-                }else if($message_read->message_id == $latest_message_id){
-                    $mergedData[$index]["count"] = 0;
-                }else{
-                    $mergedData[$index]["count"] = UserMessage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('message_id', '>', $message_read->message_id)->count() + UserMessageImage::where("user_id", $message->user_id)->where("admin_id", $message->admin_id)->where('message_id', '>', $message_read->message_id)->count() ;
-                }
-     
             }
-   
-        }
 
+        }
 
         $messages = $messageService->fetchAdminAndUserMessages($id, $account_id);
         $group_message = $messageService->formatMessage($messages);
         return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user]);
     }
 
-   
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

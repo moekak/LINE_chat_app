@@ -13,7 +13,7 @@
       </div>
       {{-- チャットユーザーアカウントのリアルタイム表示 --}}
       <div class="chat__users-list-area">
-            <input type="text" class="chat__users-list-area-input" placeholder="Search">
+            <input type="text" class="chat__users-list-area-input js_message_input" placeholder="Search">
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
                   @foreach ($mergedData as $data)
                         <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
@@ -24,6 +24,7 @@
                                           <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
                                     </div>  
                                     <div class="chat__users-list-msg">
+                               
                                           <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
                                           @php
                                                 $count_style = $data["count"] <= 0 ? "none": "flex";

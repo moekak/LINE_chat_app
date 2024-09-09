@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
+use App\Models\MessageReadUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use Illuminate\Support\Carbon;
@@ -106,15 +107,13 @@ class MessageService{
             $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
             $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
-           
 
             $mergedUserMessages =  $userMessages->merge($userMessageImages);
             $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
-            $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
-            $sortedAdminMessages = $mergedAdminMessages->sortByDesc("created_at");
+            $sortedUserMessages = $mergedUserMessages->sortBy("created_at");
+            $sortedAdminMessages = $mergedAdminMessages->sortBy("created_at");
 
-
-            return $sortedAdminMessages->merge($sortedUserMessages)->sortBy("created_at");
+            return $sortedAdminMessages->merge($sortedUserMessages);
       }
 
 
@@ -164,6 +163,22 @@ class MessageService{
         }
 
         return $latest_message_id;
+    }
+
+
+    public function selectTotalMessageCount($admin_id, $user_id){
+        $message_read = MessageReadUser::where("admin_id", $admin_id)->where("chat_user_id", $user_id)->orderBy("created_at", "desc")->first(["message_id"]);
+        $latest_message_id = $this->getLatesetUserMessageID($user_id, $admin_id);
+        $count = 0;
+        if($message_read== null){
+            $count = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->count() + UserMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->count();
+        }else if($message_read->message_id == $latest_message_id){
+            $count = 0;
+        }else{
+            $count = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->where('message_id', '>', $message_read->message_id)->count() + UserMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->where('message_id', '>', $message_read->message_id)->count() ;
+        }
+
+        return $count;
     }
 
 }

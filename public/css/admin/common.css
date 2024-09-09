@@ -171,6 +171,7 @@ main{
  }
  .chat__message-wrapper{
      padding-bottom: 20px;
+     padding-top: 15px;
  }
  .chat__message-container-left{
       width: 100%;

@@ -17,20 +17,20 @@ let socket = io('https://line-chat.tokyo:3000', {
 // ページの可視性が変更されたときのイベントリスナー
 document.addEventListener("visibilitychange", function() {
       if (document.visibilityState === 'visible') {
-            alert("ページがアクティブです。Socket.IO接続を確認または再接続します。")
-            console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
+            // alert("ページがアクティブです。Socket.IO接続を確認または再接続します。")
+            // console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
             checkOrReconnectSocket();
       }
   });
   
   function checkOrReconnectSocket() {
-    alert(`Socket.IOの現在の接続状態:",${socket.connected} `);
+    // alert(`Socket.IOの現在の接続状態:",${socket.connected} `);
    
       if (!socket.connected) {
-            alert("Socket.IOは接続されていません。再接続を試みます。")
-            alert(sender_id)
+            // alert("Socket.IOは接続されていません。再接続を試みます。")
+            // alert(sender_id)
             registerUser(sender_id)
-          console.log("Socket.IOは接続されていません。再接続を試みます。");
+          // console.log("Socket.IOは接続されていません。再接続を試みます。");
           socket.connect();
       }else{
         registerUser(sender_id)
@@ -50,7 +50,7 @@ socket.on('reconnect_attempt', () => {
   
   // サーバーから切断されたときのイベント
   socket.on('disconnect', (reason) => {
-    alert(`Disconnected from the server due to ${reason}`);
+    // alert(`Disconnected from the server due to ${reason}`);
     // ここで接続状態を更新
     // 再接続を試みる
     socket.connect();
@@ -58,10 +58,10 @@ socket.on('reconnect_attempt', () => {
 });
 
 socket.on('userDisconnected', (data) => {
-    alert(`User ${data.userId} disconnected due to ${data.reason}`);
+    // alert(`User ${data.userId} disconnected due to ${data.reason}`);
     if (data.userId === socket.id) {
         // 自分自身の切断処理
-        alert('This is me, updating my connection status.');
+        // alert('This is me, updating my connection status.');
     }
 });
 const sender_id = document.getElementById("js_sender_id").value
@@ -160,3 +160,26 @@ setInterval(sendHeartbeat, 10000);
 
 const user_type= "user"
 fileOperation(socket, sender_id, "/api/user/messages/image", user_type)
+
+
+
+// チャット画面上部をクリックした際のスタイル変更処理
+const items = document.querySelectorAll(".js_header_item");
+
+items.forEach((item) => {
+  item.addEventListener("click", () => {
+
+    // すべてのアイテムからactiveクラスを削除
+    items.forEach((otherItem) => {
+      otherItem.classList.remove("active");
+      otherItem.querySelector(".header-icon").classList.remove("active_font");
+      otherItem.querySelector(".chat__message_header-item-text").classList.remove("active_font");
+    });
+
+    // クリックされたアイテムにクラスを追加
+    item.classList.add("active");
+    item.querySelector(".header-icon").classList.add("active_font");
+    item.querySelector(".chat__message_header-item-text").classList.add("active_font");
+  });
+});
+

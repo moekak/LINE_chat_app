@@ -140,7 +140,8 @@ var displayMessage = function displayMessage(sender_id, msg, sender_type, receiv
       // 管理者からメッセージが送信された場合
     } else {
       if (id == receiver_id) {
-        element.innerHTML = msg;
+        if (message_type == "text") element.innerHTML = msg;
+        if (message_type == "image") element.innerHTML = "画像を送信しました。";
       }
     }
   });
@@ -173,12 +174,13 @@ var updateMessageTime = function updateMessageTime(time, sender_id, sender_type,
     }
   });
 };
-var createDivElement = function createDivElement(id, receiver_id, msg, time, message_id, sender_id, message_type) {
+var createDivElement = function createDivElement(receiver_id, msg, time, message_id, sender_id, message_type) {
+  console.log("createDivElement");
   return new Promise(function (resolve) {
     var parentNewDiv = document.createElement("div");
     parentNewDiv.classList.add("chat__users-list-wraper");
     parentNewDiv.classList.add("js_chat_wrapper");
-    parentNewDiv.setAttribute("data-id", id);
+    parentNewDiv.setAttribute("data-id", sender_id);
     parentNewDiv.setAttribute("data-admin-id", receiver_id);
     parentNewDiv.style.marginTop = "0";
     (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(sender_id, "/").concat(receiver_id)).then(function (res) {
@@ -199,7 +201,7 @@ var createDivElement = function createDivElement(id, receiver_id, msg, time, mes
       var small = document.createElement("small");
       small.classList.add("chat_time");
       small.classList.add("js_update_message_time");
-      small.setAttribute("data-id", id);
+      small.setAttribute("data-id", sender_id);
       small.innerHTML = "17:20";
 
       // append
@@ -212,13 +214,13 @@ var createDivElement = function createDivElement(id, receiver_id, msg, time, mes
       var smalltag = document.createElement("small");
       smalltag.classList.add("chat_message");
       smalltag.classList.add("js_chatMessage_elment");
-      smalltag.setAttribute("data-id", id);
+      smalltag.setAttribute("data-id", sender_id);
       if (message_type == "text") smalltag.innerHTML = msg;
       if (message_type == "image") smalltag.innerHTML = "画像が送信されました";
       var countDiv = document.createElement("div");
       countDiv.classList.add("message_count");
       countDiv.classList.add("js_mesage_count");
-      countDiv.setAttribute("data-id", id);
+      countDiv.setAttribute("data-id", sender_id);
       if (document.getElementById("js_chatuser_id").value == sender_id) {
         countDiv.style.display = "none";
         countDiv.innerHTML = 0;
@@ -238,27 +240,36 @@ var createDivElement = function createDivElement(id, receiver_id, msg, time, mes
     });
   });
 };
-var updateUserDataElement = function updateUserDataElement(id, receiver_id, msg, time, message_id, sender_id, message_type) {
-  console.log(sender_id);
+var updateUserDataElement = function updateUserDataElement(receiver_id, msg, time, message_id, sender_id, message_type, sender_type) {
   var wrappers = document.querySelectorAll(".js_chat_wrapper");
   var chat_wrapper = document.getElementById("js_chatUser_wrapper");
   var firstChild = chat_wrapper.firstChild;
   var hasDiv = false;
   wrappers.forEach(function (wrapper) {
     var user_id = wrapper.getAttribute("data-id");
-    if (id == user_id && Array.from(wrappers.length > 0)) {
-      hasDiv = true;
-      var newDiv = wrapper.cloneNode(true);
-      chat_wrapper.insertBefore(newDiv, firstChild);
-      if (wrapper.parentNode == chat_wrapper) {
-        chat_wrapper.removeChild(wrapper);
+    if (sender_type == "admin") {
+      if (receiver_id == user_id && Array.from(wrappers.length > 0)) {
+        hasDiv = true;
+        var newDiv = wrapper.cloneNode(true);
+        chat_wrapper.insertBefore(newDiv, firstChild);
+        if (wrapper.parentNode == chat_wrapper) {
+          chat_wrapper.removeChild(wrapper);
+        }
+      }
+    } else {
+      if (sender_id == user_id && Array.from(wrappers.length > 0)) {
+        hasDiv = true;
+        var _newDiv = wrapper.cloneNode(true);
+        chat_wrapper.insertBefore(_newDiv, firstChild);
+        if (wrapper.parentNode == chat_wrapper) {
+          chat_wrapper.removeChild(wrapper);
+        }
       }
     }
     (0,_uiController_js__WEBPACK_IMPORTED_MODULE_1__.chatNavigator)();
   });
-  console.log(hasDiv);
   if (!hasDiv && firstChild !== undefined) {
-    createDivElement(id, receiver_id, msg, time, message_id, sender_id, message_type).then(function (wrapper) {
+    createDivElement(receiver_id, msg, time, message_id, sender_id, message_type).then(function (wrapper) {
       chat_wrapper.insertBefore(wrapper, firstChild);
       (0,_uiController_js__WEBPACK_IMPORTED_MODULE_1__.chatNavigator)();
     })["catch"](function (error) {
@@ -7255,7 +7266,6 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
 function registerUser(sender_id) {
   socket.emit("register", sender_id);
 }
-(0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__.fileOperation)(socket, sender_id, "/api/admin/messages/image", user_type);
 
 // サーバーからのメッセージを受信
 socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
@@ -7263,7 +7273,7 @@ socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
   if (sender_type == "user") {
     console.log(sender_id + "admnChat.js");
-    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(sender_id, receiver_id, msg, time, message_id, sender_id, "text");
+    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(receiver_id, msg, time, message_id, sender_id, "text", sender_type);
   }
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, msg, sender_type, receiver_id, "text");
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increateMessageCount)(sender_id, sender_type);
@@ -7281,7 +7291,7 @@ socket.on("send_image", function (sender_type, sender_id, time, receiver_id, mes
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, "", sender_type, receiver_id, "image");
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increateMessageCount)(sender_id, sender_type);
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(sender_id, receiver_id, resizedImage, time, message_id, sender_id, "image");
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(receiver_id, resizedImage, time, message_id, sender_id, "image", sender_type);
 });
 
 //   formからメッセージを送信する
@@ -7326,6 +7336,7 @@ function sendHeartbeat() {
 // 30秒ごとにハートビートを送信
 setInterval(sendHeartbeat, 10000);
 var user_type = "admin";
+(0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__.fileOperation)(socket, sender_id, "/api/admin/messages/image", user_type);
 })();
 
 /******/ })()

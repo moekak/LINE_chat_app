@@ -22,6 +22,16 @@
 
 
 @section('chat-message')
+<div class="chat__message_header">
+      <div class="chat__message_header-item js_header_item">
+            <i class="far fa-envelope header-icon"></i>
+            <p class="chat__message_header-item-text">メッセージ</p>
+      </div>
+      <div class="chat__message_header-item js_header_item">
+            <i class="far fa-comment header-icon"></i>
+            <p class="chat__message_header-item-text">サポート</p>
+      </div>
+</div>
 <input type="hidden" value="{{$admin_info->user_picture}}" id="js_user_icon_img">
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_user">

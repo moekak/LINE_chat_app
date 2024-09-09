@@ -8,6 +8,8 @@ export const fetchPostOperation = (data, url) => {
         body: JSON.stringify(data),
       }).then((response) => {
         if (!response.ok) {
+          console.log(response);
+          
           throw new Error("サーバーエラーが発生しました。");
         }
         return response.json();
