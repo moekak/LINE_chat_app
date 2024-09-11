@@ -15,7 +15,14 @@
       <div class="chat__users-list-area">
             <input type="text" class="chat__users-list-area-input js_message_input" placeholder="Search">
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
+                  {{-- @php
+                       echo '<pre>';
+                      print_r($mergedData);
+                      echo '<pre>';
+                  @endphp --}}
                   @foreach ($mergedData as $data)
+            
+             
                         <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
                               <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
                               <div class="chat_users-list-flex">

@@ -236,7 +236,7 @@ main{
       padding: 10px 10px;
       gap: 10px;
       position: fixed;
-      bottom: 0%;
+      bottom: 3%;
       z-index: 999;
       width: 800px;
  }

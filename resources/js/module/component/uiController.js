@@ -37,7 +37,7 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
             const ctx = canvas.getContext('2d');
             
             // 画像のサイズを制御する。例えば幅を500pxにリサイズ。
-            const maxWidth = 120;
+            const maxWidth = 160;
             const scaleSize = maxWidth / img.width;
             canvas.width = maxWidth;
             canvas.height = img.height * scaleSize;

@@ -28,4 +28,6 @@ class ChatController extends Controller
 
         return view("user.chat", ["admin_info" => $admin_info, "user_id" => $user_id, "group_message" => $group_message]);
     }
+
+
 }

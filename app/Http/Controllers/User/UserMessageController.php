@@ -5,11 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserMessageImageRequest;
 use App\Http\Requests\UserMessageRequest;
+use App\Models\MessageReadUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use App\Services\ImageService;
 use App\Services\MessageService;
-
+use Illuminate\Support\Facades\Log;
 
 class UserMessageController extends Controller
 {
@@ -18,7 +19,6 @@ class UserMessageController extends Controller
     {
 
         try {
-
             $messageService = new MessageService();
             $validated = $request->validated();
 
@@ -26,8 +26,9 @@ class UserMessageController extends Controller
             $validated["message_id"] = $messageService->getLatesetUserMessageID($validated["user_id"], $validated["admin_id"]) + 1;
             $userMessage = UserMessage::create($validated);
             $createdAt = $userMessage->created_at->format('H:i');
-            $message_id = $userMessage->mesage_id;
-    
+            $message_id = $userMessage->message_id;
+
+
             return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
         } catch (\Exception $e) {
             // エラーが発生した場合にエラーメッセージを返す

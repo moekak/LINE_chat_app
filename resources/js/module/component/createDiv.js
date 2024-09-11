@@ -23,6 +23,8 @@ export const createDiv = (parentNewDiv, userPicture, userName, sender_id, msg, m
       small.classList.add("js_update_message_time");
       small.setAttribute("data-id", sender_id);
       small.innerHTML = time;
+      console.log(`timeは${time}`);
+      
 
       // append
       grandChildDiv1.appendChild(p);

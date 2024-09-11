@@ -15,10 +15,16 @@ class ChatUserController extends Controller
     // チャットユーザーのデータを取得するAPI
     public function getUserData($id, $admin_id){
         try{
+            $messageService = new MessageService();
             $data = ChatUser::findOrFail($id);
 
             $totalMessageCount = UserMessage::where("user_id", $id)->where("admin_id", $admin_id)->count();
-            return response()->json(["userInfo" => $data, "totalCount" => $totalMessageCount]);
+            $chatMessages       = $messageService->fetchAdminAndUserMessages($admin_id, $id);
+            $latesetMessage     = $chatMessages->sortByDesc("created_at")->first();
+            $formatted_date = $messageService->formatTime($latesetMessage->created_at);
+
+            $totalMessageCount  = $messageService->selectTotalMessageCount($admin_id, $id);
+            return response()->json(["userInfo" => $data, "totalCount" => $totalMessageCount, "formatted_date" => $formatted_date]);
 
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);

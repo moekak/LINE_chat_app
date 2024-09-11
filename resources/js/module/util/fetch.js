@@ -26,14 +26,18 @@ export const fetchGetOperation = (url) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }).then((response) => {
+      }).then(async (response) => {
         if (!response.ok) {
-          throw new Error("サーバーエラーが発生しました。");
+          const errorMessage = await response.text(); // レスポンスの内容を取得し、待機する
+          throw new Error(`サーバーエラー: ${response.status} - ${errorMessage}`);
         }
-        return response.json();
+        return response.json(); // 正常な場合はJSONとして返す
       })
-      .catch((error)=>{
+      .then((data) => {
 
-            console.log(error);
+        return data
       })
+      .catch((error) => {
+        console.error("エラーが発生しました:", error.message);
+      });
     };

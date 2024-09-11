@@ -24,4 +24,5 @@ Route::post("/user/messages/read", [MessageReadUserController::class, "store"]);
 Route::get("/users/{user_id}/{receiver_id}", [ChatUserController::class, "getUserData"]);
 // 検索されたユーザー情報を取り出す。
 Route::post("/search/users", [ChatUserController::class, "getUserDataBySearch"]);
-// Route::post("/search/users", [MessageReadUserController::class, "store"]);
+
+Route::get("/users/messages/lineAccounts/{admin_id}", [ChatController::class, "getMergedDataAPI"]);

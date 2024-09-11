@@ -25,17 +25,17 @@ height: 84vh;
     border-bottom: 1px solid rgba(128, 128, 128, 0.514);
 }
 .chat__message_header-item-text{
-    font-size: 9px;
+    font-size: 10px;
     color: gray;
     font-family: 'Helvetica', 'Arial', sans-serif;
-    font-weight: bold;
+
 }
 .chat__message_header-item{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px 0;
+    padding: 10px 0;
     cursor: pointer;
 }
 .active{
@@ -45,11 +45,27 @@ height: 84vh;
     color: #07556e !important;
 }
 .header-icon{
-    font-size: 19px;
+    font-size: 20px;
     color: gray;
+    padding-bottom: 2px;
 
 }
+.chat_default-area{
+    border: 2px solid #07556e;
+    border-radius: 5px;
+    background: #fff;
+    padding: 10px;
+    margin: 0 auto;
+    width: max-content;
+    margin-bottom: 8px;
+}
+.chat_default-txt{
+    font-size: 12px;
+}
 @media (max-width: 450px){
+    .chat__form{
+        bottom: 0%;
+   }
     .chat__message-area {
         padding: 0px 0px 20px 0px;
     }

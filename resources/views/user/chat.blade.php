@@ -35,6 +35,9 @@
 <input type="hidden" value="{{$admin_info->user_picture}}" id="js_user_icon_img">
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_user">
+            <div class="chat_default-area">
+                  <small class="chat_default-txt">どうぞお気軽にご連絡くださいね♪</small>
+            </div>
             @foreach ($group_message as $date => $messages)
 
             <small class="chat__message-main-time">{{ $date }}</small>

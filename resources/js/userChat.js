@@ -68,10 +68,13 @@ const sender_id = document.getElementById("js_sender_id").value
 registerUser(sender_id)
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
+
+
       const data = {
             content:msg2,
             user_id: sender_id,
-            admin_id: receiver_id
+            admin_id: receiver_id,
+
       }
       
       fetch("/api/user/messages", {
@@ -144,8 +147,14 @@ disableSubmitBtn()
 
 
 // チャットを開いたときに一番下までスクロールさせる
-const scroll_el = document.querySelector(".chat__message-main")
+// チャットを開いたときに一番下までスクロールさせる
+document.addEventListener("DOMContentLoaded", ()=>{
+  const scroll_el = document.querySelector(".chat__message-main")
+
+console.log(scroll_el);
+
 scroll_el.scrollTop = scroll_el.scrollHeight
+})
 
 
 

@@ -48,13 +48,13 @@ const appendRight = (msg, parentElement, time, message_type) => {
 
     if (message_type == "text") {
         newThirdDiv.classList.add("chat__message-box-right");
+        
         const formattedMsg = msg.replace(/\n/g, "<br>");
         newThirdDiv.innerHTML = formattedMsg;
     } else {
         const img = document.createElement("img");
         img.setAttribute("src", msg);
         img.setAttribute("alt", "");
-        img.classList.add("chat-margin5");
         newThirdDiv.appendChild(img);
     }
 
@@ -81,8 +81,9 @@ const appendLeft = (msg, parentElement, time, message_type) => {
     let iconMsg;
     if (document.getElementById("icon_msg") !== null) {
         iconMsg = document.getElementById("icon_msg").cloneNode(true);
-        console.log(iconMsg);
-        console.log(typeof iconMsg);
+
+        
+
     } else {
         iconMsg = document.createElement("img");
         // 画像のURLとその他の属性を設定
@@ -94,10 +95,10 @@ const appendLeft = (msg, parentElement, time, message_type) => {
     }
 
     const newThirdDiv = document.createElement("div");
-    newThirdDiv.classList.add("chat__message-box-left");
     newThirdDiv.classList.add("chat-margin5");
 
     if (message_type == "text") {
+        newThirdDiv.classList.add("chat__message-box-left");
         const formattedMsg = msg.replace(/\n/g, "<br>");
         newThirdDiv.innerHTML = formattedMsg;
     } else {
@@ -151,6 +152,9 @@ export const displayMessage = (
     receiver_id,
     message_type
 ) => {
+
+    console.log(msg + "message");
+    
     const elements = document.querySelectorAll(".js_chatMessage_elment");
     elements.forEach((element) => {
         let id = element.getAttribute("data-id");
@@ -223,10 +227,10 @@ const createDivElement = (
 
         fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`)
             .then((res) => {
-
                 console.log(res);
                 
-                const newDiv = createDiv(parentNewDiv, res["userInfo"]["user_picture"], res["userInfo"]["line_name"], sender_id, msg, message_type, res["totalCount"])
+                
+                const newDiv = createDiv(parentNewDiv, res["userInfo"]["user_picture"], res["userInfo"]["line_name"], sender_id, msg, message_type, res["totalCount"], res["formatted_date"])
                 resolve(newDiv)
 
             }
@@ -236,10 +240,8 @@ const createDivElement = (
 };
 
 
-export const createDivForSearch = (data, receiver_id, sender_id) =>{
+export const createDivForSearch = (data, sender_id) =>{
 
-       
-        const wrappers = document.querySelectorAll(".js_chat_wrapper");
         let chat_wrapper = document.getElementById("js_chatUser_wrapper");
         
 
@@ -248,6 +250,7 @@ export const createDivForSearch = (data, receiver_id, sender_id) =>{
                 (res) => {
                     console.log(res);
                     
+
                     chat_wrapper.innerHTML = "";
 
                     
@@ -261,11 +264,11 @@ export const createDivForSearch = (data, receiver_id, sender_id) =>{
                         const parentNewDiv = document.createElement("div");
                         parentNewDiv.classList.add("chat__users-list-wraper");
                         parentNewDiv.classList.add("js_chat_wrapper");
-                        parentNewDiv.setAttribute("data-id", sender_id);
-                        parentNewDiv.setAttribute("data-admin-id", receiver_id);
+                        parentNewDiv.setAttribute("data-id", res["userData"]["id"]);
+                        parentNewDiv.setAttribute("data-admin-id", sender_id);
                         parentNewDiv.style.marginTop = "0";
                         let firstChild = chat_wrapper.firstChild;
-                         const newDiv = createDiv(parentNewDiv, res["userData"]["user_picture"], res["userData"]["line_name"], sender_id, res["message"]["content"], message_type, res["count"], res["formattedData"]) 
+                         const newDiv = createDiv(parentNewDiv, res["userData"]["user_picture"], res["userData"]["line_name"], res["userData"]["id"], res["message"]["content"], message_type, res["count"], res["formattedData"]) 
         
                         
                          if(firstChild == undefined){
@@ -287,48 +290,68 @@ export const createDivForSearch = (data, receiver_id, sender_id) =>{
 export const updateUserDataElement = (
     receiver_id,
     msg,
-    time,
-    message_id,
     sender_id,
     message_type,
-    sender_type
+    sender_type,
+    is_searching
 ) => {
+
+
+    
+
+
+    
     const wrappers = document.querySelectorAll(".js_chat_wrapper");
     const chat_wrapper = document.getElementById("js_chatUser_wrapper");
     let firstChild = chat_wrapper.firstChild;
     let hasDiv = false;
 
+
+   if(document.getElementById("js_chatuser_id").value == sender_id){
+    return;
+   }
+    
     wrappers.forEach((wrapper) => {
+  
+        
         let user_id = wrapper.getAttribute("data-id");
+        if(!is_searching["flag"]){
+            if (sender_type == "admin") {
+                if (receiver_id == user_id && Array.from(wrappers.length > 0)) {
+                    hasDiv = true;
 
-        if (sender_type == "admin") {
-            if (receiver_id == user_id && Array.from(wrappers.length > 0)) {
-                hasDiv = true;
+                    const newDiv = wrapper.cloneNode(true);
 
-                const newDiv = wrapper.cloneNode(true);
+                    chat_wrapper.insertBefore(newDiv, firstChild);
+                    if (wrapper.parentNode == chat_wrapper) {
+                        chat_wrapper.removeChild(wrapper);
+                    }
+                }
+            }else{
+ 
+                if (sender_id == user_id && Array.from(wrappers.length > 0)) {
+                    hasDiv = true;
 
-                chat_wrapper.insertBefore(newDiv, firstChild);
-                if (wrapper.parentNode == chat_wrapper) {
-                    chat_wrapper.removeChild(wrapper);
+                    const newDiv = wrapper.cloneNode(true);
+
+                    chat_wrapper.insertBefore(newDiv, firstChild);
+                    
+                    if (wrapper.parentNode == chat_wrapper) {
+                        chat_wrapper.removeChild(wrapper);
+                    }
                 }
             }
-        }else{
-            if (sender_id == user_id && Array.from(wrappers.length > 0)) {
-                hasDiv = true;
-
-                const newDiv = wrapper.cloneNode(true);
-
-                chat_wrapper.insertBefore(newDiv, firstChild);
-                if (wrapper.parentNode == chat_wrapper) {
-                    chat_wrapper.removeChild(wrapper);
-                }
-            }
+            chatNavigator();
         }
+    
+        
 
-        chatNavigator();
+       
     });
 
-    if (!hasDiv && firstChild !== undefined) {
+    if (!hasDiv && firstChild !== undefined && !is_searching["flag"]) {
+
+        
         createDivElement(
             receiver_id,
             msg,
