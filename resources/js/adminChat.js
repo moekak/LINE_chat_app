@@ -4,6 +4,15 @@ import { fetchGetOperation, fetchPostOperation } from './module/util/fetch.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { chatNavigator, fileOperation } from './module/component/uiController.js';
 import { createDiv } from './module/component/createDiv.js';
+import { playNotificationSound } from './module/util/notificationSound.js';
+
+
+let isON = {
+  isSoundOn : false
+}
+document.querySelector(".js_bell").addEventListener("click", ()=>{
+  isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
+})
 
 
 
@@ -107,6 +116,7 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
+    if(isON["isSoundOn"]) playNotificationSound()
       appendDiv("js_append_admin", sender_type, msg, "admin", sender_id, time, "text")
       updateMessageTime(time, sender_id, sender_type, receiver_id)
 

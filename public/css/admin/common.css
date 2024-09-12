@@ -335,4 +335,12 @@ main{
  }
 
 
+ .notification_bell{
+     width: 20px;
+     height: 20px;
+     border: 1px solid gray;
+     padding: 8px;
+     border-radius: 50%;
+     cursor: pointer;
+ }
  

@@ -10,6 +10,7 @@
                   <p class="user_name_txt">{{$admin_info->account_name}}</p>
                   <small class="user_id_txt">{{$admin_info->account_id}}</small>
             </div> 
+            <img src="{{asset("img/icons8-bell-30.png")}}" alt="" class="notification_bell js_bell">
       </div>
       {{-- チャットユーザーアカウントのリアルタイム表示 --}}
       <div class="chat__users-list-area">
@@ -31,7 +32,7 @@
                                           <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
                                     </div>  
                                     <div class="chat__users-list-msg">
-                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? $data["type"] == "user" ? "画像が送信されました" : "画像を送信しました"}}</small>
+                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
                                           @php
                                                 $count_style = $data["count"] <= 0 ? "none": "flex";
                                           @endphp
@@ -120,3 +121,5 @@
       
 </div>
 @endsection
+
+
