@@ -24,7 +24,7 @@
                                           <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
                                     </div>  
                                     <div class="chat__users-list-msg">
-                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
+                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? $data["type"] == "user" ? "画像が送信されました" : "画像を送信しました"}}</small>
                                           @php
                                                 $count_style = $data["count"] <= 0 ? "none": "flex";
                                           @endphp

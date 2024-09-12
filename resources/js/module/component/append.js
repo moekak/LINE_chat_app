@@ -164,7 +164,7 @@ export const displayMessage = (
             if (id == receiver_id) {
                 if (message_type == "text") element.innerHTML = msg;
                 if (message_type == "image")
-                    element.innerHTML = "画像を送信しました。";
+                    element.innerHTML = "画像を送信しました";
             }
         }
     });

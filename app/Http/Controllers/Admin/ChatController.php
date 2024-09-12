@@ -82,6 +82,7 @@ class ChatController extends Controller
             foreach($latestMessages as $index => $message){
                 $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
                 $mergedData[$index]["message"] = $message;
+                $mergedData[$index]["type"] = $message->type;
                 $mergedData[$index]["formatted_time"] = $message->time;
 
                 $message_read = MessageReadUser::where("admin_id", $message->admin_id)->where("chat_user_id", $message->user_id)->orderBy("created_at", "desc")->first(["message_id"]);
