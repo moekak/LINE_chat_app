@@ -22,3 +22,7 @@ Route::post("/user/messages/image", [UserMessageController::class, "storeImage"]
 Route::post("/user/messages/read", [MessageReadUserController::class, "store"]);
 // 特定のユーザー情報を取得する
 Route::get("/users/{user_id}/{receiver_id}", [ChatUserController::class, "getUserData"]);
+// 検索されたユーザー情報を取り出す。
+Route::post("/search/users", [ChatUserController::class, "getUserDataBySearch"]);
+
+Route::get("/users/messages/lineAccounts/{admin_id}", [ChatController::class, "getMergedDataAPI"]);

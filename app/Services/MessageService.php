@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
+use App\Models\ChatUser;
+use App\Models\MessageReadUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use Illuminate\Support\Carbon;
@@ -106,15 +108,29 @@ class MessageService{
             $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
             $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
-           
 
             $mergedUserMessages =  $userMessages->merge($userMessageImages);
             $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
-            $sortedUserMessages = $mergedUserMessages->sortByDesc("created_at");
-            $sortedAdminMessages = $mergedAdminMessages->sortByDesc("created_at");
 
 
-            return $sortedAdminMessages->merge($sortedUserMessages)->sortBy("created_at");
+            
+            // echo '<pre>';
+            // print_r($mergedUserMessages ->toArray());
+            // echo '<pre>';
+
+            $allSortedMessages = $mergedUserMessages->concat($mergedAdminMessages)
+            ->map(function ($message) {
+                // created_at を東京時間に変換
+                $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+                return $message;
+            })->sortBy("created_at");
+            // ->sortBy("created_at");
+            // echo '<pre>';
+            // print_r($allSortedMessages ->toArray());
+            // echo '<pre>';
+
+            return $allSortedMessages;
+
       }
 
 
@@ -164,6 +180,110 @@ class MessageService{
         }
 
         return $latest_message_id;
+    }
+
+
+    public function selectTotalMessageCount($admin_id, $user_id){
+        $message_read = MessageReadUser::where("admin_id", $admin_id)->where("chat_user_id", $user_id)->orderBy("created_at", "desc")->first(["message_id"]);
+        $latest_message_id = $this->getLatesetUserMessageID($user_id, $admin_id);
+        $count = 0;
+        if($message_read== null){
+            $count = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->count() + UserMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->count();
+        }else if($message_read->message_id == $latest_message_id){
+            $count = 0;
+        }else{
+            $count = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->where('message_id', '>', $message_read->message_id)->count() + UserMessageImage::where("user_id", $user_id)->where("admin_id", $admin_id)->where('message_id', '>', $message_read->message_id)->count() ;
+        }
+
+        return $count;
+    }
+
+
+    public function getMergedData($id){
+        $users_info = ChatUser::where("account_id", $id)->get();
+
+        // 最新のメッセージを保持する配列
+        $latestMessages = [];
+        $mergedData = [];
+
+        // 各チャットユーザーの最新のメッセージを取得する
+        foreach($users_info as $user){
+            $userMessages = UserMessage::where("user_id", $user->id)->where("admin_id", $id)->orderBy("created_at", "desc")->get();
+
+            $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
+            $mergedUserMessages =  $userMessages->merge($userMessageImages);
+            $sortedUserMessages = $mergedUserMessages->map(function($message) {
+                // created_at を東京時間に変換
+                $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+                return $message;
+            })->sortByDesc("created_at");
+
+            $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
+    
+            $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
+            $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
+            $sortedAdminMessages = $mergedAdminMessages->map(function($message) {
+                // created_at を東京時間に変換
+                $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+                return $message;
+            })->sortByDesc("created_at");
+            
+            // echo '<pre>';
+
+            // print_r($sortedAdminMessages->toArray()); // 管理者メッセージのソート確認
+            // echo '</pre>';
+
+       
+
+            if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
+                $allMessages = $sortedUserMessages->merge($sortedAdminMessages)
+                ->map(function($message) {
+                    // created_at を東京時間に変換
+                    $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+                    return $message;
+                })->sortByDesc('created_at');
+                $latestMessages[] = $allMessages->first();
+            }
+
+            // foreach($latestMessages as $message){
+            //     echo "<br>";
+            //     print($message->created_at);
+            //     echo "<br>";
+            // }
+
+            // exit;
+       
+           
+            
+        }
+
+        // 最新メッセージの時間のフォーマット
+        foreach($latestMessages as $message){
+            $message["time"] =$this->formatTime($message->created_at);
+        }
+
+
+
+        if(count($latestMessages) > 0){
+              // 最新のメッセージを最新順にソート
+            $latestMessages = collect($latestMessages)->filter()->sortByDesc(function($message) {
+                return Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+            });
+
+ 
+            foreach($latestMessages as $index => $message){
+                $totalMessageCount =$this->selectTotalMessageCount($message->admin_id, $message->user_id);
+                $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
+                $mergedData[$index]["message"] = $message;
+                $mergedData[$index]["formatted_time"] = $message->time;
+                $mergedData[$index]["count"] = $totalMessageCount;
+
+            }
+
+        }
+
+     
+        return $mergedData;
     }
 
 }
