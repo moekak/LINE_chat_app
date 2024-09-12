@@ -110,7 +110,6 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
 
   function registerUser(sender_id){
       socket.emit("register", sender_id)
-
   }
 
   

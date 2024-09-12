@@ -51,6 +51,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const { selectUserID, selectAdminID } = require('./database.js');
 const axios = require('axios');
+const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./socketBroadcast.js');
 
 
 
@@ -106,8 +107,13 @@ io.on('connection', (socket) => {
 
 
     socket.on("register", (sender_id)=>{
-        socket.userId = sender_id;// ソケットにユーザーIDを保存
-        userSockets.set(sender_id, socket);
+        // もしこのユーザーIDがすでに存在する場合は、既存のソケットリストに追加
+        if (userSockets.has(sender_id)) {
+            userSockets.get(sender_id).push(socket);
+        } else {
+            // 新しいユーザーIDの場合、新しい配列を作成してソケットを保存
+            userSockets.set(sender_id, [socket]);
+        }
         console.log(`User ${sender_id} connected`);
     })
     // メッセージの受信とブロードキャスト
@@ -115,63 +121,17 @@ io.on('connection', (socket) => {
         const {msg, receiver_id, sender_id, sender_type, time, message_id} = data
 
         console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
-        const recipientSocket  = userSockets.get(receiver_id);
-        const senderSocket = userSockets.get(sender_id);
-        // 受信者のソケットが存在する場合
-        if(recipientSocket){
-            recipientSocket.emit("chat message", msg, sender_type, sender_id, time, receiver_id, message_id)
-        }
-         // 送信者のソケットが存在する場合
-         if (senderSocket) {
-            senderSocket.emit("chat message", msg, sender_type, sender_id, time, receiver_id, message_id);
-        }
 
+        // 受信者、送信者、管理者のソケットを取得
+        const msgData = { msg, sender_id, sender_type, time, receiver_id, message_id } ;
+        broadcastMessageToSockets(userSockets, msgData)
+
+        // LINEへメッセージ受信通知をする
         if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
             console.log("userID" + receiver_id);
             
-            selectUserID(receiver_id, sender_id)
-            .then((userId)=>{
-                selectAdminID(sender_id)
-                .then((adminId)=>{
-                    console.log(userId);
-      
-                    const templateMessage = {
-                        type: 'template',
-                        altText: 'チャットメッセージを受信しました',
-                        template: {
-                          type: 'buttons',
-                          text: 'チャットメッセージを受信しました',
-                          actions: [
-                            {
-                              type: 'uri',
-                              label: 'チャットを確認',
-                              uri: `https://line-chat.tokyo/chat/${adminId}/${userId}`
-                            }
-                          ]
-                        }
-                      };
-                      
-                          
-                        // pushMessageを使用してプッシュ通知を送信
-
-                        // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
-                        client.pushMessage(userId, templateMessage)
-                        .then(() => {
-                            console.log('メッセージが送信されました');
-                        })
-                        .catch((err) => {
-                            console.error('メッセージ送信エラー:', err);
-                        });
-
-                })
-            })
-            
-      
-                      
-           
+            sendNotificationToLine(receiver_id, sender_id, client)
         }
-        
-
     });
     
 
@@ -181,61 +141,15 @@ io.on('connection', (socket) => {
     // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
         const {resizedImage, receiver_id, sender_id, sender_type, time, message_id} = data
-        const recipientSocket  = userSockets.get(receiver_id);
-        const senderSocket = userSockets.get(sender_id);
 
-        // 受信者のソケットが存在する場合
-        if(recipientSocket){
-            recipientSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
-        }
-         // 送信者のソケットが存在する場合
-         if (senderSocket) {
-            senderSocket.emit("send_image", sender_type, sender_id, time, receiver_id, message_id, resizedImage)
-        }
+        // 受信者、送信者、管理者のソケットを取得
+        const msgData = { sender_type, sender_id, time, receiver_id, message_id, resizedImage } ;
+        broadcastImagesToSockets(userSockets, msgData)
+        
 
-        if(sender_type == "admin"){
-            console.log("userID" + receiver_id);
-            
-            selectUserID(receiver_id, sender_id)
-            .then((userId)=>{
-                selectAdminID(sender_id)
-                .then((adminId)=>{
-                    console.log(userId);
-      
-                    const templateMessage = {
-                        type: 'template',
-                        altText: 'チャットメッセージを受信しました',
-                        template: {
-                          type: 'buttons',
-                          text: 'チャットメッセージを受信しました',
-                          actions: [
-                            {
-                              type: 'uri',
-                              label: 'チャットを確認',
-                              uri: `https://line-chat.tokyo/chat/${adminId}/${userId}`
-                            }
-                          ]
-                        }
-                      };
-                      
-                          
-                        // pushMessageを使用してプッシュ通知を送信
-
-                        // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
-                        client.pushMessage(userId, templateMessage)
-                        .then(() => {
-                            console.log('メッセージが送信されました');
-                        })
-                        .catch((err) => {
-                            console.error('メッセージ送信エラー:', err);
-                        });
-
-                })
-            })
-            
-      
-                      
-           
+        // LINEへメッセージ受信通知をする
+        if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
+            sendNotificationToLine(receiver_id, sender_id, client)
         }
         
     })
