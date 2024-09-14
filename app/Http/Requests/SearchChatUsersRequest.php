@@ -23,7 +23,7 @@ class SearchChatUsersRequest extends FormRequest
     {
         return [
             "admin_id" => ["required", "integer", "exists:line_accounts,id"],
-            "text" => ["required", "string"]
+            "text" => ["required"]
         ];
     }
 }

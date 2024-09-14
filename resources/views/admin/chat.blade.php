@@ -5,7 +5,9 @@
 <section class="chat__users-list">
       {{-- 管理者アカウントの情報を表示 --}}
       <div class="chat__users-list-top">
-            <img src="{{$admin_info->user_picture}}" alt="" class="chat_users-icon">  
+            <a href="https://twitter-clone.click/account/show/{{Route::current()->parameter('id')}}">
+                  <img src="{{ $admin_info->user_picture }}" alt="" class="chat_users-icon">
+            </a> 
             <div class="chat__users-list-top-detail">
                   <p class="user_name_txt">{{$admin_info->account_name}}</p>
                   <small class="user_id_txt">{{$admin_info->account_id}}</small>
@@ -16,14 +18,7 @@
       <div class="chat__users-list-area">
             <input type="text" class="chat__users-list-area-input js_message_input" placeholder="Search">
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
-                  {{-- @php
-                       echo '<pre>';
-                      print_r($mergedData);
-                      echo '<pre>';
-                  @endphp --}}
                   @foreach ($mergedData as $data)
-            
-             
                         <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
                               <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
                               <div class="chat_users-list-flex">

@@ -87,7 +87,7 @@ const server = https.createServer(options, app);
 // WebSocket 接続を許可するオリジン（ドメイン）を指定
 const io = socketIo(server, {
     cors: {
-        origin: ['https://line-chat.tokyo', "http://127.0.0.1:8000"],
+        origin: ['https://line-chat.tokyo', "http://127.0.0.1:8000", "https://twitter-clone.click"],
         methods: ['GET', 'POST']
     },
 });
@@ -118,12 +118,14 @@ io.on('connection', (socket) => {
     })
     // メッセージの受信とブロードキャスト
     socket.on('chat message', (data) => {
-        const {msg, receiver_id, sender_id, sender_type, time, message_id} = data
+        const {msg, receiver_id, sender_id, sender_type, time, message_id, admin_login_id} = data
+        console.log(`admin_login_id${admin_login_id}`);
+        console.log(" ")
 
         console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
 
         // 受信者、送信者、管理者のソケットを取得
-        const msgData = { msg, sender_id, sender_type, time, receiver_id, message_id } ;
+        const msgData = { msg, sender_id, sender_type, time, receiver_id, message_id, admin_login_id } ;
         broadcastMessageToSockets(userSockets, msgData)
 
         // LINEへメッセージ受信通知をする
@@ -140,10 +142,13 @@ io.on('connection', (socket) => {
    
     // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
-        const {resizedImage, receiver_id, sender_id, sender_type, time, message_id} = data
+        const {resizedImage, receiver_id, sender_id, sender_type, time, message_id,admin_login_id} = data
 
+        console.log(`admin_login_id${admin_login_id}`);
+        console.log(" ")
+        console.log(`resizedImage: ${resizedImage}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
         // 受信者、送信者、管理者のソケットを取得
-        const msgData = { sender_type, sender_id, time, receiver_id, message_id, resizedImage } ;
+        const msgData = { sender_type, sender_id, time, receiver_id, message_id, resizedImage,admin_login_id } ;
         broadcastImagesToSockets(userSockets, msgData)
         
 

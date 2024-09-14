@@ -7,6 +7,7 @@ use App\Http\Requests\AdminMessageImageRequest;
 use App\Http\Requests\AdminMessageRequest;
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
+use App\Models\LineAccount;
 use App\Services\ImageService;
 use App\Services\MessageService;
 use Illuminate\Support\Facades\Log;
@@ -29,8 +30,10 @@ class AdminMessageController extends Controller
             $adminMessage = AdminMessage::create($validated);
             $createdAt = $adminMessage->created_at->format('H:i');
             $message_id = $adminMessage->message_id;
+
+            $admin_login_id = LineAccount::where("id", $validated["admin_id"])->value("user_id");
     
-            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id,"admin_login_id" => $admin_login_id], 200);
 
         } catch (\Exception $e) {
             // エラーが発生した場合にエラーメッセージを返す
@@ -69,8 +72,9 @@ class AdminMessageController extends Controller
             $adminMessageImage = AdminMessageImage::create($data);
             $createdAt = $adminMessageImage->created_at->format('H:i');
             $message_id = $adminMessageImage->message_id;
+            $admin_login_id = LineAccount::where("id", $validated["admin_id"])->value("user_id");
     
-            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id], 200);
+            return response()->json(['created_at' => $createdAt, "message_id"=> $message_id, "admin_login_id" => $admin_login_id], 200);
 
             
         } catch (\Exception $e) {

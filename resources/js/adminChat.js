@@ -103,7 +103,8 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
       .then((data)=>{
         const time = data["created_at"]
         const message_id = data["message_id"]
-        socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id});
+        const admin_login_id = data["admin_login_id"]
+        socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id, admin_login_id});
       })
   }
 
@@ -115,7 +116,9 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
-    if(isON["isSoundOn"]) playNotificationSound()
+      if(isON["isSoundOn"]) playNotificationSound()
+        console.log("receiving chat message");
+        
       appendDiv("js_append_admin", sender_type, msg, "admin", sender_id, time, "text")
       updateMessageTime(time, sender_id, sender_type, receiver_id)
 
@@ -167,18 +170,17 @@ document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
 
       e.preventDefault();
       
-      
       document.getElementById('js_msg').style.height = "19px"
       const msg = document.getElementById("js_msg").value
+
+      console.log(msg);
+      
       const formattedMsg = msg.replace(/\n/g, '<br>'); // 改行文字を <br> タグに置き換える
       const receiver_id = document.getElementById("js_receiver_id").value
       const sender_id = document.getElementById("js_sender_id").value
       const sender_type = document.getElementById("js_sender_type").value
       
       document.querySelector(".chat__form-submit").classList.add("disable_btn")
-
-
-    
       sendMessage(formattedMsg, sender_id, receiver_id, sender_type, msg)
       document.getElementById("js_msg").value = "";
 })
@@ -226,7 +228,14 @@ function sendHeartbeat() {
 // 30秒ごとにハートビートを送信
 setInterval(sendHeartbeat, 10000);
 const user_type= "admin"
-fileOperation(socket, sender_id, "/api/admin/messages/image", user_type)
+
+const fileInput = document.getElementById("fileInput")
+fileInput.addEventListener("change", ()=>{
+  console.log("yeyeyeye");
+  
+  fileOperation(socket, sender_id, "/api/admin/messages/image", user_type)
+  fileInput.value = "";
+})
 
 
 // debounce関数を作成

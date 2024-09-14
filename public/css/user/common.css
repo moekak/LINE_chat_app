@@ -38,6 +38,9 @@ height: 84vh;
     padding: 10px 0;
     cursor: pointer;
 }
+.chat__message_header-item a{
+    text-decoration: none;
+}
 .active{
     border-bottom: 2px solid #07556e;
 }
@@ -61,6 +64,31 @@ height: 84vh;
 }
 .chat_default-txt{
     font-size: 12px;
+}
+
+/* お知らせ箇所 */
+.annoucement_wrapper{
+    background-color: #fff;
+    margin-top: 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.annoucement_wrapper p{
+    font-size: 13px;
+}
+.announcement_container-left-icon{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+.announcement_container{
+    display: flex;
+    gap: 20px;
+    padding: 14px 20px;
+    border-bottom: .5px solid rgba(128, 128, 128, 0.081);
+}
+.announcement_container-right-date{
+    font-size: 11px;
+    color: gray;
 }
 @media (max-width: 450px){
     .chat__form{

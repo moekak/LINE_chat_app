@@ -4,7 +4,8 @@ const connection = mysql.createConnection({
   host: 'localhost',    // データベースホスト
   user: 'laravel-project',         // データベースユーザー
   password: 'AhdhfnYhZp5YMn8H', // データベースパスワード
-  database: 'laravel-project'      // データベース名
+  database: 'laravel-project',      // データベース名
+  reconnect: true
 });
 
 // データベースに接続

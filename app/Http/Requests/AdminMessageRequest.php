@@ -22,7 +22,7 @@ class AdminMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "content"=> ["required", "string"],
+            "content"=> ["required"],
             "user_id" => ["required", "integer", "exists:chat_users,id"],
             "admin_id" => ["required", "integer", "exists:line_accounts,id"],
         ];

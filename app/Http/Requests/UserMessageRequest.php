@@ -22,7 +22,7 @@ class UserMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "content"=> ["required", "string"],
+            "content"=> ["required"],
             "admin_id" => ["required", "integer", "exists:line_accounts,id"],
             "user_id" => ["required", "integer", "exists:chat_users,id"],
         ];

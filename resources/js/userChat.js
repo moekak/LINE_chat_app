@@ -99,8 +99,10 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
             console.log(data);
             const time = data["created_at"]
             const message_id = data["message_id"]
+            const admin_login_id = data["admin_login_id"]
+    
             
-            socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id});
+            socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id, admin_login_id});
 
       })
   }
@@ -117,6 +119,8 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
 
 
   socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
+    console.log(sender_type, sender_id, time, receiver_id, message_id, resizedImage);
+    
     appendDiv("js_append_user", sender_type, resizedImage, "user", "", time, "image")
       
   })
@@ -168,7 +172,11 @@ function sendHeartbeat() {
 setInterval(sendHeartbeat, 10000);
 
 const user_type= "user"
-fileOperation(socket, sender_id, "/api/user/messages/image", user_type)
+const fileInput = document.getElementById("fileInput")
+fileInput.addEventListener("change", ()=>{
+  fileOperation(socket, sender_id, "/api/user/messages/image", user_type)
+  fileInput.value = "";
+})
 
 
 

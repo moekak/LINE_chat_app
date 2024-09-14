@@ -47,9 +47,6 @@ class ChatController extends Controller
         $admin_info= LineAccount::where("id", $id)->first();
         $mergedData = $messageService->getMergedData($id);
 
-        // echo '<pre>';
-        // print_r($mergedData);
-        // echo '<pre>';
 
         $messages = $messageService->fetchAdminAndUserMessages($id, $account_id);
    

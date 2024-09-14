@@ -24,12 +24,12 @@
 @section('chat-message')
 <div class="chat__message_header">
       <div class="chat__message_header-item js_header_item">
-            <i class="far fa-envelope header-icon"></i>
-            <p class="chat__message_header-item-text">メッセージ</p>
+            <a href="{{route("announcements", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><i class="far fa-envelope header-icon"></i></a>
+            <a href="{{route("announcements", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><p class="chat__message_header-item-text">メッセージ</p></a>
       </div>
-      <div class="chat__message_header-item js_header_item">
-            <i class="far fa-comment header-icon"></i>
-            <p class="chat__message_header-item-text">サポート</p>
+      <div class="chat__message_header-item js_header_item active">
+            <a href="{{route("chat", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><i class="far fa-comment header-icon active_font"></i></a>
+            <a href="{{route("chat", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><p class="chat__message_header-item-text active_font">サポート</p></a>
       </div>
 </div>
 <input type="hidden" value="{{$admin_info->user_picture}}" id="js_user_icon_img">
@@ -92,8 +92,4 @@
       
       
 </div>
-
-
-{{-- test --}}
-
 @endsection

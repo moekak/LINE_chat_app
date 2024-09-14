@@ -14,9 +14,6 @@ export const chatNavigator = () =>{
 }
 
 export const fileOperation = (socket, sender_id, url, user_type)=>{
-   const fileInput = document.getElementById("fileInput")
-   fileInput.addEventListener("change", (e)=>{
-
     console.log("moeka");
     
         const file = fileInput.files[0]
@@ -60,6 +57,7 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
                     "image":resizedImage
                 }
             }else if(user_type == "admin"){
+
                 data = {
                     "user_id" :  receiver_id,
                     "admin_id":sender_id,
@@ -76,16 +74,16 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
                 
                 const time = res["created_at"]
                 const message_id = res["message_id"]
+                const admin_login_id = res["admin_login_id"];
                 // // ここでサーバーに送信
-                socket.emit('send_image', {resizedImage, receiver_id, sender_id, sender_type, time, message_id});
+                socket.emit('send_image', {resizedImage, receiver_id, sender_id, sender_type, time, message_id, admin_login_id});
             })
          
         };
     };
 
     reader.readAsDataURL(file);
-        
-   })
+
 }
 
 

@@ -141,7 +141,7 @@ var displayMessage = function displayMessage(sender_id, msg, sender_type, receiv
     } else {
       if (id == receiver_id) {
         if (message_type == "text") element.innerHTML = msg;
-        if (message_type == "image") element.innerHTML = "画像を送信しました。";
+        if (message_type == "image") element.innerHTML = "画像を送信しました";
       }
     }
   });
@@ -183,7 +183,8 @@ var createDivElement = function createDivElement(receiver_id, msg, sender_id, me
     parentNewDiv.setAttribute("data-admin-id", receiver_id);
     parentNewDiv.style.marginTop = "0";
     (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(sender_id, "/").concat(receiver_id)).then(function (res) {
-      var newDiv = (0,_createDiv_js__WEBPACK_IMPORTED_MODULE_1__.createDiv)(parentNewDiv, res["userInfo"]["user_picture"], res["userInfo"]["line_name"], sender_id, msg, message_type, res["totalCount"]);
+      console.log(res);
+      var newDiv = (0,_createDiv_js__WEBPACK_IMPORTED_MODULE_1__.createDiv)(parentNewDiv, res["userInfo"]["user_picture"], res["userInfo"]["line_name"], sender_id, msg, message_type, res["totalCount"], res["formatted_date"]);
       resolve(newDiv);
     });
   });
@@ -336,6 +337,7 @@ var createDiv = function createDiv(parentNewDiv, userPicture, userName, sender_i
   small.classList.add("js_update_message_time");
   small.setAttribute("data-id", sender_id);
   small.innerHTML = time;
+  console.log("time\u306F".concat(time));
 
   // append
   grandChildDiv1.appendChild(p);
@@ -452,6 +454,7 @@ var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
           console.log(res);
           var time = res["created_at"];
           var message_id = res["message_id"];
+          var admin_login_id = res["admin_login_id"];
           // // ここでサーバーに送信
           socket.emit('send_image', {
             resizedImage: resizedImage,
@@ -459,7 +462,8 @@ var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
             sender_id: sender_id,
             sender_type: sender_type,
             time: time,
-            message_id: message_id
+            message_id: message_id,
+            admin_login_id: admin_login_id
           });
         });
       };
@@ -7317,12 +7321,10 @@ var sender_id = document.getElementById("js_sender_id").value;
 registerUser(sender_id);
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-  var current_user_id = document.getElementById("js_chatuser_id");
   var data = {
     content: msg2,
     user_id: sender_id,
-    admin_id: receiver_id,
-    current_user_id: current_user_id
+    admin_id: receiver_id
   };
   fetch("/api/user/messages", {
     method: "POST",
@@ -7345,13 +7347,15 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
     console.log(data);
     var time = data["created_at"];
     var message_id = data["message_id"];
+    var admin_login_id = data["admin_login_id"];
     socket.emit('chat message', {
       msg: msg,
       receiver_id: receiver_id,
       sender_id: sender_id,
       sender_type: sender_type,
       time: time,
-      message_id: message_id
+      message_id: message_id,
+      admin_login_id: admin_login_id
     });
   });
 }
@@ -7383,8 +7387,12 @@ document.getElementById("js_chat_form").addEventListener("submit", function (e) 
 (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_2__.disableSubmitBtn)();
 
 // チャットを開いたときに一番下までスクロールさせる
-var scroll_el = document.querySelector(".chat__message-main");
-scroll_el.scrollTop = scroll_el.scrollHeight;
+// チャットを開いたときに一番下までスクロールさせる
+document.addEventListener("DOMContentLoaded", function () {
+  var scroll_el = document.querySelector(".chat__message-main");
+  console.log(scroll_el);
+  scroll_el.scrollTop = scroll_el.scrollHeight;
+});
 
 // ハートビートを送信する関数
 function sendHeartbeat() {
