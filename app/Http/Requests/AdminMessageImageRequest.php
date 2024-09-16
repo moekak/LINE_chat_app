@@ -22,8 +22,8 @@ class AdminMessageImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "admin_id" => ["required", "integer", "exists:line_accounts,id"],
-            "user_id" => ["required", "integer", "exists:chat_users,id"],
+            "user_id" => ["required",  "exists:user_entities,entity_uuid"],
+            "admin_id" => ["required", "exists:user_entities,entity_uuid"],
             "image" => ["required", "string"]
         ];
     }

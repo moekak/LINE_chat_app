@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminMessage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
+use App\Models\UserEntity;
 use App\Models\UserMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -26,7 +27,10 @@ class ChatController extends Controller
         $messages = $messageService->fetchAdminAndUserMessages($admin_info["id"], $user_id["id"]);
         $group_message = $messageService->formatMessage($messages);
 
-        return view("user.chat", ["admin_info" => $admin_info, "user_id" => $user_id, "group_message" => $group_message]);
+        $uuid_admin = UserEntity::where("entity_type", "admin")->where("related_id", $admin_info["id"])->value("entity_uuid");
+        $uuid_user = UserEntity::where("entity_type", "user")->where("related_id", $user_id["id"])->value("entity_uuid");
+
+        return view("user.chat", ["admin_info" => $admin_info, "user_id" => $user_id, "group_message" => $group_message, "uuid_user"=>  $uuid_user, "uuid_admin" => $uuid_admin]);
     }
 
 

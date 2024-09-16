@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { appendDiv } from './module/component/append.js';
+import { displayChatMessage } from './module/component/chatController.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { fileOperation } from './module/component/uiController.js';
 
@@ -29,11 +29,11 @@ document.addEventListener("visibilitychange", function() {
       if (!socket.connected) {
             // alert("Socket.IOは接続されていません。再接続を試みます。")
             // alert(sender_id)
-            registerUser(sender_id)
+            registerUser()
           // console.log("Socket.IOは接続されていません。再接続を試みます。");
           socket.connect();
       }else{
-        registerUser(sender_id)
+        registerUser()
       }
   }
     
@@ -54,7 +54,7 @@ socket.on('reconnect_attempt', () => {
     // ここで接続状態を更新
     // 再接続を試みる
     socket.connect();
-    registerUser(sender_id)
+    registerUser()
 });
 
 socket.on('userDisconnected', (data) => {
@@ -64,18 +64,22 @@ socket.on('userDisconnected', (data) => {
         // alert('This is me, updating my connection status.');
     }
 });
+
+const uuid = document.getElementById("js_uuid").value
 const sender_id = document.getElementById("js_sender_id").value
-registerUser(sender_id)
+registerUser()
 // メッセージをサーバーに送信
 function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-
-
       const data = {
             content:msg2,
             user_id: sender_id,
             admin_id: receiver_id,
 
       }
+
+      console.log(data);
+      
+      
       
       fetch("/api/user/messages", {
             method: "POST",
@@ -96,7 +100,9 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
               return response.json();
       })
       .then((data)=>{
-            console.log(data);
+        
+        
+
             const time = data["created_at"]
             const message_id = data["message_id"]
             const admin_login_id = data["admin_login_id"]
@@ -108,20 +114,20 @@ function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
   }
 
 
-  function registerUser(sender_id){
-      socket.emit("register", sender_id)
-  }
-  
+  function registerUser(){
+      const uuid = document.getElementById("js_uuid").value
+     socket.emit("register", uuid)
+ }
   // サーバーからのメッセージを受信
   socket.on('chat message', function (msg, sender_type, sender_id, time) {
-      appendDiv("js_append_user", sender_type, msg, "user", "", time, "text")
+      displayChatMessage("js_append_user", sender_type, msg, "user", "", time, "text")
   });
 
 
   socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
     console.log(sender_type, sender_id, time, receiver_id, message_id, resizedImage);
     
-    appendDiv("js_append_user", sender_type, resizedImage, "user", "", time, "image")
+    displayChatMessage("js_append_user", sender_type, resizedImage, "user", "", time, "image")
       
   })
 

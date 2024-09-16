@@ -22,7 +22,7 @@ class SearchChatUsersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "admin_id" => ["required", "integer", "exists:line_accounts,id"],
+            "admin_id" => ["required", "exists:user_entities,entity_uuid"],
             "text" => ["required"]
         ];
     }

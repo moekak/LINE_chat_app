@@ -2,6 +2,8 @@
 
 {{-- チャット画面左側のチャットユーザー一覧 --}}
 @section('user-list')
+<input type="hidden" id="js_uuid" value="{{$uuid_admin}}">
+<input type="hidden" id="js_admin_id" value="{{$admin_info->id}}">
 <section class="chat__users-list">
       {{-- 管理者アカウントの情報を表示 --}}
       <div class="chat__users-list-top">
@@ -18,20 +20,22 @@
       <div class="chat__users-list-area">
             <input type="text" class="chat__users-list-area-input js_message_input" placeholder="Search">
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
+
                   @foreach ($mergedData as $data)
-                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-id="{{$data["user_info"]->id}}" data-admin-id="{{$admin_info->id}}">
-                              <img src="{{$data["user_info"]->user_picture}}" alt="" class="chat_users-icon"> 
+                  
+                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="{{$data["uuid"]}}" data-id="{{$data["userInfo"]->id}}" data-admin-id="{{$admin_info->id}}">
+                              <img src="{{$data["userInfo"]->user_picture}}" alt="" class="chat_users-icon"> 
                               <div class="chat_users-list-flex">
                                     <div class="chat_users-list-box"> 
-                                          <p class="chat_name_txt">{{$data["user_info"]->line_name}}</p>
-                                          <small class="chat_time js_update_message_time"  data-id="{{$data["user_info"]->id}}">{{$data["formatted_time"]}}</small>
+                                          <p class="chat_name_txt">{{$data["userInfo"]->line_name}}</p>
+                                          <small class="chat_time js_update_message_time"  data-id="{{$data["uuid"]}}">{{$data["formatted_date"]}}</small>
                                     </div>  
                                     <div class="chat__users-list-msg">
-                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["user_info"]->id}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
+                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["uuid"]}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
                                           @php
-                                                $count_style = $data["count"] <= 0 ? "none": "flex";
+                                                $count_style = $data["totalCount"] <= 0 ? "none": "flex";
                                           @endphp
-                                          <div class="message_count js_mesage_count" data-id="{{$data["user_info"]->id}}" style="display:{{$count_style}}">{{$data["count"]}}</div>
+                                          <div class="message_count js_mesage_count" data-id="{{$data["uuid"]}}" style="display:{{$count_style}}">{{$data["totalCount"]}}</div>
                                     </div>
                               </div>
                         </div>
@@ -49,8 +53,8 @@
 @endsection
  
 @section('send_data')
-      <input type="hidden" name="admin_id" value="<?=$admin_info["id"]?>" id="js_sender_id">
-      <input type="hidden" name="user_id" value="<?=$user_id?>" id="js_receiver_id">
+      <input type="hidden" name="admin_id" value="{{$uuid_admin}}" id="js_sender_id">
+      <input type="hidden" name="user_id" value="{{$uuid_user}}" id="js_receiver_id">
       <input type="hidden" name="sender" value="admin" id="js_sender_type">
 @endsection
 
@@ -58,13 +62,13 @@
 
 @section('chat-message')
 <div class="chat__message-top">
-      <input type="hidden" value="{{$chat_user->id}}" id="js_chatuser_id">
+      <input type="hidden" value="{{$uuid_user}}" id="js_chatuser_id">
       <input type="hidden" value="{{$chat_user->user_picture}}" id="js_user_icon_img">
       <img src="{{$chat_user->user_picture}}" alt="" class="chat_users-icon"> 
       <p class="chat_message_name">{{$chat_user->line_name}}</p>
 </div>
 <div class="chat__message-main">
-      <div class="chat__message-wrapper js_append_admin" data-id="{{$chat_user->id}}">
+      <div class="chat__message-wrapper js_append_admin" data-id="{{$uuid_user}}">
            @foreach ($group_message as $date => $messages)
                   <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)

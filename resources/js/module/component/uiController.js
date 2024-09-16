@@ -13,9 +13,17 @@ export const chatNavigator = () =>{
       });
 }
 
+export const scrollToBottom = () => {
+    const scroll_el = document.querySelector(".chat__message-main");
+    if (scroll_el) {
+        scroll_el.scrollTop = scroll_el.scrollHeight;
+    }
+};
+
+
 export const fileOperation = (socket, sender_id, url, user_type)=>{
-    console.log("moeka");
-    
+
+
         const file = fileInput.files[0]
         const reader = new FileReader();
         const maxSizeMB = 5;
@@ -65,11 +73,9 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
                     "image":resizedImage
                 }
             }
-            console.log(url);
             
             fetchPostOperation(data, url)
             .then((res)=>{
-
                 console.log(res);
                 
                 const time = res["created_at"]

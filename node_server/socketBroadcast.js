@@ -2,7 +2,7 @@ const { selectUserID, selectAdminID } = require("./database.js");
 
 const broadcastMessageToSockets = (userSockets, msgData) =>{
 
-      const { msg, sender_id, sender_type, time, receiver_id, message_id, admin_login_id } = msgData;
+      const { msg, sender_id, sender_type, time, receiver_id, message_id, admin_login_id} = msgData;
       const recipientSockets  = userSockets.get(receiver_id);
       const senderSockets     = userSockets.get(sender_id);
       const adminSockets      = userSockets.get(`admin${receiver_id}`);
@@ -68,7 +68,7 @@ const broadcastImagesToSockets = (userSockets, msgData) =>{
 
 
 const sendNotificationToLine = (receiver_id, sender_id, client) =>{
-      selectUserID(receiver_id, sender_id)
+      selectUserID(receiver_id)
       .then((userId)=>{
           selectAdminID(sender_id)
           .then((adminId)=>{

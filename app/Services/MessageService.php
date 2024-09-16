@@ -227,12 +227,7 @@ class MessageService{
                 $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
                 return $message;
             })->sortByDesc("created_at");
-            
-            // echo '<pre>';
-
-            // print_r($sortedAdminMessages->toArray()); // 管理者メッセージのソート確認
-            // echo '</pre>';
-
+        
        
 
             if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
@@ -245,16 +240,6 @@ class MessageService{
                 $latestMessages[] = $allMessages->first();
             }
 
-            // foreach($latestMessages as $message){
-            //     echo "<br>";
-            //     print($message->created_at);
-            //     echo "<br>";
-            // }
-
-            // exit;
-       
-           
-            
         }
 
         // 最新メッセージの時間のフォーマット
@@ -262,6 +247,7 @@ class MessageService{
             $message["time"] =$this->formatTime($message->created_at);
         }
 
+        $userEntityService = new UserEntityService();
 
 
         if(count($latestMessages) > 0){
@@ -273,14 +259,18 @@ class MessageService{
  
             foreach($latestMessages as $index => $message){
                 $totalMessageCount =$this->selectTotalMessageCount($message->admin_id, $message->user_id);
-                $mergedData[$index]["user_info"] = ChatUser::where("id", $message->user_id)->first();
+                $mergedData[$index]["userInfo"] = ChatUser::where("id", $message->user_id)->first();
                 $mergedData[$index]["message"] = $message;
-                $mergedData[$index]["formatted_time"] = $message->time;
-                $mergedData[$index]["count"] = $totalMessageCount;
+                $mergedData[$index]["formatted_date"] = $message->time;
+                $mergedData[$index]["totalCount"] = $totalMessageCount;
+                $mergedData[$index]["uuid"] = $userEntityService->getUserUuid($message->user_id);
+
 
             }
 
         }
+
+
 
      
         return $mergedData;

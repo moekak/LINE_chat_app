@@ -5,7 +5,6 @@ export const changeTextareaHeight = () =>{
     
     function autoResize() {
 
-        
         if(this.scrollHeight > height){
             console.log(this.scrollHeight);
                     

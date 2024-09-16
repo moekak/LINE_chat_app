@@ -8,9 +8,10 @@ use App\Http\Requests\AdminMessageRequest;
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
 use App\Models\LineAccount;
+use App\Models\UserEntity;
 use App\Services\ImageService;
 use App\Services\MessageService;
-use Illuminate\Support\Facades\Log;
+use App\Services\UserEntityService;
 
 class AdminMessageController extends Controller
 {
@@ -20,18 +21,35 @@ class AdminMessageController extends Controller
     public function store(AdminMessageRequest $request)
     {
         try {
-
+            
             $messageService = new MessageService();
+            $userEntityService = new UserEntityService();
+
             $validated = $request->validated();
             $validated["type"]= "admin";
-            $latestMessageID = $messageService->getLatesetAdminMessageID($validated["user_id"], $validated["admin_id"]);
+
+            $admin_id = $userEntityService->getAdminID($validated["admin_id"]);
+            $user_id = $userEntityService->getUserID($validated["user_id"]);
+ 
+
+            $latestMessageID = $messageService->getLatesetAdminMessageID($user_id, $admin_id);
             $validated["message_id"] = $latestMessageID + 1;
-    
-            $adminMessage = AdminMessage::create($validated);
+            
+
+            $message_data = [
+                "message_id"=> $validated["message_id"],
+                "user_id" => $user_id,
+                "admin_id" => $admin_id,
+                "content" => $validated["content"],
+                "type" => "admin"
+            ];
+
+          
+            $adminMessage = AdminMessage::create($message_data);
             $createdAt = $adminMessage->created_at->format('H:i');
             $message_id = $adminMessage->message_id;
 
-            $admin_login_id = LineAccount::where("id", $validated["admin_id"])->value("user_id");
+            $admin_login_id = LineAccount::where("id", $admin_id)->value("user_id");
     
             return response()->json(['created_at' => $createdAt, "message_id"=> $message_id,"admin_login_id" => $admin_login_id], 200);
 
@@ -46,23 +64,23 @@ class AdminMessageController extends Controller
         try{
             
             $messageService = new MessageService();
+            $userEntityService = new UserEntityService();
             $imageService   = new ImageService();
             
             $validated      = $request->validated();
             $base64Image    = $validated["image"];
             $imageName      = $imageService ->saveBase64Image($base64Image);
 
+            $admin_id = $userEntityService->getAdminID($validated["admin_id"]);
+            $user_id = $userEntityService->getUserID($validated["user_id"]);
 
-            // エラーが起きたら早期リターンさせる
-            // if(isset($imageName["error"])){
-            //     return response()->json(["error" => $imageName["error"]]);
-            // }
-           
+
+
             
             $data = [
-                "user_id" => $validated["user_id"],
-                "admin_id" => $validated["admin_id"],
-                "message_id" => $messageService->getLatesetAdminMessageID($validated["user_id"], $validated["admin_id"]) + 1,
+                "user_id" => $user_id,
+                "admin_id" => $admin_id,
+                "message_id" => $messageService->getLatesetAdminMessageID($user_id, $admin_id) + 1,
                 "type" => "admin",
                 "image" => $imageName
             ];
@@ -72,13 +90,13 @@ class AdminMessageController extends Controller
             $adminMessageImage = AdminMessageImage::create($data);
             $createdAt = $adminMessageImage->created_at->format('H:i');
             $message_id = $adminMessageImage->message_id;
-            $admin_login_id = LineAccount::where("id", $validated["admin_id"])->value("user_id");
+            $admin_login_id = LineAccount::where("id", $admin_id)->value("user_id");
     
             return response()->json(['created_at' => $createdAt, "message_id"=> $message_id, "admin_login_id" => $admin_login_id], 200);
 
             
         } catch (\Exception $e) {
-            Log::debug("aa");
+
             // エラーが発生した場合にエラーメッセージを返す
             return response()->json([
                 'error' => $e->getMessage(),

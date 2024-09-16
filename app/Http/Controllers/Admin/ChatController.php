@@ -8,9 +8,11 @@ use App\Models\AdminMessageImage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\MessageReadUser;
+use App\Models\UserEntity;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use App\Services\MessageService;
+use App\Services\UserEntityService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +30,8 @@ class ChatController extends Controller
         // ユーザーの最新のメッセージIDを取得する
         $latest_message_id = $messageService->getLatesetUserMessageID($account_id, $id);
 
-        // 開いているメッセージを既読にするため、データベースに保存
+
+        // // 開いているメッセージを既読にするため、データベースに保存
         if($latest_message_id !== null){
               $message_read_data = [
                 "message_id"=> $latest_message_id,
@@ -39,6 +42,9 @@ class ChatController extends Controller
 
             MessageReadUser::create($message_read_data);
         }
+
+        $uuid_admin = UserEntity::where("entity_type", "admin")->where("related_id", $id)->value("entity_uuid");
+        $uuid_user = UserEntity::where("entity_type", "user")->where("related_id", $account_id)->value("entity_uuid");
     
         // 特定のユーザー情報を取り出す
         $chat_user = ChatUser::where("id", $account_id)->first();
@@ -51,25 +57,21 @@ class ChatController extends Controller
         $messages = $messageService->fetchAdminAndUserMessages($id, $account_id);
    
         $group_message = $messageService->formatMessage($messages);
-        // echo '<pre>';
-        // print_r($group_message ->toArray());
-        // echo '<pre>';
-       
-        return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user]);
+
+
+        return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user, "uuid_admin" => $uuid_admin, "uuid_user"=>$uuid_user]);
     }
 
-    public function getMergedDataAPI($admin_id){
+    public function getMergedDataAPI($admin_uuid){
         try{
             
             $messageService = new MessageService();
+            $userEntityService = new UserEntityService();
+
+            $admin_id = $userEntityService->getAdminID($admin_uuid);
+
             $mergedData = $messageService->getMergedData($admin_id);
-
-            foreach($mergedData as $data){
-                Log::debug($data["message"]->created_at);
-
-            }
-
-            
+           
             return response()->json(["mergedData" => $mergedData]);
 
         }catch (\Exception $e){

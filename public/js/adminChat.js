@@ -1,9 +1,9 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./resources/js/module/component/append.js":
+/***/ "./resources/js/module/component/chatController.js":
 /*!*************************************************!*\
-  !*** ./resources/js/module/component/append.js ***!
+  !*** ./resources/js/module/component/chatController.js ***!
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -11,12 +11,12 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   adjustMesageLength: () => (/* binding */ adjustMesageLength),
-/* harmony export */   appendDiv: () => (/* binding */ appendDiv),
+/* harmony export */   displayChatMessage: () => (/* binding */ displayChatMessage),
 /* harmony export */   createDivForSearch: () => (/* binding */ createDivForSearch),
 /* harmony export */   displayMessage: () => (/* binding */ displayMessage),
-/* harmony export */   increateMessageCount: () => (/* binding */ increateMessageCount),
+/* harmony export */   increaseMessageCount: () => (/* binding */ increaseMessageCount),
 /* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime),
-/* harmony export */   updateUserDataElement: () => (/* binding */ updateUserDataElement)
+/* harmony export */   updateChatUserList: () => (/* binding */ updateChatUserList)
 /* harmony export */ });
 /* harmony import */ var _util_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch */ "./resources/js/module/util/fetch.js");
 /* harmony import */ var _createDiv_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createDiv.js */ "./resources/js/module/component/createDiv.js");
@@ -24,26 +24,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var appendDiv = function appendDiv(className, type, msg, file_name, sender_id, time, message_type) {
+var displayChatMessage = function displayChatMessage(className, type, msg, file_name, sender_id, time, message_type) {
   var parentElement = document.querySelector(".".concat(className));
   if (type == "admin") {
     if (file_name == "user") {
-      appendLeft(msg, parentElement, time, message_type);
+      addLeftChatMessage(msg, parentElement, time, message_type);
     } else if (file_name == "admin") {
-      appendRight(msg, parentElement, time, message_type);
+      addRightChatMessage(msg, parentElement, time, message_type);
     }
   }
   if (type == "user") {
     if (file_name == "user") {
-      appendRight(msg, parentElement, time, message_type);
+      addRightChatMessage(msg, parentElement, time, message_type);
     } else if (file_name == "admin" && sender_id == parentElement.getAttribute("data-id")) {
       console.log("ey");
-      appendLeft(msg, parentElement, time, message_type);
+      addLeftChatMessage(msg, parentElement, time, message_type);
     }
   }
 };
-var appendRight = function appendRight(msg, parentElement, time, message_type) {
-  console.log("appendright");
+var addRightChatMessage = function addRightChatMessage(msg, parentElement, time, message_type) {
+  console.log("addRightChatMessage");
   var newFirstDiv = document.createElement("div");
   newFirstDiv.classList.add("chat__message-container-right");
   var newSecondDiv = document.createElement("div");
@@ -70,7 +70,7 @@ var appendRight = function appendRight(msg, parentElement, time, message_type) {
   var scroll_el = document.querySelector(".chat__message-main");
   scroll_el.scrollTop = scroll_el.scrollHeight;
 };
-var appendLeft = function appendLeft(msg, parentElement, time, message_type) {
+var addLeftChatMessage = function addLeftChatMessage(msg, parentElement, time, message_type) {
   var newFirstDiv = document.createElement("div");
   newFirstDiv.classList.add("chat__message-container-left");
   var newSecondDiv = document.createElement("div");
@@ -110,7 +110,7 @@ var appendLeft = function appendLeft(msg, parentElement, time, message_type) {
   var scroll_el = document.querySelector(".chat__message-main");
   scroll_el.scrollTop = scroll_el.scrollHeight;
 };
-var increateMessageCount = function increateMessageCount(sender_id, type) {
+var increaseMessageCount = function increaseMessageCount(sender_id, type) {
   if (type == "user") {
     // const parentElement = document.querySelector(".js_append_admin")
 
@@ -174,7 +174,7 @@ var updateMessageTime = function updateMessageTime(time, sender_id, sender_type,
     }
   });
 };
-var createDivElement = function createDivElement(receiver_id, msg, sender_id, message_type) {
+var createNewDivElement = function createNewDivElement(receiver_id, msg, sender_id, message_type) {
   return new Promise(function (resolve) {
     var parentNewDiv = document.createElement("div");
     parentNewDiv.classList.add("chat__users-list-wraper");
@@ -218,7 +218,7 @@ var createDivForSearch = function createDivForSearch(data, sender_id) {
     });
   });
 };
-var updateUserDataElement = function updateUserDataElement(receiver_id, msg, sender_id, message_type, sender_type, is_searching) {
+var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id, message_type, sender_type, is_searching) {
   var wrappers = document.querySelectorAll(".js_chat_wrapper");
   var chat_wrapper = document.getElementById("js_chatUser_wrapper");
   var firstChild = chat_wrapper.firstChild;
@@ -252,7 +252,7 @@ var updateUserDataElement = function updateUserDataElement(receiver_id, msg, sen
     }
   });
   if (!hasDiv && firstChild !== undefined && !is_searching["flag"]) {
-    createDivElement(receiver_id, msg, sender_id, message_type).then(function (wrapper) {
+    createNewDivElement(receiver_id, msg, sender_id, message_type).then(function (wrapper) {
       chat_wrapper.insertBefore(wrapper, firstChild);
       (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
     })["catch"](function (error) {
@@ -7270,7 +7270,7 @@ var __webpack_exports__ = {};
   \***********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
-/* harmony import */ var _module_component_append_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/component/append.js */ "./resources/js/module/component/append.js");
+/* harmony import */ var _module_component_append_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/component/chatController.js */ "./resources/js/module/component/chatController.js");
 /* harmony import */ var _module_util_fetch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./module/util/fetch.js */ "./resources/js/module/util/fetch.js");
 /* harmony import */ var _module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./module/component/changeStyle.js */ "./resources/js/module/component/changeStyle.js");
 /* harmony import */ var _module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/component/uiController.js */ "./resources/js/module/component/uiController.js");
@@ -7395,13 +7395,13 @@ function registerUser(sender_id) {
 // サーバーからのメッセージを受信
 socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
   if (isON["isSoundOn"]) (0,_module_util_notificationSound_js__WEBPACK_IMPORTED_MODULE_6__.playNotificationSound)();
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_admin", sender_type, msg, "admin", sender_id, time, "text");
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayChatMessage)("js_append_admin", sender_type, msg, "admin", sender_id, time, "text");
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
   if (sender_type == "user") {
-    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(receiver_id, msg, sender_id, "text", sender_type, is_searching);
+    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateChatUserList)(receiver_id, msg, sender_id, "text", sender_type, is_searching);
   }
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, msg, sender_type, receiver_id, "text");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increateMessageCount)(sender_id, sender_type);
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increaseMessageCount)(sender_id, sender_type);
   var data = {
     "message_id": message_id,
     "admin_id": receiver_id,
@@ -7412,11 +7412,11 @@ socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_
   }
 });
 socket.on("send_image", function (sender_type, sender_id, time, receiver_id, message_id, resizedImage) {
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.appendDiv)("js_append_admin", sender_type, resizedImage, "admin", sender_id, time, "image");
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayChatMessage)("js_append_admin", sender_type, resizedImage, "admin", sender_id, time, "image");
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
   (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, "", sender_type, receiver_id, "image");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increateMessageCount)(sender_id, sender_type);
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateUserDataElement)(receiver_id, resizedImage, sender_id, "image", sender_type, is_searching);
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increaseMessageCount)(sender_id, sender_type);
+  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateChatUserList)(receiver_id, resizedImage, sender_id, "image", sender_type, is_searching);
   var data = {
     "message_id": message_id,
     "admin_id": receiver_id,

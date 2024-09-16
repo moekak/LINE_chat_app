@@ -15,13 +15,14 @@
 @endsection
 
 @section('send_data')
-      <input type="hidden" name="admin_id" value="<?=$user_id["id"]?>" id="js_sender_id">
-      <input type="hidden" name="user_id" value="<?=$admin_info["id"]?>" id="js_receiver_id">
+      <input type="hidden" name="admin_id" value="{{$uuid_user}}" id="js_sender_id">
+      <input type="hidden" name="user_id" value="{{$uuid_admin}}" id="js_receiver_id">
       <input type="hidden" value="user" id="js_sender_type">
 @endsection
 
 
 @section('chat-message')
+<input type="hidden" id="js_uuid" value="{{$uuid_user}}">
 <div class="chat__message_header">
       <div class="chat__message_header-item js_header_item">
             <a href="{{route("announcements", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><i class="far fa-envelope header-icon"></i></a>

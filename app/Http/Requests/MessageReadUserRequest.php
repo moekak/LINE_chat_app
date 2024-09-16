@@ -23,8 +23,9 @@ class MessageReadUserRequest extends FormRequest
     {
         return [
             "message_id"=> ["required", "integer"],
-            "admin_id" => ["required", "integer", "exists:line_accounts,id"],
-            "chat_user_id" => ["required", "integer", "exists:chat_users,id"],
+            "chat_user_id" => ["required", "exists:user_entities,entity_uuid"],
+            "admin_id" => ["required", "exists:user_entities,entity_uuid"],
+
         ];
     }
 }
