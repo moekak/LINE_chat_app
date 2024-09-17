@@ -49,7 +49,7 @@ const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const { selectUserID, selectAdminID, selectUserIds } = require('./database.js');
+const { selectUserIds } = require('./database.js');
 const axios = require('axios');
 const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./socketBroadcast.js');
 
@@ -63,18 +63,15 @@ const config = {
 const client = new Client(config);
 
 
-
-
-
 // アプリケーションの初期化
 const app = express();
 
-//リクエストを送信する際に許可するオリジン（ドメイン）を指定
-app.use(cors({
-    origin: ['https://line-chat.tokyo', "http://127.0.0.1:8000"],
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-  }));
+//サーバーへのリクエストを送信できるドメインを指定(http通信を使用する際は必要)
+// app.use(cors({
+//     origin: ['https://line-chat.tokyo', "http://127.0.0.1:8000"],
+//     methods: ['GET', 'POST'],
+//     allowedHeaders: ['Content-Type']
+//   }));
 
 // SSL/TLS 証明書の読み込み
 const options = {
@@ -84,7 +81,8 @@ const options = {
 
 // HTTPS サーバーの作成
 const server = https.createServer(options, app);
-// WebSocket 接続を許可するオリジン（ドメイン）を指定
+//指定されたドメインのみが WebSocket 経由で通信できるようにする
+// WebSocket プロトコルの性質上、別途 Socket.IO 側でも CORS 設定（必須ではない）
 const io = socketIo(server, {
     cors: {
         origin: ['https://line-chat.tokyo', "http://127.0.0.1:8000", "https://twitter-clone.click"],
@@ -92,8 +90,8 @@ const io = socketIo(server, {
     },
 });
 
-// 静的ファイルの提供
-app.use(express.static('public'));
+// // 静的ファイルの提供
+// app.use(express.static('public'));
 
 const userSockets = new Map(); // ユーザーIDとソケットのマッピング
 
@@ -105,6 +103,7 @@ io.on('connection', (socket) => {
 
 
    // ソケットの登録
+   //一人のユーザーが複数の接続を持つ可能性があるためSetを使用
     socket.on("register", (sender_id) => {
         if (userSockets.has(sender_id)) {
             // Setにソケットを追加（重複なし）
