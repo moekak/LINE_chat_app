@@ -24,10 +24,7 @@ export const prepareMessageData = () => {
 };
 
 // メッセージをサーバーに送信
-export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, msg2) => {
-
-      console.log(`formattedMsg: ${msg}`);
-      
+export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, msg2, url) => {
       const data = {
             content:msg2,
             admin_id: sender_id,
@@ -35,7 +32,7 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
       }
 
       // 管理者メッセージをデータベースに格納
-      fetchPostOperation(data, "/api/admin/messages")
+      fetchPostOperation(data, url)
       .then((res)=>{
         const time            = res["created_at"]
         const message_id      = res["message_id"]

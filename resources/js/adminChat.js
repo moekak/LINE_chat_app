@@ -31,7 +31,7 @@ document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
   e.preventDefault();
   const { msg, formattedMsg, receiver_id, sender_type } = prepareMessageData();
   // メッセージをサーバーに送信する
-  sendMessage(socket, formattedMsg, sender_id, receiver_id, sender_type, msg)
+  sendMessage(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/admin/messages")
 })
 
 

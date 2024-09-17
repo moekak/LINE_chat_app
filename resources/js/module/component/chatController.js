@@ -113,8 +113,7 @@ export const updateMessageTime = (time,sender_id,sender_type,receiver_id) => {
 const createNewDivElement = (receiver_id, sender_id, msg, message_type ) => {
     fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`)
         .then((res) => {
-
-            console.log(res);
+            
             const template      = createChatUserContainer(receiver_id, res, msg, message_type)
             const parentElement = document.getElementById("js_chatUser_wrapper");
             const firstChild    = parentElement.firstChild; // 最初の子要素を取得
@@ -158,9 +157,6 @@ export const createDivForSearch = (data) =>{
 
 // チャットユーザーリストを更新
 export const updateChatUserList = (receiver_id,msg,sender_id,message_type,sender_type,is_searching) => {
-
-    console.log("2222");
-    
 
     const wrappers      = document.querySelectorAll(".js_chat_wrapper");
     const chat_wrapper  = document.getElementById("js_chatUser_wrapper");
