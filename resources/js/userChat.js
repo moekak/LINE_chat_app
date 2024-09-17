@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     e.preventDefault();
     const { msg, formattedMsg, receiver_id, sender_type } = prepareMessageData();
     // メッセージをサーバーに送信する
-    sendMessage(formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/user/messages")
+    sendMessage(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/user/messages")
   })
 
 

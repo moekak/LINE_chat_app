@@ -7,8 +7,9 @@ import { debounce, handleReceivedMessage, handleSearchInput, prepareMessageData,
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
+
 // グローバル変数
-let is_searching  ={flag: false}
+let is_searching  = {flag: false}
 let isON          = {isSoundOn : false}
 const sender_id   = document.getElementById("js_sender_id").value
 

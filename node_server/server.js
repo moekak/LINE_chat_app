@@ -49,7 +49,7 @@ const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const { selectUserID, selectAdminID } = require('./database.js');
+const { selectUserID, selectAdminID, selectUserIds } = require('./database.js');
 const axios = require('axios');
 const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./socketBroadcast.js');
 
@@ -92,7 +92,6 @@ const io = socketIo(server, {
     },
 });
 
-
 // 静的ファイルの提供
 app.use(express.static('public'));
 
@@ -117,6 +116,7 @@ io.on('connection', (socket) => {
         console.log(`User ${sender_id} connected`);
     });
 
+
     // メッセージの受信とブロードキャスト
     socket.on('chat message', (data) => {
         const {msg, receiver_id, sender_id, sender_type, time, message_id, admin_login_id} = data
@@ -128,31 +128,24 @@ io.on('connection', (socket) => {
 
         // LINEへメッセージ受信通知をする
         if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
-            console.log("userID" + receiver_id);
-            
             sendNotificationToLine(receiver_id, sender_id, client)
         }
     });
     
 
-
     // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
         const {resizedImage, receiver_id, sender_id, sender_type, time, message_id,admin_login_id} = data
-        console.log(`resizedImage: ${resizedImage}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}`);
 
         // 受信者、送信者、管理者のソケットを取得
         const msgData = { sender_type, sender_id, time, receiver_id, message_id, resizedImage,admin_login_id } ;
         broadcastImagesToSockets(userSockets, msgData)
         
-
         // LINEへメッセージ受信通知をする
         if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
             sendNotificationToLine(receiver_id, sender_id, client)
         }
-        
     })
-
 
     // ソケットの切断処理
     socket.on('disconnect', (reason) => {
@@ -161,6 +154,14 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('userDisconnected', { userId: socket.userId, reason });
         userSockets.delete(socket.userId);
     });
+
+    socket.on("broadcast message", (data)=>{
+        const {formatted_title, formatted_body, admin_account_id, created_at} = data
+        selectUserIds(admin_account_id)
+
+        console.log(data);
+        
+    })
 });
 
 
@@ -174,8 +175,6 @@ server.listen(PORT, () => {
 
 
 server.setTimeout(0);  // タイムアウトを無効化
-
-
 
 app.get('/test', (req, res) => {
       res.send('Hello World!');

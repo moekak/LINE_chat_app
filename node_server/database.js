@@ -70,7 +70,25 @@ const selectAdminID = (account_id) => {
   });
 };
 
+const selectUserIds = (admin_account_id) =>{
+    return new Promise(()=>{
+        const select_user_ids = "SELECT id FROM chat_users WHERE account_id = ?";
+        connection.query(select_user_ids, [admin_account_id], (err, results) =>{
+            if(err){
+                reject(err)
+                return
+            }
+
+            results.forEach((res)=>{
+                console.log(res);
+                
+            })
+        })
+    })
+}
+
 module.exports = {
     selectUserID,
     selectAdminID,
+    selectUserIds
 };

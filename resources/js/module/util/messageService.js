@@ -25,23 +25,23 @@ export const prepareMessageData = () => {
 
 // メッセージをサーバーに送信
 export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, msg2, url) => {
-      const data = {
-            content:msg2,
-            admin_id: sender_id,
-            user_id: receiver_id
-      }
+    const data = {
+          content:msg2,
+          admin_id: sender_id,
+          user_id: receiver_id
+    }
 
-      // 管理者メッセージをデータベースに格納
-      fetchPostOperation(data, url)
-      .then((res)=>{
-        const time            = res["created_at"]
-        const message_id      = res["message_id"]
-        const admin_login_id  = res["admin_login_id"]
-        
-        socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id, admin_login_id});
-        document.getElementById("js_msg").value = "";
-      })
-  }
+    // 管理者メッセージをデータベースに格納
+    fetchPostOperation(data, url)
+    .then((res)=>{
+      const time            = res["created_at"]
+      const message_id      = res["message_id"]
+      const admin_login_id  = res["admin_login_id"]
+      
+      socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id, admin_login_id});
+      document.getElementById("js_msg").value = "";
+    })
+}
 
 
   // ##################################################################
