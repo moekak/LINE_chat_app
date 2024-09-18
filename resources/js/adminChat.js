@@ -37,12 +37,15 @@ document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
 
 
 // サーバーからのメッセージを受信
-socket.on('chat message', (msg, sender_type, sender_id, time, receiver_id, message_id)=> {
-  handleReceivedMessage(isON,is_searching, sender_type, sender_id, time, receiver_id, message_id, msg, "text")
+socket.on('chat message', (msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id)=> {
+  handleReceivedMessage(isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, message_id, msg, "text")
 });
 
   // サーバーからの画像を受信
 socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
+
+  // console.log(`senderId: ${sender_id}`);
+  // console.log(`receiverId: ${receiver_id}`);
   handleReceivedMessage(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
 })
 
@@ -67,10 +70,10 @@ disableSubmitBtn()
 
 
 // 画像の処理
-const user_type= "admin"
+
 const fileInput = document.getElementById("fileInput")
 fileInput.addEventListener("change", ()=>{
-  fileOperation(socket, sender_id, "/api/admin/messages/image", user_type)
+  fileOperation(socket, sender_id, "/api/admin/messages/image","admin")
   fileInput.value = "";
 })
 

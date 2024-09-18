@@ -6,7 +6,7 @@ export const changeTextareaHeight = () =>{
     function autoResize() {
 
         if(this.scrollHeight > height){
-            console.log(this.scrollHeight);
+
                     
         this.style.height = 'auto'; // 高さをリセット
         this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定

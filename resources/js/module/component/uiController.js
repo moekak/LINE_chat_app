@@ -2,15 +2,15 @@ import { fetchPostOperation } from "../util/fetch";
 
 // 特定のチャットユーザー画面を開く
 export const chatNavigator = () =>{
-      const chat_btns = document.querySelectorAll(".js_chat_wrapper");
+    const chat_btns = document.querySelectorAll(".js_chat_wrapper");
 
-      chat_btns.forEach((btn) => {
-          btn.addEventListener("click", (e) => {
-              let id = e.currentTarget.getAttribute("data-id");
-              let admin_id = e.currentTarget.getAttribute("data-admin-id");
-              window.location.href = `/${admin_id}/${id}`;
-          });
-      });
+    chat_btns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            let id = e.currentTarget.getAttribute("data-id");
+            let admin_id = e.currentTarget.getAttribute("data-admin-id");
+            window.location.href = `/${admin_id}/${id}`;
+        });
+    });
 }
 
 export const scrollToBottom = () => {
@@ -21,7 +21,7 @@ export const scrollToBottom = () => {
 };
 
 
-export const fileOperation = (socket, sender_id, url, user_type)=>{
+export const fileOperation = (socket, sender_id, url, sender_type)=>{
 
 
         const file = fileInput.files[0]
@@ -51,20 +51,20 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
 
             // 圧縮した画像をBase64に変換
             const resizedImage = canvas.toDataURL('image/jpeg', 0.7); // JPEG形式で圧縮率70%
-            
-
+            // 呼び出し元のファイルがユーザーの場合 => ユーザーID
+            // 呼び出し元のファイルが管理者の場合   => 管理者ID
             const receiver_id = document.getElementById("js_receiver_id").value
-            const sender_type = document.getElementById("js_sender_type").value
+
             let data = {}
 
-            if(user_type == "user"){
+            if(sender_type == "user"){
                 data = {
                     "user_id" :  sender_id,
                     "admin_id":receiver_id,
                     "type" : sender_type,
                     "image":resizedImage
                 }
-            }else if(user_type == "admin"){
+            }else if(sender_type == "admin"){
 
                 data = {
                     "user_id" :  receiver_id,
@@ -76,15 +76,13 @@ export const fileOperation = (socket, sender_id, url, user_type)=>{
             
             fetchPostOperation(data, url)
             .then((res)=>{
-                console.log(res);
-                
+
                 const time = res["created_at"]
                 const message_id = res["message_id"]
                 const admin_login_id = res["admin_login_id"];
                 // // ここでサーバーに送信
                 socket.emit('send_image', {resizedImage, receiver_id, sender_id, sender_type, time, message_id, admin_login_id});
             })
-         
         };
     };
 

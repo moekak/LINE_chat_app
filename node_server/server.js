@@ -118,16 +118,16 @@ io.on('connection', (socket) => {
 
     // メッセージの受信とブロードキャスト
     socket.on('chat message', (data) => {
-        const {msg, receiver_id, sender_id, sender_type, time, message_id, admin_login_id} = data
-        console.log(`Message: ${msg}, Recipient ID: ${receiver_id}, senderType: ${sender_type}, message_id: ${message_id}, senderID: ${sender_id}`);
+        const {msg, actual_receiver_id, actual_sender_id, sender_type, time, message_id, admin_login_id} = data
+        console.log(` Recipient ID: ${actual_receiver_id}, senderID: ${actual_sender_id}`);
 
         // 受信者、送信者、管理者のソケットを取得
-        const msgData = { msg, sender_id, sender_type, time, receiver_id, message_id, admin_login_id } ;
+        const msgData = { msg, actual_sender_id, sender_type, time, actual_receiver_id, message_id, admin_login_id } ;
         broadcastMessageToSockets(userSockets, msgData)
 
         // LINEへメッセージ受信通知をする
-        if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
-            sendNotificationToLine(receiver_id, sender_id, client)
+        if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
+            sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
     });
     
@@ -176,6 +176,5 @@ server.listen(PORT, () => {
 server.setTimeout(0);  // タイムアウトを無効化
 
 app.get('/test', (req, res) => {
-      res.send('Hello World!');
-  });
-  
+    res.send('Hello World!');
+});

@@ -7,19 +7,25 @@ import { chatNavigator, scrollToBottom } from "./uiController.js";
 // #####################################################################
 
 //メッセージをチャット画面に表示する
-export const displayChatMessage = (className,type,msg,file_name,sender_id,time, message_type) => {
+// file_name = 呼び出し元ファイル
+export const displayChatMessage = (className, type, msg, file_name, actual_sender_id, time, message_type) => {
     const parentElement = document.querySelector(`.${className}`);
     const isSenderAdmin = type === "admin";
     const isFileFromUser = file_name === "user";
     const isSenderUser = type === "user";
-    const isCorrectAdminMessage = file_name === "admin" && sender_id === parentElement.getAttribute("data-id");
+    // 関数呼び出し元ファイルがadminでなおかつメッセージ送信者がユーザーの場合
+    const isCorrectAdminMessage = file_name === "admin" && actual_sender_id === parentElement.getAttribute("data-id") //このdata-idはユーザーIDが入っている
 
+    console.log(actual_sender_id);
+    
 
     if (isSenderAdmin && isFileFromUser) {
         addLeftChatMessage(msg, parentElement, time, message_type);
     } else if (isSenderAdmin || (isSenderUser && isFileFromUser)) {
         addRightChatMessage(msg, parentElement, time, message_type);
     } else if (isCorrectAdminMessage) {
+        console.log("wowowwowowowoow");
+        
         addLeftChatMessage(msg, parentElement, time, message_type);
     }
 };
@@ -52,13 +58,12 @@ export const increaseMessageCount = (sender_id) => {
     const count_elements    = document.querySelectorAll(".js_mesage_count");
     const chat_user_id      = document.getElementById("js_chatuser_id").value;
 
-    console.log(`senderID: ${sender_id}`);
+
     
     
     count_elements.forEach((count) => {
         let id = count.getAttribute("data-id");
-        console.log(id);
-        
+      
         // メッセージを送信したユーザーが一覧に表示されて、なおかつそのゆざーのチャット画面を開いていない場合
         if (id == sender_id && id !== chat_user_id) {
             let currentCount = Number(count.innerHTML) || 0;
@@ -111,9 +116,9 @@ export const updateMessageTime = (time,sender_id,sender_type,receiver_id) => {
 
 // チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
 const createNewDivElement = (receiver_id, sender_id, msg, message_type ) => {
-    fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`)
+    fetchGetOperation(`/api/users/${receiver_id}/${sender_id}`)
         .then((res) => {
-            
+
             const template      = createChatUserContainer(receiver_id, res, msg, message_type)
             const parentElement = document.getElementById("js_chatUser_wrapper");
             const firstChild    = parentElement.firstChild; // 最初の子要素を取得
@@ -141,8 +146,6 @@ export const createDivForSearch = (data) =>{
             parentElement.innerHTML = ""
             if(res["userInfo"].length > 0){
                 res["userInfo"].forEach((res)=>{
-
-                    console.log(res);
                     
                     let message_type = res["message"]["content"] ? "text" : "image"
                     parentElement.innerHTML += createChatUserContainer(res["uuid"], res, res["message"]["content"], message_type)

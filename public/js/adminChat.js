@@ -1,268 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./resources/js/module/component/chatController.js":
-/*!*************************************************!*\
-  !*** ./resources/js/module/component/chatController.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   adjustMesageLength: () => (/* binding */ adjustMesageLength),
-/* harmony export */   displayChatMessage: () => (/* binding */ displayChatMessage),
-/* harmony export */   createDivForSearch: () => (/* binding */ createDivForSearch),
-/* harmony export */   displayMessage: () => (/* binding */ displayMessage),
-/* harmony export */   increaseMessageCount: () => (/* binding */ increaseMessageCount),
-/* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime),
-/* harmony export */   updateChatUserList: () => (/* binding */ updateChatUserList)
-/* harmony export */ });
-/* harmony import */ var _util_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch */ "./resources/js/module/util/fetch.js");
-/* harmony import */ var _createDiv_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createDiv.js */ "./resources/js/module/component/createDiv.js");
-/* harmony import */ var _uiController_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./uiController.js */ "./resources/js/module/component/uiController.js");
-
-
-
-var displayChatMessage = function displayChatMessage(className, type, msg, file_name, sender_id, time, message_type) {
-  var parentElement = document.querySelector(".".concat(className));
-  if (type == "admin") {
-    if (file_name == "user") {
-      addLeftChatMessage(msg, parentElement, time, message_type);
-    } else if (file_name == "admin") {
-      addRightChatMessage(msg, parentElement, time, message_type);
-    }
-  }
-  if (type == "user") {
-    if (file_name == "user") {
-      addRightChatMessage(msg, parentElement, time, message_type);
-    } else if (file_name == "admin" && sender_id == parentElement.getAttribute("data-id")) {
-      console.log("ey");
-      addLeftChatMessage(msg, parentElement, time, message_type);
-    }
-  }
-};
-var addRightChatMessage = function addRightChatMessage(msg, parentElement, time, message_type) {
-  console.log("addRightChatMessage");
-  var newFirstDiv = document.createElement("div");
-  newFirstDiv.classList.add("chat__message-container-right");
-  var newSecondDiv = document.createElement("div");
-  newSecondDiv.classList.add("chat__mesgae-main-right");
-  var newThirdDiv = document.createElement("div");
-  newThirdDiv.classList.add("chat-margin5");
-  if (message_type == "text") {
-    newThirdDiv.classList.add("chat__message-box-right");
-    var formattedMsg = msg.replace(/\n/g, "<br>");
-    newThirdDiv.innerHTML = formattedMsg;
-  } else {
-    var img = document.createElement("img");
-    img.setAttribute("src", msg);
-    img.setAttribute("alt", "");
-    newThirdDiv.appendChild(img);
-  }
-  var newTimeDiv = document.createElement("div");
-  newTimeDiv.classList.add("chat__message-time-txt");
-  newTimeDiv.innerHTML = time;
-  newSecondDiv.appendChild(newTimeDiv);
-  newSecondDiv.appendChild(newThirdDiv);
-  newFirstDiv.appendChild(newSecondDiv);
-  parentElement.appendChild(newFirstDiv);
-  var scroll_el = document.querySelector(".chat__message-main");
-  scroll_el.scrollTop = scroll_el.scrollHeight;
-};
-var addLeftChatMessage = function addLeftChatMessage(msg, parentElement, time, message_type) {
-  var newFirstDiv = document.createElement("div");
-  newFirstDiv.classList.add("chat__message-container-left");
-  var newSecondDiv = document.createElement("div");
-  newSecondDiv.classList.add("chat__mesgae-main-left");
-  var iconMsg;
-  if (document.getElementById("icon_msg") !== null) {
-    iconMsg = document.getElementById("icon_msg").cloneNode(true);
-  } else {
-    iconMsg = document.createElement("img");
-    // 画像のURLとその他の属性を設定
-    var src = document.getElementById("js_user_icon_img").value;
-    iconMsg.setAttribute("src", src);
-    iconMsg.setAttribute("alt", "");
-    iconMsg.setAttribute("class", "chat_users-icon-message");
-    iconMsg.setAttribute("id", "icon_msg");
-  }
-  var newThirdDiv = document.createElement("div");
-  newThirdDiv.classList.add("chat-margin5");
-  if (message_type == "text") {
-    newThirdDiv.classList.add("chat__message-box-left");
-    var formattedMsg = msg.replace(/\n/g, "<br>");
-    newThirdDiv.innerHTML = formattedMsg;
-  } else {
-    var img = document.createElement("img");
-    img.setAttribute("src", msg);
-    img.setAttribute("alt", "");
-    newThirdDiv.appendChild(img);
-  }
-  var newTimeDiv = document.createElement("div");
-  newTimeDiv.classList.add("chat__message-time-txt");
-  newTimeDiv.innerHTML = time;
-  newSecondDiv.appendChild(iconMsg);
-  newSecondDiv.appendChild(newThirdDiv);
-  newSecondDiv.appendChild(newTimeDiv);
-  newFirstDiv.appendChild(newSecondDiv);
-  parentElement.appendChild(newFirstDiv);
-  var scroll_el = document.querySelector(".chat__message-main");
-  scroll_el.scrollTop = scroll_el.scrollHeight;
-};
-var increaseMessageCount = function increaseMessageCount(sender_id, type) {
-  if (type == "user") {
-    // const parentElement = document.querySelector(".js_append_admin")
-
-    var count_elements = document.querySelectorAll(".js_mesage_count");
-    var chat_user_id = document.getElementById("js_chatuser_id").value;
-    count_elements.forEach(function (count) {
-      var id = count.getAttribute("data-id");
-      if (Number(id) == Number(sender_id) && Number(id) !== Number(chat_user_id)) {
-        var currentCount = Number(count.innerHTML) || 0;
-        if (currentCount == 0) count.style.display = "flex";
-        count.innerHTML = "".concat(currentCount + 1);
-        console.log(count);
-      }
-    });
-  }
-};
-var displayMessage = function displayMessage(sender_id, msg, sender_type, receiver_id, message_type) {
-  console.log(msg + "message");
-  var elements = document.querySelectorAll(".js_chatMessage_elment");
-  elements.forEach(function (element) {
-    var id = element.getAttribute("data-id");
-    if (sender_type == "user") {
-      if (id == sender_id) {
-        if (message_type == "text") element.innerHTML = msg;
-        if (message_type == "image") element.innerHTML = "画像が送信されました";
-      }
-      // 管理者からメッセージが送信された場合
-    } else {
-      if (id == receiver_id) {
-        if (message_type == "text") element.innerHTML = msg;
-        if (message_type == "image") element.innerHTML = "画像を送信しました";
-      }
-    }
-  });
-};
-var adjustMesageLength = function adjustMesageLength() {
-  var elements = document.querySelectorAll(".js_chatMessage_elment");
-  elements.forEach(function (element) {
-    if (element.innerHTML.length >= 40) {
-      element.innerHTML = element.innerHTML.substring(0, 40) + "...";
-    }
-  });
-};
-
-// 管理者用チャット画面の左側の各メッセージの時間を更新する
-var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id) {
-  var elements = document.querySelectorAll(".js_update_message_time");
-  elements.forEach(function (element) {
-    var id = element.getAttribute("data-id");
-
-    // ユーザーからメッセージが送信された場合
-    if (sender_type == "user") {
-      if (id == sender_id) {
-        element.innerHTML = time;
-      }
-      // 管理者からメッセージが送信された場合
-    } else {
-      if (id == receiver_id) {
-        element.innerHTML = time;
-      }
-    }
-  });
-};
-var createNewDivElement = function createNewDivElement(receiver_id, msg, sender_id, message_type) {
-  return new Promise(function (resolve) {
-    var parentNewDiv = document.createElement("div");
-    parentNewDiv.classList.add("chat__users-list-wraper");
-    parentNewDiv.classList.add("js_chat_wrapper");
-    parentNewDiv.setAttribute("data-id", sender_id);
-    parentNewDiv.setAttribute("data-admin-id", receiver_id);
-    parentNewDiv.style.marginTop = "0";
-    (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(sender_id, "/").concat(receiver_id)).then(function (res) {
-      console.log(res);
-      var newDiv = (0,_createDiv_js__WEBPACK_IMPORTED_MODULE_1__.createDiv)(parentNewDiv, res["userInfo"]["user_picture"], res["userInfo"]["line_name"], sender_id, msg, message_type, res["totalCount"], res["formatted_date"]);
-      resolve(newDiv);
-    });
-  });
-};
-var createDivForSearch = function createDivForSearch(data, sender_id) {
-  var chat_wrapper = document.getElementById("js_chatUser_wrapper");
-  (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, "/api/search/users").then(function (res) {
-    console.log(res);
-    chat_wrapper.innerHTML = "";
-    res["userData"].forEach(function (res) {
-      var message_type;
-      if (res["message"]["content"]) {
-        message_type = "text";
-      } else {
-        message_type = "image";
-      }
-      var parentNewDiv = document.createElement("div");
-      parentNewDiv.classList.add("chat__users-list-wraper");
-      parentNewDiv.classList.add("js_chat_wrapper");
-      parentNewDiv.setAttribute("data-id", res["userData"]["id"]);
-      parentNewDiv.setAttribute("data-admin-id", sender_id);
-      parentNewDiv.style.marginTop = "0";
-      var firstChild = chat_wrapper.firstChild;
-      var newDiv = (0,_createDiv_js__WEBPACK_IMPORTED_MODULE_1__.createDiv)(parentNewDiv, res["userData"]["user_picture"], res["userData"]["line_name"], res["userData"]["id"], res["message"]["content"], message_type, res["count"], res["formattedData"]);
-      if (firstChild == undefined) {
-        chat_wrapper.appendChild(newDiv);
-      } else {
-        chat_wrapper.insertBefore(newDiv, firstChild);
-      }
-      (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
-    });
-  });
-};
-var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id, message_type, sender_type, is_searching) {
-  var wrappers = document.querySelectorAll(".js_chat_wrapper");
-  var chat_wrapper = document.getElementById("js_chatUser_wrapper");
-  var firstChild = chat_wrapper.firstChild;
-  var hasDiv = false;
-  if (document.getElementById("js_chatuser_id").value == sender_id) {
-    return;
-  }
-  wrappers.forEach(function (wrapper) {
-    var user_id = wrapper.getAttribute("data-id");
-    if (!is_searching["flag"]) {
-      if (sender_type == "admin") {
-        if (receiver_id == user_id && Array.from(wrappers.length > 0)) {
-          hasDiv = true;
-          var newDiv = wrapper.cloneNode(true);
-          chat_wrapper.insertBefore(newDiv, firstChild);
-          if (wrapper.parentNode == chat_wrapper) {
-            chat_wrapper.removeChild(wrapper);
-          }
-        }
-      } else {
-        if (sender_id == user_id && Array.from(wrappers.length > 0)) {
-          hasDiv = true;
-          var _newDiv = wrapper.cloneNode(true);
-          chat_wrapper.insertBefore(_newDiv, firstChild);
-          if (wrapper.parentNode == chat_wrapper) {
-            chat_wrapper.removeChild(wrapper);
-          }
-        }
-      }
-      (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
-    }
-  });
-  if (!hasDiv && firstChild !== undefined && !is_searching["flag"]) {
-    createNewDivElement(receiver_id, msg, sender_id, message_type).then(function (wrapper) {
-      chat_wrapper.insertBefore(wrapper, firstChild);
-      (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
-    })["catch"](function (error) {
-      return console.error("Failed to create element:", error);
-    });
-  }
-};
-
-/***/ }),
-
 /***/ "./resources/js/module/component/changeStyle.js":
 /*!******************************************************!*\
   !*** ./resources/js/module/component/changeStyle.js ***!
@@ -302,77 +40,237 @@ var disableSubmitBtn = function disableSubmitBtn() {
 
 /***/ }),
 
-/***/ "./resources/js/module/component/createDiv.js":
-/*!****************************************************!*\
-  !*** ./resources/js/module/component/createDiv.js ***!
-  \****************************************************/
+/***/ "./resources/js/module/component/chatController.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/module/component/chatController.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createDiv: () => (/* binding */ createDiv)
+/* harmony export */   adjustMesageLength: () => (/* binding */ adjustMesageLength),
+/* harmony export */   createDivForSearch: () => (/* binding */ createDivForSearch),
+/* harmony export */   displayChatMessage: () => (/* binding */ displayChatMessage),
+/* harmony export */   displayMessage: () => (/* binding */ displayMessage),
+/* harmony export */   increaseMessageCount: () => (/* binding */ increaseMessageCount),
+/* harmony export */   updateChatUserList: () => (/* binding */ updateChatUserList),
+/* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime)
 /* harmony export */ });
-var createDiv = function createDiv(parentNewDiv, userPicture, userName, sender_id, msg, message_type, totalCount, time) {
-  // アイコンの作成
-  var img = document.createElement("img");
-  img.classList.add("chat_users-icon");
-  img.setAttribute("src", userPicture);
-  img.setAttribute("alt", "");
+/* harmony import */ var _util_fetch_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch.js */ "./resources/js/module/util/fetch.js");
+/* harmony import */ var _elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./elementTemplate.js */ "./resources/js/module/component/elementTemplate.js");
+/* harmony import */ var _uiController_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./uiController.js */ "./resources/js/module/component/uiController.js");
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
-  //メッセージ箇所作成
-  var chileDiv = document.createElement("div");
-  chileDiv.classList.add("chat_users-list-flex");
-  var grandChildDiv1 = document.createElement("div");
-  grandChildDiv1.classList.add("chat_users-list-box");
 
-  // チャットユーザーの名前の作成
-  var p = document.createElement("p");
-  p.innerHTML = userName;
-  p.classList.add("chat_name_txt");
 
-  // チャットメッセージ時間の作成
-  var small = document.createElement("small");
-  small.classList.add("chat_time");
-  small.classList.add("js_update_message_time");
-  small.setAttribute("data-id", sender_id);
-  small.innerHTML = time;
-  console.log("time\u306F".concat(time));
 
-  // append
-  grandChildDiv1.appendChild(p);
-  grandChildDiv1.appendChild(small);
+// #####################################################################
+//                メッセージをチャット画面に表示させる処理
+// #####################################################################
 
-  // #################
-  var grandChildDiv2 = document.createElement("div");
-  grandChildDiv2.classList.add("chat__users-list-msg");
-  var smalltag = document.createElement("small");
-  smalltag.classList.add("chat_message");
-  smalltag.classList.add("js_chatMessage_elment");
-  smalltag.setAttribute("data-id", sender_id);
-  if (message_type == "text") smalltag.innerHTML = msg;
-  if (message_type == "image") smalltag.innerHTML = "画像が送信されました";
-  var countDiv = document.createElement("div");
-  countDiv.classList.add("message_count");
-  countDiv.classList.add("js_mesage_count");
-  countDiv.setAttribute("data-id", sender_id);
-  if (document.getElementById("js_chatuser_id").value == sender_id || totalCount == 0) {
-    countDiv.style.display = "none";
-    countDiv.innerHTML = 0;
-  } else {
-    countDiv.style.display = "flex";
-    countDiv.innerHTML = totalCount;
+//メッセージをチャット画面に表示する
+var displayChatMessage = function displayChatMessage(className, type, msg, file_name, sender_id, time, message_type) {
+  var parentElement = document.querySelector(".".concat(className));
+  var isSenderAdmin = type === "admin";
+  var isFileFromUser = file_name === "user";
+  var isSenderUser = type === "user";
+  var isCorrectAdminMessage = file_name === "admin" && sender_id === parentElement.getAttribute("data-id");
+  if (isSenderAdmin && isFileFromUser) {
+    addLeftChatMessage(msg, parentElement, time, message_type);
+  } else if (isSenderAdmin || isSenderUser && isFileFromUser) {
+    addRightChatMessage(msg, parentElement, time, message_type);
+  } else if (isCorrectAdminMessage) {
+    addLeftChatMessage(msg, parentElement, time, message_type);
+  }
+};
+
+// チャット画面右側(青)にメッセージを表示する処理
+var addRightChatMessage = function addRightChatMessage(content, parentElement, time, message_type) {
+  parentElement.innerHTML += (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createRightMessageContainer)(message_type, time, content);
+  (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.scrollToBottom)();
+};
+// チャット画面右側(白)にメッセージを表示する処理
+var addLeftChatMessage = function addLeftChatMessage(content, parentElement, time, message_type) {
+  parentElement.innerHTML += (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createLeftMessageContainer)(message_type, time, content);
+  (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.scrollToBottom)();
+};
+
+// #####################################################################
+//                               END
+// #####################################################################
+
+// #####################################################################
+//                チャットユーザーリストの表示処理
+// #####################################################################
+
+// ユーザーからメッセージを受信したらリアルタイムで通知を増やし表示する処理
+// そのユーザーのチャットを開いてる場合は除く
+var increaseMessageCount = function increaseMessageCount(sender_id) {
+  var count_elements = document.querySelectorAll(".js_mesage_count");
+  var chat_user_id = document.getElementById("js_chatuser_id").value;
+  console.log("senderID: ".concat(sender_id));
+  count_elements.forEach(function (count) {
+    var id = count.getAttribute("data-id");
+    console.log(id);
+
+    // メッセージを送信したユーザーが一覧に表示されて、なおかつそのゆざーのチャット画面を開いていない場合
+    if (id == sender_id && id !== chat_user_id) {
+      var currentCount = Number(count.innerHTML) || 0;
+      if (currentCount == 0) count.style.display = "flex";
+      count.innerHTML = "".concat(currentCount + 1);
+    }
+  });
+};
+
+// 新しいメッセージをリアルタイムでチャットユーザーリストのメッセージ箇所に表示する
+var displayMessage = function displayMessage(sender_id, msg, sender_type, receiver_id, message_type) {
+  var elements = document.querySelectorAll(".js_chatMessage_elment");
+  elements.forEach(function (element) {
+    // チャットユーザー一覧からチャットユーザーIDを取得
+    var id = element.getAttribute("data-id");
+    var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
+    var txt = message_type == "image" ? sender_type == "user" ? "画像が送信されました" : "画像を送信しました" : msg;
+    if (id == chat_user_id) element.innerHTML = txt;
+  });
+};
+
+// チャットユーザー一覧表示のメッセージ長さ制限処理
+// 40文字以上だったら"..."にする
+var adjustMesageLength = function adjustMesageLength() {
+  var elements = document.querySelectorAll(".js_chatMessage_elment");
+  elements.forEach(function (element) {
+    if (element.innerHTML.length >= 40) {
+      element.innerHTML = element.innerHTML.substring(0, 40) + "...";
+    }
+  });
+};
+
+// 新しいメッセージの時間をリアルタイムでチャットユーザーリストの時間箇所に表示する
+var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id) {
+  var elements = document.querySelectorAll(".js_update_message_time");
+  elements.forEach(function (element) {
+    var id = element.getAttribute("data-id");
+    var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
+    if (id == chat_user_id) element.innerHTML = time;
+  });
+};
+
+// チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
+var createNewDivElement = function createNewDivElement(receiver_id, sender_id, msg, message_type) {
+  (0,_util_fetch_js__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(receiver_id, "/").concat(sender_id)).then(function (res) {
+    console.log(res);
+    var template = (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(receiver_id, res, msg, message_type);
+    var parentElement = document.getElementById("js_chatUser_wrapper");
+    var firstChild = parentElement.firstChild; // 最初の子要素を取得
+
+    if (firstChild) {
+      var newDiv = document.createElement('div');
+      newDiv.innerHTML = template;
+      parentElement.insertBefore(newDiv, firstChild);
+    } else {
+      parentElement.innerHTML += template; // 最初の子要素がない場合、末尾に追加
+    }
+    (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
+  });
+};
+
+// ユーザー検索処理
+var createDivForSearch = function createDivForSearch(data) {
+  (0,_util_fetch_js__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, "/api/search/users").then(function (res) {
+    var parentElement = document.getElementById("js_chatUser_wrapper");
+    parentElement.innerHTML = "";
+    if (res["userInfo"].length > 0) {
+      res["userInfo"].forEach(function (res) {
+        console.log(res);
+        var message_type = res["message"]["content"] ? "text" : "image";
+        parentElement.innerHTML += (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["uuid"], res, res["message"]["content"], message_type);
+      });
+      (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
+    }
+  });
+};
+
+// チャットユーザーリストを更新
+var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id, message_type, sender_type, is_searching) {
+  var wrappers = document.querySelectorAll(".js_chat_wrapper");
+  var chat_wrapper = document.getElementById("js_chatUser_wrapper");
+  var firstChild = chat_wrapper.firstChild;
+  var hasDiv = false;
+
+  // 開いているチャットユーザーが送信者と同じ場合は処理を中止
+  if (document.getElementById("js_chatuser_id").value == sender_id) {
+    return;
   }
 
-  // append
-  grandChildDiv2.appendChild(smalltag);
-  grandChildDiv2.appendChild(countDiv);
-  chileDiv.appendChild(grandChildDiv1);
-  chileDiv.appendChild(grandChildDiv2);
-  parentNewDiv.appendChild(img);
-  parentNewDiv.appendChild(chileDiv);
-  console.log(parentNewDiv);
-  return parentNewDiv;
+  // 検索中でない場合の処理
+  if (!is_searching.flag) {
+    // 既にチャットリストに送信者のリストがある場合の処理
+    var _iterator = _createForOfIteratorHelper(wrappers),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var wrapper = _step.value;
+        var user_id = wrapper.getAttribute("data-uuid");
+        var chat_user_id = sender_type === "admin" ? receiver_id : sender_id;
+        if (chat_user_id === user_id && wrappers.length > 0) {
+          hasDiv = true;
+
+          // div要素をcloneして親要素の一番最初に挿入
+          var newDiv = wrapper.cloneNode(true);
+          chat_wrapper.insertBefore(newDiv, firstChild);
+
+          // 元の要素を削除
+          if (wrapper.parentNode === chat_wrapper) {
+            chat_wrapper.removeChild(wrapper);
+          }
+          break; // 早期リターン
+        }
+      }
+
+      // 新しい要素が必要な場合
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    if (!hasDiv && firstChild) {
+      createNewDivElement(receiver_id, sender_id, msg, message_type);
+    }
+  }
+
+  // チャットナビゲーションを更新
+  (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
+};
+
+/***/ }),
+
+/***/ "./resources/js/module/component/elementTemplate.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/module/component/elementTemplate.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createChatUserContainer: () => (/* binding */ createChatUserContainer),
+/* harmony export */   createLeftMessageContainer: () => (/* binding */ createLeftMessageContainer),
+/* harmony export */   createRightMessageContainer: () => (/* binding */ createRightMessageContainer)
+/* harmony export */ });
+var createRightMessageContainer = function createRightMessageContainer(message_type, time, content) {
+  return "\n         <div class=\"chat__message-container-right\">\n            <div class=\"chat__mesgae-main-right\">\n                  <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                  ").concat(message_type === "text" ? "<div class=\"chat__message-box-right chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n            </div>\n      </div>\n      ");
+};
+var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content) {
+  var src = document.getElementById("js_user_icon_img").value;
+  return "\n         <div class=\"chat__message-container-left\">\n            <div class=\"chat__mesgae-main-left\">\n                  <img src=\"".concat(src, "\" alt=\"\" class=\"chat_users-icon-message\" id=\"icon_msg\"> \n                  ").concat(message_type === "text" ? "<div class=\"chat__message-box-left chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n                  <div class=\"chat__message-time-txt\">").concat(time, "</div>\n            </div> \n      </div>\n      ");
+};
+var createChatUserContainer = function createChatUserContainer(sender_id, res, msg, message_type) {
+  var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["totalCount"] == 0 ? "none" : "flex";
+  var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["totalCount"] == 0 ? 0 : res["totalCount"];
+  return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["userInfo"]["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <img src=\"").concat(res["userInfo"]["user_picture"], "\" alt=\"\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\"> \n                              <p class=\"chat_name_txt\">").concat(res["userInfo"]["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["formatted_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(message_type == "text" ? msg : "画像が送信されました", "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
 };
 
 /***/ }),
@@ -387,7 +285,8 @@ var createDiv = function createDiv(parentNewDiv, userPicture, userName, sender_i
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   chatNavigator: () => (/* binding */ chatNavigator),
-/* harmony export */   fileOperation: () => (/* binding */ fileOperation)
+/* harmony export */   fileOperation: () => (/* binding */ fileOperation),
+/* harmony export */   scrollToBottom: () => (/* binding */ scrollToBottom)
 /* harmony export */ });
 /* harmony import */ var _util_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch */ "./resources/js/module/util/fetch.js");
 
@@ -403,73 +302,74 @@ var chatNavigator = function chatNavigator() {
     });
   });
 };
+var scrollToBottom = function scrollToBottom() {
+  var scroll_el = document.querySelector(".chat__message-main");
+  if (scroll_el) {
+    scroll_el.scrollTop = scroll_el.scrollHeight;
+  }
+};
 var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
-  var fileInput = document.getElementById("fileInput");
-  fileInput.addEventListener("change", function (e) {
-    console.log("moeka");
-    var file = fileInput.files[0];
-    var reader = new FileReader();
-    var maxSizeMB = 5;
-    if (file.size > maxSizeMB * 1024 * 1024) {
-      alert("ファイルサイズは5MBにしてください。");
-      return;
-    }
-    reader.onload = function (e) {
-      var img = new Image();
-      img.src = e.target.result;
-      img.onload = function () {
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
+  var file = fileInput.files[0];
+  var reader = new FileReader();
+  var maxSizeMB = 5;
+  if (file.size > maxSizeMB * 1024 * 1024) {
+    alert("ファイルサイズは5MBにしてください。");
+    return;
+  }
+  reader.onload = function (e) {
+    var img = new Image();
+    img.src = e.target.result;
+    img.onload = function () {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
 
-        // 画像のサイズを制御する。例えば幅を500pxにリサイズ。
-        var maxWidth = 160;
-        var scaleSize = maxWidth / img.width;
-        canvas.width = maxWidth;
-        canvas.height = img.height * scaleSize;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // 画像のサイズを制御する。例えば幅を500pxにリサイズ。
+      var maxWidth = 160;
+      var scaleSize = maxWidth / img.width;
+      canvas.width = maxWidth;
+      canvas.height = img.height * scaleSize;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // 圧縮した画像をBase64に変換
-        var resizedImage = canvas.toDataURL('image/jpeg', 0.7); // JPEG形式で圧縮率70%
+      // 圧縮した画像をBase64に変換
+      var resizedImage = canvas.toDataURL('image/jpeg', 0.7); // JPEG形式で圧縮率70%
 
-        var receiver_id = document.getElementById("js_receiver_id").value;
-        var sender_type = document.getElementById("js_sender_type").value;
-        var data = {};
-        if (user_type == "user") {
-          data = {
-            "user_id": sender_id,
-            "admin_id": receiver_id,
-            "type": sender_type,
-            "image": resizedImage
-          };
-        } else if (user_type == "admin") {
-          data = {
-            "user_id": receiver_id,
-            "admin_id": sender_id,
-            "type": sender_type,
-            "image": resizedImage
-          };
-        }
-        console.log(url);
-        (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, url).then(function (res) {
-          console.log(res);
-          var time = res["created_at"];
-          var message_id = res["message_id"];
-          var admin_login_id = res["admin_login_id"];
-          // // ここでサーバーに送信
-          socket.emit('send_image', {
-            resizedImage: resizedImage,
-            receiver_id: receiver_id,
-            sender_id: sender_id,
-            sender_type: sender_type,
-            time: time,
-            message_id: message_id,
-            admin_login_id: admin_login_id
-          });
+      var receiver_id = document.getElementById("js_receiver_id").value;
+      var sender_type = document.getElementById("js_sender_type").value;
+      var data = {};
+      if (user_type == "user") {
+        data = {
+          "user_id": sender_id,
+          "admin_id": receiver_id,
+          "type": sender_type,
+          "image": resizedImage
+        };
+      } else if (user_type == "admin") {
+        data = {
+          "user_id": receiver_id,
+          "admin_id": sender_id,
+          "type": sender_type,
+          "image": resizedImage
+        };
+      }
+      (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, url).then(function (res) {
+        console.log(res);
+        var time = res["created_at"];
+        var message_id = res["message_id"];
+        var admin_login_id = res["admin_login_id"];
+        // // ここでサーバーに送信
+        socket.emit('send_image', {
+          resizedImage: resizedImage,
+          receiver_id: receiver_id,
+          sender_id: sender_id,
+          sender_type: sender_type,
+          time: time,
+          message_id: message_id,
+          admin_login_id: admin_login_id
         });
-      };
+      });
     };
-    reader.readAsDataURL(file);
-  });
+  };
+  reader.readAsDataURL(file);
 };
 
 /***/ }),
@@ -497,13 +397,39 @@ var fetchPostOperation = function fetchPostOperation(data, url) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
-  }).then(function (response) {
-    if (!response.ok) {
-      console.log(response);
-      throw new Error("サーバーエラーが発生しました。");
-    }
-    return response.json();
-  })["catch"](function (error) {
+  }).then( /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(response) {
+      var errorMessage;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            if (!(response.status === 204)) {
+              _context.next = 2;
+              break;
+            }
+            return _context.abrupt("return");
+          case 2:
+            if (response.ok) {
+              _context.next = 7;
+              break;
+            }
+            _context.next = 5;
+            return response.text();
+          case 5:
+            errorMessage = _context.sent;
+            throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(errorMessage));
+          case 7:
+            return _context.abrupt("return", response.json());
+          case 8:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }())["catch"](function (error) {
     console.log(error);
   });
 };
@@ -514,35 +440,217 @@ var fetchGetOperation = function fetchGetOperation(url) {
       "Content-Type": "application/json"
     }
   }).then( /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(response) {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(response) {
       var errorMessage;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            if (response.ok) {
-              _context.next = 5;
+            if (!(response.status === 204)) {
+              _context2.next = 2;
               break;
             }
-            _context.next = 3;
+            return _context2.abrupt("return");
+          case 2:
+            if (response.ok) {
+              _context2.next = 7;
+              break;
+            }
+            _context2.next = 5;
             return response.text();
-          case 3:
-            errorMessage = _context.sent;
-            throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(errorMessage));
           case 5:
-            return _context.abrupt("return", response.json());
-          case 6:
+            errorMessage = _context2.sent;
+            throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(errorMessage));
+          case 7:
+            return _context2.abrupt("return", response.json());
+          case 8:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
-      }, _callee);
+      }, _callee2);
     }));
-    return function (_x) {
-      return _ref.apply(this, arguments);
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
     };
   }()).then(function (data) {
     return data;
   })["catch"](function (error) {
     console.error("エラーが発生しました:", error.message);
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/module/util/messageService.js":
+/*!****************************************************!*\
+  !*** ./resources/js/module/util/messageService.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   debounce: () => (/* binding */ debounce),
+/* harmony export */   fetchAndDisplayAllMessages: () => (/* binding */ fetchAndDisplayAllMessages),
+/* harmony export */   handleReceivedMessage: () => (/* binding */ handleReceivedMessage),
+/* harmony export */   handleSearchInput: () => (/* binding */ handleSearchInput),
+/* harmony export */   prepareMessageData: () => (/* binding */ prepareMessageData),
+/* harmony export */   sendMessage: () => (/* binding */ sendMessage)
+/* harmony export */ });
+/* harmony import */ var _component_chatController_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../component/chatController.js */ "./resources/js/module/component/chatController.js");
+/* harmony import */ var _component_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../component/elementTemplate.js */ "./resources/js/module/component/elementTemplate.js");
+/* harmony import */ var _component_uiController_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../component/uiController.js */ "./resources/js/module/component/uiController.js");
+/* harmony import */ var _fetch_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fetch.js */ "./resources/js/module/util/fetch.js");
+/* harmony import */ var _notificationSound_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./notificationSound.js */ "./resources/js/module/util/notificationSound.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+
+
+
+
+
+
+// ##################################################################
+//                  サーバーへデータを送信する処理
+// ###################################################################
+
+var prepareMessageData = function prepareMessageData() {
+  // スタイル変更
+  document.getElementById('js_msg').style.height = "19px";
+  document.querySelector(".chat__form-submit").classList.add("disable_btn");
+
+  // サーバーに送信するデータをすべて取得する
+  var msg = document.getElementById("js_msg").value;
+  var formattedMsg = msg.replace(/\n/g, '<br>'); // 改行文字を <br> タグに置き換える
+  var receiver_id = document.getElementById("js_receiver_id").value;
+  var sender_type = document.getElementById("js_sender_type").value;
+  return {
+    msg: msg,
+    formattedMsg: formattedMsg,
+    receiver_id: receiver_id,
+    sender_type: sender_type
+  };
+};
+
+// メッセージをサーバーに送信
+var sendMessage = function sendMessage(socket, msg, sender_id, receiver_id, sender_type, msg2, url) {
+  var data = {
+    content: msg2,
+    admin_id: sender_id,
+    user_id: receiver_id
+  };
+
+  // 管理者メッセージをデータベースに格納
+  (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchPostOperation)(data, url).then(function (res) {
+    var time = res["created_at"];
+    var message_id = res["message_id"];
+    var admin_login_id = res["admin_login_id"];
+    socket.emit('chat message', {
+      msg: msg,
+      receiver_id: receiver_id,
+      sender_id: sender_id,
+      sender_type: sender_type,
+      time: time,
+      message_id: message_id,
+      admin_login_id: admin_login_id
+    });
+    document.getElementById("js_msg").value = "";
+  });
+};
+
+// ##################################################################
+//                  メッセージ受信処理
+// ###################################################################
+
+// メッセージ受信時の処理
+var handleReceivedMessage = function handleReceivedMessage(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, content, message_type) {
+  if (isON["isSoundOn"]) (0,_notificationSound_js__WEBPACK_IMPORTED_MODULE_4__.playNotificationSound)();
+
+  // チャットを画面に表示する処理
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayChatMessage)("js_append_admin", sender_type, content, "admin", sender_id, time, message_type);
+
+  // チャットリストのリアルタイムでデータを表示する処理
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayMessage)(sender_id, message_type === "text" ? content : "", sender_type, receiver_id, message_type);
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateChatUserList)(receiver_id, content, sender_id, message_type, sender_type, is_searching);
+  if (sender_type === "user") {
+    // 通知表示
+    (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.increaseMessageCount)(sender_id);
+  }
+
+  // メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
+  var data = {
+    "message_id": message_id,
+    "admin_id": sender_id,
+    "chat_user_id": receiver_id
+  };
+  if (sender_id == document.getElementById("js_chatuser_id").value) {
+    (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchPostOperation)(data, "/api/user/messages/read");
+  }
+};
+
+// debounce関数を作成
+var debounce = function debounce(func, delay) {
+  var timer;
+  return function () {
+    var _this = this;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    clearTimeout(timer); // 前のタイマーをクリア
+    timer = setTimeout(function () {
+      func.apply(_this, args); // 一定時間後に関数を実行
+    }, delay);
+  };
+};
+
+// ##################################################################
+//                      検索バーの処理
+// ###################################################################
+
+// 検索バーの入力処理
+var handleSearchInput = function handleSearchInput(is_searching, value, sender_id) {
+  var data = {
+    admin_id: sender_id,
+    text: value
+  };
+
+  // 検索欄に何かしら入力があった場合
+  if (value.length > 0) {
+    (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.createDivForSearch)(data);
+  } else {
+    is_searching.flag = false;
+    fetchAndDisplayAllMessages(sender_id);
+  }
+};
+
+// 全ユーザーのメッセージを取得し、表示する処理
+var fetchAndDisplayAllMessages = function fetchAndDisplayAllMessages(admin_id) {
+  (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchGetOperation)("/api/users/messages/lineAccounts/".concat(admin_id)).then(function (res) {
+    var parentElement = document.getElementById("js_chatUser_wrapper");
+    parentElement.innerHTML = "";
+
+    // データを作成日時の降順にソート
+    var sortedData = Object.entries(res["mergedData"]).sort(function (_ref, _ref2) {
+      var _ref3 = _slicedToArray(_ref, 2),
+        a = _ref3[1];
+      var _ref4 = _slicedToArray(_ref2, 2),
+        b = _ref4[1];
+      return new Date(b.message.created_at) - new Date(a.message.created_at);
+    });
+
+    // ソートされたデータをチャットリストに表示
+    sortedData.forEach(function (_ref5) {
+      var _ref6 = _slicedToArray(_ref5, 2),
+        key = _ref6[0],
+        res = _ref6[1];
+      var message_type = res["message"]["content"] ? "text" : "image";
+      parentElement.innerHTML += (0,_component_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["uuid"], res, res["message"]["content"], message_type);
+    });
+    (0,_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
   });
 };
 
@@ -563,6 +671,94 @@ var playNotificationSound = function playNotificationSound() {
   // WAVファイルのパスを指定
   var audio = new Audio('/img/sound.wav');
   audio.play();
+};
+
+/***/ }),
+
+/***/ "./resources/js/module/util/socketHandler.js":
+/*!***************************************************!*\
+  !*** ./resources/js/module/util/socketHandler.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkOrReconnectSocket: () => (/* binding */ checkOrReconnectSocket),
+/* harmony export */   getSocket: () => (/* binding */ getSocket),
+/* harmony export */   initSocket: () => (/* binding */ initSocket),
+/* harmony export */   registerUser: () => (/* binding */ registerUser),
+/* harmony export */   sendHeartbeat: () => (/* binding */ sendHeartbeat)
+/* harmony export */ });
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
+
+var socket;
+
+// Socket.IOサーバーへの接続を初期化
+var initSocket = function initSocket(url, sender_id) {
+  socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])(url, {
+    reconnection: true,
+    // 自動再接続を有効にする
+    reconnectionDelay: 1000,
+    // 再接続の遅延時間 (ミリ秒)
+    reconnectionDelayMax: 5000,
+    // 再接続の最大遅延時間 (ミリ秒)
+    reconnectionAttempts: Infinity // 再接続の試行回数 (無限に設定)
+  });
+
+  // ページの可視性が変更されたときのイベントリスナー
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'visible') {
+      checkOrReconnectSocket(sender_id);
+    }
+  });
+
+  // 再接続試行イベント
+  socket.on('reconnect_attempt', function () {
+    console.log('Attempting to reconnect');
+  });
+
+  // 再接続エラーイベント
+  socket.on('reconnect_error', function (error) {
+    console.log('Reconnection failed:', error);
+  });
+
+  // サーバーから切断されたときのイベント
+  socket.on('disconnect', function (reason) {
+    console.log("Disconnected from the server due to ".concat(reason));
+    socket.connect();
+    registerUser(sender_id); // 切断時にユーザーを再登録
+  });
+};
+
+// ソケットの接続状態を確認し、必要に応じて再接続
+var checkOrReconnectSocket = function checkOrReconnectSocket(sender_id) {
+  if (!socket.connected) {
+    console.log("Socket.IOは接続されていません。再接続を試みます。");
+    registerUser(sender_id);
+    socket.connect();
+  } else {
+    registerUser(sender_id);
+  }
+};
+
+// ユーザーをサーバーに登録する関数
+var registerUser = function registerUser(sender_id) {
+  if (socket && sender_id) {
+    socket.emit('register', sender_id);
+    console.log("User ".concat(sender_id, " is registered."));
+  }
+};
+
+// ハートビートを送信する関数
+var sendHeartbeat = function sendHeartbeat() {
+  console.log('Sending heartbeat');
+  socket.emit('heartbeat');
+};
+
+// ソケットを外部で使用できるようにエクスポート
+var getSocket = function getSocket() {
+  return socket;
 };
 
 /***/ }),
@@ -7269,286 +7465,91 @@ var __webpack_exports__ = {};
   !*** ./resources/js/adminChat.js ***!
   \***********************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
-/* harmony import */ var _module_component_append_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/component/chatController.js */ "./resources/js/module/component/chatController.js");
-/* harmony import */ var _module_util_fetch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./module/util/fetch.js */ "./resources/js/module/util/fetch.js");
-/* harmony import */ var _module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./module/component/changeStyle.js */ "./resources/js/module/component/changeStyle.js");
-/* harmony import */ var _module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/component/uiController.js */ "./resources/js/module/component/uiController.js");
-/* harmony import */ var _module_component_createDiv_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./module/component/createDiv.js */ "./resources/js/module/component/createDiv.js");
-/* harmony import */ var _module_util_notificationSound_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./module/util/notificationSound.js */ "./resources/js/module/util/notificationSound.js");
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/* harmony import */ var _module_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module/component/chatController.js */ "./resources/js/module/component/chatController.js");
+/* harmony import */ var _module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./module/component/changeStyle.js */ "./resources/js/module/component/changeStyle.js");
+/* harmony import */ var _module_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./module/component/uiController.js */ "./resources/js/module/component/uiController.js");
+/* harmony import */ var _module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./module/util/socketHandler.js */ "./resources/js/module/util/socketHandler.js");
+/* harmony import */ var _module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/util/messageService.js */ "./resources/js/module/util/messageService.js");
 
 
 
 
 
-
-
-var isON = {
-  isSoundOn: false
-};
-document.querySelector(".js_bell").addEventListener("click", function () {
-  isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false;
-});
-
-// Socket.IOサーバーへの接続を設定
-var socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])('https://line-chat.tokyo:3000', {
-  reconnection: true,
-  // 自動再接続を有効にする
-  reconnectionDelay: 1000,
-  // 再接続の遅延時間 (ミリ秒)
-  reconnectionDelayMax: 5000,
-  // 再接続の最大遅延時間 (ミリ秒)
-  reconnectionAttempts: Infinity // 再接続の試行回数 (無限に設定)
-});
-
-// ページの可視性が変更されたときのイベントリスナー
-document.addEventListener("visibilitychange", function () {
-  if (document.visibilityState === 'visible') {
-    console.log("ページがアクティブです。Socket.IO接続を確認または再接続します。");
-    checkOrReconnectSocket();
-  }
-});
-function checkOrReconnectSocket() {
-  console.log("Socket.IOの現在の接続状態:", socket.connected);
-  var sender_id = document.getElementById("js_sender_id").value;
-  if (!socket.connected) {
-    console.log("Socket.IOは接続されていません。再接続を試みます。");
-    console.log(sender_id + "sender_id, reconnecting websocket");
-    registerUser(sender_id);
-    socket.connect();
-  } else {
-    registerUser(sender_id);
-  }
-}
-
-// 再接続試行イベント
-socket.on('reconnect_attempt', function () {
-  console.log('Attempting to reconnect');
-});
-
-// 再接続エラーイベント
-socket.on('reconnect_error', function (error) {
-  console.log('Reconnection failed:', error);
-});
-
-// サーバーから切断されたときのイベント
-socket.on('disconnect', function (reason) {
-  if (reason === 'io server disconnect') {
-    // サーバー側で接続が強制切断された場合
-    console.log('Disconnected by the server');
-  } else {
-    // その他の理由で切断された場合
-    console.log('Disconnected:', reason);
-  }
-});
-var sender_id = document.getElementById("js_sender_id").value;
-registerUser(sender_id);
-// メッセージをサーバーに送信
-function sendMessage(msg, sender_id, receiver_id, sender_type, msg2) {
-  var data = {
-    content: msg2,
-    admin_id: sender_id,
-    user_id: receiver_id
-  };
-  fetch("/api/admin/messages", {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      // リクエストボディが JSON フォーマットであることを示す
-      'Accept': 'application/json' // レスポンスが JSON フォーマットであることを期待する
-    },
-    body: JSON.stringify(data)
-  }).then(function (response) {
-    console.log(response);
-    if (!response.ok) {
-      return response.json().then(function (errorData) {
-        throw new Error(errorData.error || 'An unknown error occurred');
-      });
-    }
-    //return response.json(): 成功した場合（response.ok が true）、レスポンスボディを JSON として解析し、その結果を次の then チェーンに渡す
-    return response.json();
-  }).then(function (data) {
-    var time = data["created_at"];
-    var message_id = data["message_id"];
-    var admin_login_id = data["admin_login_id"];
-    socket.emit('chat message', {
-      msg: msg,
-      receiver_id: receiver_id,
-      sender_id: sender_id,
-      sender_type: sender_type,
-      time: time,
-      message_id: message_id,
-      admin_login_id: admin_login_id
-    });
-  });
-}
-function registerUser(sender_id) {
-  socket.emit("register", sender_id);
-}
-
-// サーバーからのメッセージを受信
-socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
-  if (isON["isSoundOn"]) (0,_module_util_notificationSound_js__WEBPACK_IMPORTED_MODULE_6__.playNotificationSound)();
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayChatMessage)("js_append_admin", sender_type, msg, "admin", sender_id, time, "text");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
-  if (sender_type == "user") {
-    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateChatUserList)(receiver_id, msg, sender_id, "text", sender_type, is_searching);
-  }
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, msg, sender_type, receiver_id, "text");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increaseMessageCount)(sender_id, sender_type);
-  var data = {
-    "message_id": message_id,
-    "admin_id": receiver_id,
-    "chat_user_id": sender_id
-  };
-  if (sender_id == document.getElementById("js_chatuser_id").value) {
-    (0,_module_util_fetch_js__WEBPACK_IMPORTED_MODULE_2__.fetchPostOperation)(data, "/api/user/messages/read");
-  }
-});
-socket.on("send_image", function (sender_type, sender_id, time, receiver_id, message_id, resizedImage) {
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayChatMessage)("js_append_admin", sender_type, resizedImage, "admin", sender_id, time, "image");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.displayMessage)(sender_id, "", sender_type, receiver_id, "image");
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.increaseMessageCount)(sender_id, sender_type);
-  (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.updateChatUserList)(receiver_id, resizedImage, sender_id, "image", sender_type, is_searching);
-  var data = {
-    "message_id": message_id,
-    "admin_id": receiver_id,
-    "chat_user_id": sender_id
-  };
-  if (sender_id == document.getElementById("js_chatuser_id").value) {
-    (0,_module_util_fetch_js__WEBPACK_IMPORTED_MODULE_2__.fetchPostOperation)(data, "/api/user/messages/read");
-  }
-});
-
-//   formからメッセージを送信する
-document.getElementById("js_chat_form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  document.getElementById('js_msg').style.height = "19px";
-  var msg = document.getElementById("js_msg").value;
-  console.log(msg);
-  var formattedMsg = msg.replace(/\n/g, '<br>'); // 改行文字を <br> タグに置き換える
-  var receiver_id = document.getElementById("js_receiver_id").value;
-  var sender_id = document.getElementById("js_sender_id").value;
-  var sender_type = document.getElementById("js_sender_type").value;
-  document.querySelector(".chat__form-submit").classList.add("disable_btn");
-  sendMessage(formattedMsg, sender_id, receiver_id, sender_type, msg);
-  document.getElementById("js_msg").value = "";
-});
-(0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.adjustMesageLength)();
-(0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_3__.changeTextareaHeight)();
-(0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_3__.disableSubmitBtn)();
-
-// 選択してチャットを開くユーザーの切り替えをする
-
-var chat_btns = document.querySelectorAll(".js_chat_wrapper");
-chat_btns.forEach(function (btn) {
-  btn.addEventListener("click", function (e) {
-    var id = e.currentTarget.getAttribute("data-id");
-    var admin_id = e.currentTarget.getAttribute("data-admin-id");
-    window.location.href = "/".concat(admin_id, "/").concat(id);
-  });
-});
-
-// チャットを開いたときに一番下までスクロールさせる
 document.addEventListener("DOMContentLoaded", function () {
-  var scroll_el = document.querySelector(".chat__message-main");
-  console.log(scroll_el);
-  scroll_el.scrollTop = scroll_el.scrollHeight;
-});
-
-// ハートビートを送信する関数
-function sendHeartbeat() {
-  console.log('Sending heartbeat');
-  socket.emit('heartbeat');
-}
-
-// 30秒ごとにハートビートを送信
-setInterval(sendHeartbeat, 10000);
-var user_type = "admin";
-(0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__.fileOperation)(socket, sender_id, "/api/admin/messages/image", user_type);
-
-// debounce関数を作成
-var debounce = function debounce(func, delay) {
-  var timer;
-  return function () {
-    var _this = this;
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    clearTimeout(timer); // 前のタイマーをクリア
-    timer = setTimeout(function () {
-      func.apply(_this, args); // 一定時間後に関数を実行
-    }, delay);
+  // グローバル変数
+  var is_searching = {
+    flag: false
   };
-};
-
-// チャット画面検索機能
-
-var message_input = document.querySelector(".js_message_input");
-var is_searching = {
-  flag: false
-};
-message_input.addEventListener("input", debounce(function (e) {
-  var value = e.target.value;
-  is_searching["flag"] = true;
-  var data = {
-    admin_id: sender_id,
-    text: value
+  var isON = {
+    isSoundOn: false
   };
-  if (value.length > 0) {
-    (0,_module_component_append_js__WEBPACK_IMPORTED_MODULE_1__.createDivForSearch)(data, sender_id);
-  } else {
-    is_searching["flag"] = false;
-    var admin_id = sender_id;
-    (0,_module_util_fetch_js__WEBPACK_IMPORTED_MODULE_2__.fetchGetOperation)("/api/users/messages/lineAccounts/".concat(admin_id)).then(function (res) {
-      // なぜかフロント側だと最新順ではなくなってしまうため
-      // Object.entriesでオブジェクトを配列に変換し、sortでcreated_atの降順にソート
-      var sortedData = Object.entries(res["mergedData"]).sort(function (_ref, _ref2) {
-        var _ref3 = _slicedToArray(_ref, 2),
-          a = _ref3[1];
-        var _ref4 = _slicedToArray(_ref2, 2),
-          b = _ref4[1];
-        return new Date(b.message.created_at) - new Date(a.message.created_at);
-      });
-      var chat_wrapper = document.getElementById("js_chatUser_wrapper");
-      chat_wrapper.innerHTML = "";
+  var sender_id = document.getElementById("js_sender_id").value;
 
-      // ソートされたデータを処理
-      sortedData.reverse().forEach(function (_ref5) {
-        var _ref6 = _slicedToArray(_ref5, 2),
-          key = _ref6[0],
-          value = _ref6[1];
-        var message_type;
-        if (value["message"]["content"]) {
-          message_type = "text";
-        } else {
-          message_type = "image";
-        }
-        var parentNewDiv = document.createElement("div");
-        parentNewDiv.classList.add("chat__users-list-wraper");
-        parentNewDiv.classList.add("js_chat_wrapper");
-        parentNewDiv.setAttribute("data-id", value["user_info"]["id"]);
-        parentNewDiv.setAttribute("data-admin-id", sender_id);
-        parentNewDiv.style.marginTop = "0";
-        var firstChild = chat_wrapper.firstChild;
-        var newDiv = (0,_module_component_createDiv_js__WEBPACK_IMPORTED_MODULE_5__.createDiv)(parentNewDiv, value["user_info"]["user_picture"], value["user_info"]["line_name"], value["user_info"]["id"], value["message"]["content"], message_type, value["count"], value["formatted_time"]);
-        if (firstChild == undefined) {
-          chat_wrapper.appendChild(newDiv);
-        } else {
-          chat_wrapper.insertBefore(newDiv, firstChild);
-        }
-      });
-      (0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_4__.chatNavigator)();
+  // サーバーへの接続を初期化
+  (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.initSocket)('https://line-chat.tokyo:3000', sender_id);
+  // ユーザーをソケットサーバーに登録する
+  (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.registerUser)(sender_id);
+  // 30秒ごとにハートビートを送信
+  setInterval(_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.sendHeartbeat, 10000);
+  var socket = (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.getSocket)();
+
+  // 着信音処理
+  document.querySelector(".js_bell").addEventListener("click", function () {
+    isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false;
+  });
+
+  // クライアントからソケットサーバーへメッセージを送信する
+  document.getElementById("js_chat_form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var _prepareMessageData = (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.prepareMessageData)(),
+      msg = _prepareMessageData.msg,
+      formattedMsg = _prepareMessageData.formattedMsg,
+      receiver_id = _prepareMessageData.receiver_id,
+      sender_type = _prepareMessageData.sender_type;
+    // メッセージをサーバーに送信する
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.sendMessage)(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/admin/messages");
+  });
+
+  // サーバーからのメッセージを受信
+  socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, msg, "text");
+  });
+
+  // サーバーからの画像を受信
+  socket.on("send_image", function (sender_type, sender_id, time, receiver_id, message_id, resizedImage) {
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
+  });
+
+  // 選択してチャットを開くユーザーの切り替えをする
+  var chat_btns = document.querySelectorAll(".js_chat_wrapper");
+  chat_btns.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      var id = e.currentTarget.getAttribute("data-id");
+      var admin_id = e.currentTarget.getAttribute("data-admin-id");
+      window.location.href = "/".concat(admin_id, "/").concat(id);
     });
-  }
-}, 500)); // 1000ミリ秒（1秒）の間隔を指定
+  });
+  (0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.scrollToBottom)();
+  (0,_module_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.adjustMesageLength)();
+  (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_1__.changeTextareaHeight)();
+  (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_1__.disableSubmitBtn)();
+
+  // 画像の処理
+  var user_type = "admin";
+  var fileInput = document.getElementById("fileInput");
+  fileInput.addEventListener("change", function () {
+    (0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.fileOperation)(socket, sender_id, "/api/admin/messages/image", user_type);
+    fileInput.value = "";
+  });
+
+  // チャット画面検索機能
+  var message_input = document.querySelector(".js_message_input");
+  message_input.addEventListener("input", (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.debounce)(function (e) {
+    var value = e.target.value;
+    is_searching["flag"] = true;
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleSearchInput)(is_searching, value, sender_id);
+  }, 500)); // 1000ミリ秒（1秒）の間隔を指定
+});
 })();
 
 /******/ })()

@@ -25,22 +25,41 @@ export const prepareMessageData = () => {
 
 // メッセージをサーバーに送信
 export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, msg2, url) => {
-    const data = {
-          content:msg2,
-          admin_id: sender_id,
-          user_id: receiver_id
-    }
+
+  	// sender_typeに基づいて送信者・受信者を自動設定
+	let actual_sender_id, actual_receiver_id, data;
+
+	if(sender_type == "admin"){
+		actual_sender_id = sender_id; // 管理者が送信者(管理者ID)
+		actual_receiver_id = receiver_id // ユーザーが受信者(ユーザーID)
+
+		data = {
+			content:msg2,
+			admin_id: actual_sender_id,
+			user_id: actual_receiver_id
+		}
+	}else if(sender_type == "user"){
+		actual_sender_id = receiver_id; // ユーザーが送信者(ユーザーID)
+		actual_receiver_id = sender_id // 管理者が受信者(管理者ID)
+
+		data = {
+			content:msg2,
+			admin_id: actual_receiver_id,
+			user_id: actual_sender_id
+		}
+	}
 
     // 管理者メッセージをデータベースに格納
     fetchPostOperation(data, url)
-    .then((res)=>{
-      const time            = res["created_at"]
-      const message_id      = res["message_id"]
-      const admin_login_id  = res["admin_login_id"]
-      
-      socket.emit('chat message', {msg, receiver_id, sender_id,sender_type, time, message_id, admin_login_id});
-      document.getElementById("js_msg").value = "";
-    })
+	.then((res)=>{
+		const time            = res["created_at"]
+		const message_id      = res["message_id"]
+		const admin_login_id  = res["admin_login_id"]
+
+
+		socket.emit('chat message', {msg, actual_receiver_id, actual_sender_id, sender_type, time, message_id, admin_login_id});
+		document.getElementById("js_msg").value = "";
+	})
 }
 
 
@@ -50,31 +69,31 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
 
   // メッセージ受信時の処理
 export const handleReceivedMessage = (isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, content, message_type) =>{
-      if (isON["isSoundOn"]) playNotificationSound();
+    if (isON["isSoundOn"]) playNotificationSound();
 
-      // チャットを画面に表示する処理
-      displayChatMessage("js_append_admin", sender_type, content, "admin", sender_id, time, message_type);
-  
-      // チャットリストのリアルタイムでデータを表示する処理
-      updateMessageTime(time, sender_id, sender_type, receiver_id);
-      displayMessage(sender_id, message_type === "text" ? content : "", sender_type, receiver_id, message_type);
-      updateChatUserList(receiver_id, content, sender_id, message_type, sender_type, is_searching);
-  
-      if (sender_type === "user") {
-        // 通知表示
-        increaseMessageCount(sender_id);
-      }
-  
-      // メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
-      const data = {
-        "message_id": message_id,
-        "admin_id": sender_id,
-        "chat_user_id": receiver_id
-      };
-  
-      if (sender_id == document.getElementById("js_chatuser_id").value) {
-        fetchPostOperation(data, "/api/user/messages/read");
-      }
+		// チャットを画面に表示する処理
+		displayChatMessage("js_append_admin", sender_type, content, "admin", sender_id, time, message_type);
+
+		// チャットリストのリアルタイムでデータを表示する処理
+		updateMessageTime(time, sender_id, sender_type, receiver_id);
+		displayMessage(sender_id, message_type === "text" ? content : "", sender_type, receiver_id, message_type);
+		updateChatUserList(receiver_id, content, sender_id, message_type, sender_type, is_searching);
+
+	if (sender_type === "user") {
+		// 通知表示
+		increaseMessageCount(sender_id);
+	}
+
+	// メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
+	const data = {
+		"message_id": message_id,
+		"admin_id": sender_id,
+		"chat_user_id": receiver_id
+	};
+
+	if (sender_id == document.getElementById("js_chatuser_id").value) {
+		fetchPostOperation(data, "/api/user/messages/read");
+	}
 }
 
 // debounce関数を作成
