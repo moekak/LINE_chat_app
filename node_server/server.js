@@ -45,19 +45,18 @@
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
-
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
-const cors = require('cors');
-const { selectUserIds } = require('./database.js');
-const axios = require('axios');
-const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./socketBroadcast.js');
+const { selectUserIds } = require('./util/database.js');
+const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./util/socketBroadcast.js');
+require('dotenv').config();
+
 
 
 
 const config = {
-    channelAccessToken: 'SGhx03izYuFtsEaNT1UrvEYOqsxtronY1041KfyHNYtdVQMGTzrApsBLISvB74wehNfDE83Qgtg7lrkPKpAceWSBAln25bIypZ57FCemFQOro5+OnGF5/bm+11pg1z0wisbvymCvofsjcx+L53So2AdB04t89/1O/w1cDnyilFU=',
-    channelSecret: '91c7169b106ffda2bdca9e247eb5b552'
+    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+    channelSecret: process.env.CHANNEL_SECRET
 };
 
 const client = new Client(config);

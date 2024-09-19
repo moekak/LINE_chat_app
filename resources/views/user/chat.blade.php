@@ -5,13 +5,13 @@
 
 
 @section('icon')
-    <img src="<?= $admin_info["user_picture"]?>" alt="" class="chat_users-icon"> 
+      <img src="<?= $admin_info["user_picture"]?>" alt="" class="chat_users-icon"> 
 @endsection
 @section('icon-msg')
       <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message" id="icon_msg"> 
 @endsection
 @section('script')
-    <script src="{{mix("js/userChat.js")}}"></script>
+      <script src="{{mix("js/userChat.js")}}"></script>
 @endsection
 
 @section('send_data')
@@ -42,9 +42,7 @@
             @foreach ($group_message as $date => $messages)
 
             <small class="chat__message-main-time">{{ $date }}</small>
-                    
-                    @foreach ($messages as $message)
-
+                  @foreach ($messages as $message)
                         @if ($message->type == "admin")
                               <div class="chat__message-container-left">
                                     <div class="chat__mesgae-main-left">
@@ -72,11 +70,9 @@
                                     </div>
                               </div>
                         @endif
-                    
-                    @endforeach
+                  @endforeach
             @endforeach
       </div>
-
 </div>
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
@@ -86,11 +82,10 @@
             </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
-          
             <button class="chat__form-submit disable_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
 
       </form>
-      
-      
 </div>
 @endsection
+
+

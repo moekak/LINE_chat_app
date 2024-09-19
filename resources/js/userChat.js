@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	// サーバーへの接続を初期化
 	initSocket('https://line-chat.tokyo:3000', sender_id)
-	// ユーザーをソケットサーバーに登録する
-	registerUser(sender_id)
 	// 30秒ごとにハートビートを送信
 	setInterval(sendHeartbeat, 10000);
 	const socket      = getSocket()

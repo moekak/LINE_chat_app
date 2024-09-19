@@ -90,10 +90,11 @@ height: 84vh;
     font-size: 11px;
     color: gray;
 }
+
 @media (max-width: 450px){
     .chat__form{
         bottom: 0%;
-   }
+    }
     .chat__message-area {
         padding: 0px 0px 20px 0px;
     }
@@ -113,5 +114,16 @@ height: 84vh;
     }
     .chat__message-main-time{
         font-size: 9px;
-   }
+    }
+}
+@media (max-width: 376px){
+    #js_msg{
+        font-size: 16px;
+    }
+    input, textarea {
+        font-size: 20px;  /* 最低でも16pxに設定 */
+    }
+    .chat__message-box-right, .chat__message-box-left {
+        font-size: 15px;
+    }
 }

@@ -15,11 +15,10 @@ const sender_id   = document.getElementById("js_sender_id").value
 
 // サーバーへの接続を初期化
 initSocket('https://line-chat.tokyo:3000', sender_id)
-// ユーザーをソケットサーバーに登録する
-registerUser(sender_id)
 // 30秒ごとにハートビートを送信
 setInterval(sendHeartbeat, 10000);
 const socket      = getSocket()
+
 
 // 着信音処理
 document.querySelector(".js_bell").addEventListener("click", ()=>{

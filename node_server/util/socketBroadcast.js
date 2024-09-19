@@ -1,4 +1,3 @@
-const { selectUserID, selectAdminID } = require("./database.js");
 
 const broadcastMessageToSockets = (userSockets, msgData) =>{
 
@@ -8,8 +7,7 @@ const broadcastMessageToSockets = (userSockets, msgData) =>{
     const adminSockets      = userSockets.get(`admin${actual_receiver_id}`);
     const adminUserSockets  = userSockets.get(`user${admin_login_id}`);
 
-
-      // メッセージを送信する関数（重複した処理をまとめる）
+    // メッセージを送信する関数（重複した処理をまとめる）
     const broadcastMessage = (sockets,isAdmin = false, isAdminUser = false) => {
         if (sockets) {
             sockets.forEach((socket) => {
@@ -32,14 +30,16 @@ const broadcastMessageToSockets = (userSockets, msgData) =>{
     broadcastMessage(adminSockets, true);
     broadcastMessage(adminUserSockets, false, true);
 }
+
+
 const broadcastImagesToSockets = (userSockets, msgData) =>{
 
     const { sender_type, sender_id, time, receiver_id, message_id, resizedImage, admin_login_id} = msgData;
 
     const recipientSockets  = userSockets.get(receiver_id);
     const senderSockets     = userSockets.get(sender_id);
-    const adminSockets      = userSockets.get(`admin${receiver_id}`);
-    const adminUserSockets  = userSockets.get(`user${admin_login_id}`);
+    const adminSockets      = userSockets.get(`admin${receiver_id}`) //詳細の場合はadmin_accountID
+    const adminUserSockets  = userSockets.get(`user${admin_login_id}`) //ダッシュボードの場合はloginID
 
       // メッセージを送信する関数（重複した処理をまとめる）
     const broadcastMessage = (sockets, isAdmin = false, isAdminUser = false) => {
@@ -66,41 +66,7 @@ const broadcastImagesToSockets = (userSockets, msgData) =>{
 }
 
 
-const sendNotificationToLine = (actual_receiver_id, actual_sender_id, client) =>{
-    selectUserID(actual_receiver_id)
-        .then((userId)=>{
-            selectAdminID(actual_sender_id)
-            .then((adminId)=>{
-                const templateMessage = {
-                    type: 'template',
-                    altText: 'チャットメッセージを受信しました',
-                    template: {
-                        type: 'buttons',
-                        text: 'チャットメッセージを受信しました',
-                        actions: [
-                            {
-                                type: 'uri',
-                                label: 'チャットを確認',
-                                uri: `https://line-chat.tokyo/chat/${adminId}/${userId}`
-                            }
-                        ]
-                    }
-                };
-
-                    
-            //  pushMessageを使用してプッシュ通知を送信
-            // 第一引数にユーザーID、第二引数にメッセージの配列を渡す
-                client.pushMessage(userId, templateMessage)
-                .then(() => {
-                    console.log('メッセージが送信されました');
-                })
-                .catch((err) => {
-                    console.error('メッセージ送信エラー:', err);
-                });
-            })
-        })        
-}
 
 module.exports ={
-      broadcastMessageToSockets, broadcastImagesToSockets,sendNotificationToLine
+    broadcastMessageToSockets, broadcastImagesToSockets
 }
