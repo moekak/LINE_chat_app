@@ -110,23 +110,21 @@ export const updateMessageTime = (time,sender_id,sender_type,receiver_id) => {
         let chat_user_id = sender_type == "user" ? sender_id : receiver_id
 
         if (id == chat_user_id) element.innerHTML = time;
-     
     });
 };
 
 // チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
 const createNewDivElement = (receiver_id, sender_id, msg, message_type ) => {
-    fetchGetOperation(`/api/users/${receiver_id}/${sender_id}`)
+    fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`)
         .then((res) => {
 
-            const template      = createChatUserContainer(receiver_id, res, msg, message_type)
+            const template      = createChatUserContainer(sender_id, res, msg, message_type)
             const parentElement = document.getElementById("js_chatUser_wrapper");
             const firstChild    = parentElement.firstChild; // 最初の子要素を取得
 
             if(firstChild){
-                const newDiv = document.createElement('div');
-                newDiv.innerHTML = template
-                parentElement.insertBefore(newDiv, firstChild);
+                // 最初の子要素の前に直接HTMLを挿入
+                parentElement.insertAdjacentHTML('afterbegin', template);
             }else{
                 parentElement.innerHTML += template  // 最初の子要素がない場合、末尾に追加
             }
@@ -168,9 +166,9 @@ export const updateChatUserList = (receiver_id,msg,sender_id,message_type,sender
     let hasDiv = false;
 
     // 開いているチャットユーザーが送信者と同じ場合は処理を中止
-   if(document.getElementById("js_chatuser_id").value == sender_id){
-    return;
-   }
+    if(document.getElementById("js_chatuser_id").value == sender_id){
+        return;
+    }
     
     // 検索中でない場合の処理
     if (!is_searching.flag) {
@@ -180,6 +178,7 @@ export const updateChatUserList = (receiver_id,msg,sender_id,message_type,sender
             let chat_user_id = sender_type === "admin" ? receiver_id : sender_id;
 
             if (chat_user_id === user_id && wrappers.length > 0) {
+                
                 hasDiv = true;
 
                 // div要素をcloneして親要素の一番最初に挿入
@@ -187,7 +186,7 @@ export const updateChatUserList = (receiver_id,msg,sender_id,message_type,sender
                 chat_wrapper.insertBefore(newDiv, firstChild);
 
                 // 元の要素を削除
-                if (wrapper.parentNode === chat_wrapper) {
+                if (wrapper.parentNode == chat_wrapper) {
                     chat_wrapper.removeChild(wrapper);
                 }
                 break; // 早期リターン

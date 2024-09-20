@@ -24,7 +24,6 @@ class ChatUserController extends Controller
             $user_id = $userEntityService->getUserID($id);
 
             $data = ChatUser::findOrFail($user_id);
-     
             $totalMessageCount = UserMessage::where("user_id", $user_id)->where("admin_id", $admin_id)->count();
             $chatMessages       = $messageService->fetchAdminAndUserMessages($admin_id, $user_id);
             $latesetMessage     = $chatMessages->sortByDesc("created_at")->first();
