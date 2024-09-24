@@ -12,126 +12,115 @@ use Illuminate\Support\Carbon;
 
 
 class MessageService{
-      public function formatDate($createdAt){
-            //Carbonインスタンスを作成
-            $date = Carbon::parse($createdAt);
-            //現在の日時と時刻を取得して Carbon インスタンスに格納
-            $now = Carbon::now();
-            $oneWeekAgo = $now->copy()->subWeek();
-            $yesterday = $now->copy()->subDay();
-    
-    
-            if ($date->isSameDay($now)) {
-                return '今日';
-            }
-    
-            if ($date->isSameDay($yesterday)) {
-                return '昨日';
-            }
-             // 一週間以内のチェック
-             if ($date->isBetween($oneWeekAgo, $now, 'day')) {
-                $daysOfWeek = [
-                    'Monday'    => '月曜日',
-                    'Tuesday'   => '火曜日',
-                    'Wednesday' => '水曜日',
-                    'Thursday'  => '木曜日',
-                    'Friday'    => '金曜日',
-                    'Saturday'  => '土曜日',
-                    'Sunday'    => '日曜日',
-                ];
-        
-                // 曜日の英語名を取得
-                $dayOfWeekEnglish = $date->format('l');
-        
-                // 曜日の日本語名に変換
-                return $daysOfWeek[$dayOfWeekEnglish] ?? $dayOfWeekEnglish;
-            }
-            // 1年以内のチェック
-            if ($date->isSameYear($now)) {
-                return $date->format('Y年n月j日'); // 例: 2024年8月20日 火曜日
-            }
-            // それ以外
-            return $date->format('Y年n月j日'); // 例: 2023年8月20日
-    
+    public function formatDate($createdAt){
+        //Carbonインスタンスを作成
+        $date = Carbon::parse($createdAt);
+        //現在の日時と時刻を取得して Carbon インスタンスに格納
+        $now = Carbon::now();
+        $oneWeekAgo = $now->copy()->subWeek();
+        $yesterday = $now->copy()->subDay();
+
+
+        if ($date->isSameDay($now)) {
+            return '今日';
         }
-      public function formatTime($createdAt){
-            //Carbonインスタンスを作成
-            $date = Carbon::parse($createdAt);
-            //現在の日時と時刻を取得して Carbon インスタンスに格納
-            $now = Carbon::now();
-            $oneWeekAgo = $now->copy()->subWeek();
-            $yesterday = $now->copy()->subDay();
-    
-    
-            if ($date->isSameDay($now)) {
-                return $createdAt->format("H:i")
-                ;
-            }
-    
-            if ($date->isSameDay($yesterday)) {
-                return '昨日';
-            }
-             // 一週間以内のチェック
-             if ($date->isBetween($oneWeekAgo, $now, 'day')) {
-                $daysOfWeek = [
-                    'Monday'    => '月曜日',
-                    'Tuesday'   => '火曜日',
-                    'Wednesday' => '水曜日',
-                    'Thursday'  => '木曜日',
-                    'Friday'    => '金曜日',
-                    'Saturday'  => '土曜日',
-                    'Sunday'    => '日曜日',
-                ];
-        
-                // 曜日の英語名を取得
-                $dayOfWeekEnglish = $date->format('l');
-        
-                // 曜日の日本語名に変換
-                return $daysOfWeek[$dayOfWeekEnglish] ?? $dayOfWeekEnglish;
-            }
-            // 1年以内のチェック
-            if ($date->isSameYear($now)) {
-                return $date->format('n月j日'); // 例: 2024年8月20日 火曜日
-            }
-            // それ以外
-            return $date->format('Y年n月j日'); // 例: 2023年8月20日
-    
+
+        if ($date->isSameDay($yesterday)) {
+            return '昨日';
         }
+            // 一週間以内のチェック
+        if ($date->isBetween($oneWeekAgo, $now, 'day')) {
+            $daysOfWeek = [
+                'Monday'    => '月曜日',
+                'Tuesday'   => '火曜日',
+                'Wednesday' => '水曜日',
+                'Thursday'  => '木曜日',
+                'Friday'    => '金曜日',
+                'Saturday'  => '土曜日',
+                'Sunday'    => '日曜日',
+            ];
+    
+            // 曜日の英語名を取得
+            $dayOfWeekEnglish = $date->format('l');
+    
+            // 曜日の日本語名に変換
+            return $daysOfWeek[$dayOfWeekEnglish] ?? $dayOfWeekEnglish;
+        }
+        // 1年以内のチェック
+        if ($date->isSameYear($now)) {
+            return $date->format('Y年n月j日'); // 例: 2024年8月20日 火曜日
+        }
+        // それ以外
+        return $date->format('Y年n月j日'); // 例: 2023年8月20日
+
+    }
+    public function formatTime($createdAt){
+        //Carbonインスタンスを作成
+        $date = Carbon::parse($createdAt);
+        //現在の日時と時刻を取得して Carbon インスタンスに格納
+        $now = Carbon::now();
+        $oneWeekAgo = $now->copy()->subWeek();
+        $yesterday = $now->copy()->subDay();
+
+
+        if ($date->isSameDay($now)) {
+            return $createdAt->format("H:i")
+            ;
+        }
+
+        if ($date->isSameDay($yesterday)) {
+            return '昨日';
+        }
+            // 一週間以内のチェック
+        if ($date->isBetween($oneWeekAgo, $now, 'day')) {
+            $daysOfWeek = [
+                'Monday'    => '月曜日',
+                'Tuesday'   => '火曜日',
+                'Wednesday' => '水曜日',
+                'Thursday'  => '木曜日',
+                'Friday'    => '金曜日',
+                'Saturday'  => '土曜日',
+                'Sunday'    => '日曜日',
+            ];
+    
+            // 曜日の英語名を取得
+            $dayOfWeekEnglish = $date->format('l');
+    
+            // 曜日の日本語名に変換
+            return $daysOfWeek[$dayOfWeekEnglish] ?? $dayOfWeekEnglish;
+        }
+        // 1年以内のチェック
+        if ($date->isSameYear($now)) {
+            return $date->format('n月j日'); // 例: 2024年8月20日 火曜日
+        }
+        // それ以外
+        return $date->format('Y年n月j日'); // 例: 2023年8月20日
+    }
 
 
 
       //管理者メッセージとユーザーメッセーを取り出し、一つの配列に統合して、created_at 日付で昇順でソートする
-      public function fetchAdminAndUserMessages($admin_id, $user_id) {
-            $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
-            $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
+    public function fetchAdminAndUserMessages($admin_id, $user_id) {
+        $adminMessages = AdminMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
+        $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
-            $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
-            $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
-
-
-            $mergedUserMessages =  $userMessages->merge($userMessageImages);
-            $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
+        $userMessages = UserMessage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
+        $userMessageImages = UserMessageImage::orderBy("created_at")->where("admin_id", $admin_id)->where("user_id", $user_id)->get();
 
 
-            
-            // echo '<pre>';
-            // print_r($mergedUserMessages ->toArray());
-            // echo '<pre>';
+        $mergedUserMessages =  $userMessages->merge($userMessageImages);
+        $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
+        
+        $allSortedMessages = $mergedUserMessages->concat($mergedAdminMessages)
+        ->map(function ($message) {
+            // created_at を東京時間に変換
+            $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+            return $message;
+        })->sortBy("created_at");
 
-            $allSortedMessages = $mergedUserMessages->concat($mergedAdminMessages)
-            ->map(function ($message) {
-                // created_at を東京時間に変換
-                $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
-                return $message;
-            })->sortBy("created_at");
-            // ->sortBy("created_at");
-            // echo '<pre>';
-            // print_r($allSortedMessages ->toArray());
-            // echo '<pre>';
 
-            return $allSortedMessages;
-
-      }
+        return $allSortedMessages;
+    }
 
 
     //取得したメッセージを日付順にグループ化する(最新順)
@@ -219,7 +208,6 @@ class MessageService{
             })->sortByDesc("created_at");
 
             $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
-    
             $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
             $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
             $sortedAdminMessages = $mergedAdminMessages->map(function($message) {
@@ -228,8 +216,6 @@ class MessageService{
                 return $message;
             })->sortByDesc("created_at");
         
-       
-
             if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
                 $allMessages = $sortedUserMessages->merge($sortedAdminMessages)
                 ->map(function($message) {
@@ -256,7 +242,6 @@ class MessageService{
                 return Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
             });
 
- 
             foreach($latestMessages as $index => $message){
                 $totalMessageCount =$this->selectTotalMessageCount($message->admin_id, $message->user_id);
                 $mergedData[$index]["userInfo"] = ChatUser::where("id", $message->user_id)->first();
@@ -270,9 +255,6 @@ class MessageService{
 
         }
 
-
-
-     
         return $mergedData;
     }
 

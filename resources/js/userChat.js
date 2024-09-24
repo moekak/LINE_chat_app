@@ -1,11 +1,12 @@
 import { displayChatMessage } from './module/component/chatController.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { fileOperation, scrollToBottom } from './module/component/uiController.js';
-import { checkOrReconnectSocket, getSocket, initSocket, registerUser, sendHeartbeat } from './module/util/socketHandler.js';
+import { getSocket, initSocket, sendHeartbeat } from './module/util/socketHandler.js';
 import { prepareMessageData, sendMessage } from './module/util/messageService.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
+
 	// グローバル変数
 	//!! sender_id = ユーザーID!!
 	const sender_id = document.getElementById("js_sender_id").value
