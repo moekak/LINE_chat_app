@@ -28,7 +28,6 @@ class AdminMessageController extends Controller
             $userEntityService  = new UserEntityService();
 
             $validated = $request->validated();
-            $validated["type"]= "admin";
 
             // 送信されたuuidでidを取得
             $admin_id = $userEntityService->getAdminID($validated["admin_id"]);
@@ -45,7 +44,6 @@ class AdminMessageController extends Controller
                 "user_id"       => $user_id,
                 "admin_id"      => $admin_id,
                 "content"       => $validated["content"],
-                "type"          => "admin"
             ];
 
             // メッセージをデータベースに格納
@@ -86,7 +84,6 @@ class AdminMessageController extends Controller
                 "user_id"       => $user_id,
                 "admin_id"      => $admin_id,
                 "message_id"    => $messageService->getLatesetAdminMessageID($user_id, $admin_id) + 1,
-                "type"          => "admin",
                 "image"         => $imageName
             ];
 

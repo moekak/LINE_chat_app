@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminMessage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\UserEntity;
-use App\Models\UserMessage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
+use App\Services\MergedData;
+use App\Services\MessageAggregationService;
 use App\Services\MessageService;
 
 class ChatController extends Controller
@@ -19,13 +16,14 @@ class ChatController extends Controller
     {
         // インスタンスの作成
         $messageService = new MessageService();
+        $messageAggregationService = new MessageAggregationService();
         // 管理者アカウント情報を取得する
         $admin_info = LineAccount::where("account_id", $adminId)->first();
         // ユーザーアカウント情報を取得する
         $user_id = ChatUser::where("user_id", $userId)->first();
 
-        $messages       = $messageService->fetchAdminAndUserMessages($admin_info["id"], $user_id["id"]);
-        $group_message  = $messageService->formatMessage($messages);
+        $messages       = $messageAggregationService->getUnifiedSortedMessages($user_id["id"], $admin_info["id"]);
+        $group_message  = $messageService->groupMessagesByDate($messages);
 
         // uuidを取得する
         $uuid_admin = UserEntity::where("entity_type", "admin")->where("related_id", $admin_info["id"])->value("entity_uuid");

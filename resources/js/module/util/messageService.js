@@ -140,18 +140,24 @@ export const handleSearchInput = (is_searching, value, sender_id) => {
 export const fetchAndDisplayAllMessages = (admin_id) => {
   fetchGetOperation(`/api/users/messages/lineAccounts/${admin_id}`)
     .then((res) => {
+
+      console.log(res);
+      
       const parentElement = document.getElementById("js_chatUser_wrapper");
       parentElement.innerHTML = "";
 
       // データを作成日時の降順にソート
+
+      console.log(res["mergedData"]);
+      
       const sortedData = Object.entries(res["mergedData"]).sort(([, a], [, b]) => {
-        return new Date(b.message.created_at) - new Date(a.message.created_at);
+        return new Date(b.latest_message.created_at) - new Date(a.latest_message.created_at);
       });
 
       // ソートされたデータをチャットリストに表示
       sortedData.forEach(([key, res]) => {
-        let message_type = res["message"]["content"] ? "text" : "image";
-        parentElement.innerHTML += createChatUserContainer(res["uuid"], res, res["message"]["content"], message_type);
+        let message_type = res["latest_message"]["content"] ? "text" : "image";
+        parentElement.innerHTML += createChatUserContainer(res["userUuid"], res, res["latest_message"]["content"], message_type);
       });
 
       chatNavigator();

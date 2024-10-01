@@ -29,7 +29,7 @@ class UserMessageController extends Controller
             $user_id = $userEntityService->getUserID($validated["user_id"]);
 
 
-            $validated["type"]= "user";
+
             $validated["message_id"] = $messageService->getLatesetUserMessageID($user_id, $admin_id) + 1;
 
             $message_data = [
@@ -37,7 +37,7 @@ class UserMessageController extends Controller
                 "user_id" => $user_id,
                 "admin_id" => $admin_id,
                 "content" => $validated["content"],
-                "type" => "user"
+
             ];
 
             $userMessage = UserMessage::create($message_data);
@@ -76,12 +76,12 @@ class UserMessageController extends Controller
             if(isset($imageName["error"])){
                 return response()->json(["error" => $imageName["error"]]);
             }
-           
+
             $data = [
                 "user_id" => $user_id,
                 "admin_id" => $admin_id,
                 "message_id" => $messageService->getLatesetUserMessageID($user_id, $admin_id) + 1,
-                "type" => "user",
+
                 "image" => $imageName
             ];
             

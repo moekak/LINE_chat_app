@@ -23,19 +23,19 @@
 
                   @foreach ($mergedData as $data)
                   
-                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="{{$data["uuid"]}}" data-id="{{$data["userInfo"]->id}}" data-admin-id="{{$admin_info->id}}">
-                              <img src="{{$data["userInfo"]->user_picture}}" alt="" class="chat_users-icon"> 
+                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="{{$data["userUuid"]}}" data-id="{{$data->id}}" data-admin-id="{{$admin_info->id}}">
+                              <img src="{{$data->user_picture}}" alt="" class="chat_users-icon"> 
                               <div class="chat_users-list-flex">
                                     <div class="chat_users-list-box"> 
-                                          <p class="chat_name_txt">{{$data["userInfo"]->line_name}}</p>
-                                          <small class="chat_time js_update_message_time"  data-id="{{$data["uuid"]}}">{{$data["formatted_date"]}}</small>
+                                          <p class="chat_name_txt">{{$data->line_name}}</p>
+                                          <small class="chat_time js_update_message_time"  data-id="{{$data["userUuid"]}}">{{$data["formatted_date"]}}</small>
                                     </div>  
                                     <div class="chat__users-list-msg">
-                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["uuid"]}}">{{$data["message"]->content ?? "画像が送信されました"}}</small>
+                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["userUuid"]}}">{{ $data["latest_message"]->type == "text" ? $data["latest_message"]->content : ($data["latest_message"]->type == "broadcast" ? "一斉メッセージを送信しました"  : "画像が送信されました")}}</small>
                                           @php
                                                 $count_style = $data["totalCount"] <= 0 ? "none": "flex";
                                           @endphp
-                                          <div class="message_count js_mesage_count" data-id="{{$data["uuid"]}}" style="display:{{$count_style}}">{{$data["totalCount"]}}</div>
+                                          <div class="message_count js_mesage_count" data-id="{{$data["userUuid"]}}" style="display:{{$count_style}}">{{$data["totalCount"]}}</div>
                                     </div>
                               </div>
                         </div>
@@ -73,26 +73,27 @@
                   <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)
 
-                        @if ($message->type == "user")
+
+                        @if ($message['sender_type'] == "user")
                         <div class="chat__message-container-left">
                               <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
-                                    @if ($message->content)
-                                          <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
-                                    @elseif($message->image)
-                                          <img src="{{ asset('storage/images/' . $message->image) }}" class="chat-margin5">
+                                    @if ($message["type"]== "text")
+                                          <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
+                                    @elseif($message["type"] =="image")
+                                          <img src="{{ asset('storage/images/' . $message["content"]) }}" class="chat-margin5">
                                     @endif
-                                    <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
+                                    <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
                               </div> 
                         </div>
                         @else
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
-                                          <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                          @if ($message->content)
-                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
-                                          @elseif($message->image)
-                                                <img src="{{ asset('storage/images/' . $message->image) }}" class="chat-margin5">
+                                          <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
+                                          @if ($message["type"] == "text")
+                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
+                                          @elseif($message["type"] == "image")
+                                                <img src="{{ asset('storage/images/' . $message["content"]) }}" class="chat-margin5">
                                           @endif
                                     </div>
                               </div>

@@ -11,6 +11,8 @@ use App\Models\MessageReadUser;
 use App\Models\UserEntity;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
+use App\Services\MergedData;
+use App\Services\MessageAggregationService;
 use App\Services\MessageService;
 use App\Services\UserEntityService;
 use Carbon\Carbon;
@@ -26,7 +28,9 @@ class ChatController extends Controller
     {   
 
         // インスタンスの作成
-        $messageService = new MessageService();
+        $messageService             = new MessageService();
+        $messageAggregationService  = new MessageAggregationService();
+
         // ユーザーの最新のメッセージIDを取得する
         $latest_message_id = $messageService->getLatesetUserMessageID($account_id, $id);
 
@@ -51,11 +55,12 @@ class ChatController extends Controller
         $chat_user  = ChatUser::where("id", $account_id)->first();
         $admin_info = LineAccount::where("id", $id)->first();
 
-        $mergedData     = $messageService->getMergedData($id);
-        $messages       = $messageService->fetchAdminAndUserMessages($id, $account_id);
-        $group_message  = $messageService->formatMessage($messages);
-
- 
+        $userData = ChatUser::where("account_id", $id)->get();
+        $mergedData     = $messageService->getMergedData($id, $userData);
+        $messages       = $messageAggregationService->getUnifiedSortedMessages($account_id, $id);
+        // print_r($messages->toArray());
+        // exit;
+        $group_message  = $messageService->groupMessagesByDate($messages);
 
         return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user, "uuid_admin" => $uuid_admin, "uuid_user"=>$uuid_user]);
     }
@@ -65,10 +70,12 @@ class ChatController extends Controller
             
             $messageService = new MessageService();
             $userEntityService = new UserEntityService();
+            
 
             $admin_id = $userEntityService->getAdminID($admin_uuid);
+            $userData = ChatUser::where("account_id", $admin_id)->get();
 
-            $mergedData = $messageService->getMergedData($admin_id);
+            $mergedData = $messageService->getMergedData($admin_id, $userData);
             return response()->json(["mergedData" => $mergedData]);
 
         }catch (\Exception $e){

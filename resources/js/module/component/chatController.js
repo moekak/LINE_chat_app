@@ -141,15 +141,17 @@ const createNewDivElement = (receiver_id, sender_id, msg, message_type ) => {
 
 // ユーザー検索処理
 export const createDivForSearch = (data) =>{
+    console.log(data);
+    
     fetchPostOperation(data, "/api/search/users")
         .then((res) => {
+            
             const parentElement = document.getElementById("js_chatUser_wrapper");
             parentElement.innerHTML = ""
             if(res["userInfo"].length > 0){
-                res["userInfo"].forEach((res)=>{
-                    
-                    let message_type = res["message"]["content"] ? "text" : "image"
-                    parentElement.innerHTML += createChatUserContainer(res["uuid"], res, res["message"]["content"], message_type)
+                res["userInfo"].forEach((res)=>{ 
+                    let message_type = res["latest_message"]["content"] ? "text" : "image"
+                    parentElement.innerHTML += createChatUserContainer(res["userUuid"], res, res["latest_message"]["content"], message_type)
                 })
             
                 chatNavigator();

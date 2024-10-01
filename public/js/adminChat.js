@@ -19,7 +19,6 @@ var changeTextareaHeight = function changeTextareaHeight() {
   textarea.addEventListener('input', autoResize, false);
   function autoResize() {
     if (this.scrollHeight > height) {
-      console.log(this.scrollHeight);
       this.style.height = 'auto'; // 高さをリセット
       this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定
     }
@@ -55,7 +54,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   displayMessage: () => (/* binding */ displayMessage),
 /* harmony export */   increaseMessageCount: () => (/* binding */ increaseMessageCount),
 /* harmony export */   updateChatUserList: () => (/* binding */ updateChatUserList),
-/* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime)
+/* harmony export */   updateMessageTime: () => (/* binding */ updateMessageTime),
+/* harmony export */   updateUserListMessage: () => (/* binding */ updateUserListMessage)
 /* harmony export */ });
 /* harmony import */ var _util_fetch_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/fetch.js */ "./resources/js/module/util/fetch.js");
 /* harmony import */ var _elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./elementTemplate.js */ "./resources/js/module/component/elementTemplate.js");
@@ -72,12 +72,16 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 // #####################################################################
 
 //メッセージをチャット画面に表示する
-var displayChatMessage = function displayChatMessage(className, type, msg, file_name, sender_id, time, message_type) {
+// file_name = 呼び出し元ファイル
+var displayChatMessage = function displayChatMessage(className, type, msg, file_name, actual_sender_id, time, message_type) {
   var parentElement = document.querySelector(".".concat(className));
   var isSenderAdmin = type === "admin";
   var isFileFromUser = file_name === "user";
   var isSenderUser = type === "user";
-  var isCorrectAdminMessage = file_name === "admin" && sender_id === parentElement.getAttribute("data-id");
+  // 関数呼び出し元ファイルがadminでなおかつメッセージ送信者がユーザーの場合
+  var isCorrectAdminMessage = file_name === "admin" && actual_sender_id === parentElement.getAttribute("data-id"); //このdata-idはユーザーIDが入っている
+
+  console.log(actual_sender_id);
   if (isSenderAdmin && isFileFromUser) {
     addLeftChatMessage(msg, parentElement, time, message_type);
   } else if (isSenderAdmin || isSenderUser && isFileFromUser) {
@@ -111,10 +115,8 @@ var addLeftChatMessage = function addLeftChatMessage(content, parentElement, tim
 var increaseMessageCount = function increaseMessageCount(sender_id) {
   var count_elements = document.querySelectorAll(".js_mesage_count");
   var chat_user_id = document.getElementById("js_chatuser_id").value;
-  console.log("senderID: ".concat(sender_id));
   count_elements.forEach(function (count) {
     var id = count.getAttribute("data-id");
-    console.log(id);
 
     // メッセージを送信したユーザーが一覧に表示されて、なおかつそのゆざーのチャット画面を開いていない場合
     if (id == sender_id && id !== chat_user_id) {
@@ -152,24 +154,26 @@ var adjustMesageLength = function adjustMesageLength() {
 var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id) {
   var elements = document.querySelectorAll(".js_update_message_time");
   elements.forEach(function (element) {
-    var id = element.getAttribute("data-id");
-    var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
-    if (id == chat_user_id) element.innerHTML = time;
+    if (receiver_id) {
+      var id = element.getAttribute("data-id");
+      var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
+      if (id == chat_user_id) element.innerHTML = time;
+    } else {
+      element.innerHTML = time;
+    }
   });
 };
 
 // チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
 var createNewDivElement = function createNewDivElement(receiver_id, sender_id, msg, message_type) {
-  (0,_util_fetch_js__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(receiver_id, "/").concat(sender_id)).then(function (res) {
-    console.log(res);
-    var template = (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(receiver_id, res, msg, message_type);
+  (0,_util_fetch_js__WEBPACK_IMPORTED_MODULE_0__.fetchGetOperation)("/api/users/".concat(sender_id, "/").concat(receiver_id)).then(function (res) {
+    var template = (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(sender_id, res, msg, message_type);
     var parentElement = document.getElementById("js_chatUser_wrapper");
     var firstChild = parentElement.firstChild; // 最初の子要素を取得
 
     if (firstChild) {
-      var newDiv = document.createElement('div');
-      newDiv.innerHTML = template;
-      parentElement.insertBefore(newDiv, firstChild);
+      // 最初の子要素の前に直接HTMLを挿入
+      parentElement.insertAdjacentHTML('afterbegin', template);
     } else {
       parentElement.innerHTML += template; // 最初の子要素がない場合、末尾に追加
     }
@@ -179,17 +183,24 @@ var createNewDivElement = function createNewDivElement(receiver_id, sender_id, m
 
 // ユーザー検索処理
 var createDivForSearch = function createDivForSearch(data) {
+  console.log(data);
   (0,_util_fetch_js__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, "/api/search/users").then(function (res) {
     var parentElement = document.getElementById("js_chatUser_wrapper");
     parentElement.innerHTML = "";
     if (res["userInfo"].length > 0) {
       res["userInfo"].forEach(function (res) {
         console.log(res);
-        var message_type = res["message"]["content"] ? "text" : "image";
-        parentElement.innerHTML += (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["uuid"], res, res["message"]["content"], message_type);
+        var message_type = res["latest_message"]["content"] ? "text" : "image";
+        parentElement.innerHTML += (0,_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["userUuid"], res, res["latest_message"]["content"], message_type);
       });
       (0,_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
     }
+  });
+};
+var updateUserListMessage = function updateUserListMessage() {
+  var message_wrappers = document.querySelectorAll(".js_chatMessage_elment");
+  message_wrappers.forEach(function (wrapper) {
+    wrapper.innerHTML = "一斉メッセージを送信しました";
   });
 };
 
@@ -223,7 +234,7 @@ var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id
           chat_wrapper.insertBefore(newDiv, firstChild);
 
           // 元の要素を削除
-          if (wrapper.parentNode === chat_wrapper) {
+          if (wrapper.parentNode == chat_wrapper) {
             chat_wrapper.removeChild(wrapper);
           }
           break; // 早期リターン
@@ -261,16 +272,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createRightMessageContainer: () => (/* binding */ createRightMessageContainer)
 /* harmony export */ });
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content) {
-  return "\n         <div class=\"chat__message-container-right\">\n            <div class=\"chat__mesgae-main-right\">\n                  <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                  ").concat(message_type === "text" ? "<div class=\"chat__message-box-right chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n            </div>\n      </div>\n      ");
+  return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" ? "<div class=\"chat__message-box-right chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n                  </div>\n            </div>\n      ");
 };
 var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content) {
   var src = document.getElementById("js_user_icon_img").value;
-  return "\n         <div class=\"chat__message-container-left\">\n            <div class=\"chat__mesgae-main-left\">\n                  <img src=\"".concat(src, "\" alt=\"\" class=\"chat_users-icon-message\" id=\"icon_msg\"> \n                  ").concat(message_type === "text" ? "<div class=\"chat__message-box-left chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n                  <div class=\"chat__message-time-txt\">").concat(time, "</div>\n            </div> \n      </div>\n      ");
+  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=\"".concat(src, "\" alt=\"\" class=\"chat_users-icon-message\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" ? "<div class=\"chat__message-box-left chat-margin5\">".concat(content.replace(/\n/g, "<br>"), "</div>") : "<img src=\"".concat(content, "\" class=\"chat-margin5\">"), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
 };
 var createChatUserContainer = function createChatUserContainer(sender_id, res, msg, message_type) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["totalCount"] == 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["totalCount"] == 0 ? 0 : res["totalCount"];
-  return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["userInfo"]["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <img src=\"").concat(res["userInfo"]["user_picture"], "\" alt=\"\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\"> \n                              <p class=\"chat_name_txt\">").concat(res["userInfo"]["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["formatted_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(message_type == "text" ? msg : "画像が送信されました", "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
+  return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <img src=\"").concat(res["user_picture"], "\" alt=\"\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\"> \n                              <p class=\"chat_name_txt\">").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["formatted_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(message_type == "text" ? msg : "画像が送信されました", "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
 };
 
 /***/ }),
@@ -308,7 +319,7 @@ var scrollToBottom = function scrollToBottom() {
     scroll_el.scrollTop = scroll_el.scrollHeight;
   }
 };
-var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
+var fileOperation = function fileOperation(socket, sender_id, url, sender_type) {
   var file = fileInput.files[0];
   var reader = new FileReader();
   var maxSizeMB = 5;
@@ -332,18 +343,18 @@ var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
 
       // 圧縮した画像をBase64に変換
       var resizedImage = canvas.toDataURL('image/jpeg', 0.7); // JPEG形式で圧縮率70%
-
+      // 呼び出し元のファイルがユーザーの場合 => ユーザーID
+      // 呼び出し元のファイルが管理者の場合   => 管理者ID
       var receiver_id = document.getElementById("js_receiver_id").value;
-      var sender_type = document.getElementById("js_sender_type").value;
       var data = {};
-      if (user_type == "user") {
+      if (sender_type == "user") {
         data = {
           "user_id": sender_id,
           "admin_id": receiver_id,
           "type": sender_type,
           "image": resizedImage
         };
-      } else if (user_type == "admin") {
+      } else if (sender_type == "admin") {
         data = {
           "user_id": receiver_id,
           "admin_id": sender_id,
@@ -352,7 +363,6 @@ var fileOperation = function fileOperation(socket, sender_id, url, user_type) {
         };
       }
       (0,_util_fetch__WEBPACK_IMPORTED_MODULE_0__.fetchPostOperation)(data, url).then(function (res) {
-        console.log(res);
         var time = res["created_at"];
         var message_id = res["message_id"];
         var admin_login_id = res["admin_login_id"];
@@ -491,6 +501,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   debounce: () => (/* binding */ debounce),
 /* harmony export */   fetchAndDisplayAllMessages: () => (/* binding */ fetchAndDisplayAllMessages),
+/* harmony export */   handleReceivedBroadcastingMessage: () => (/* binding */ handleReceivedBroadcastingMessage),
 /* harmony export */   handleReceivedMessage: () => (/* binding */ handleReceivedMessage),
 /* harmony export */   handleSearchInput: () => (/* binding */ handleSearchInput),
 /* harmony export */   prepareMessageData: () => (/* binding */ prepareMessageData),
@@ -537,11 +548,27 @@ var prepareMessageData = function prepareMessageData() {
 
 // メッセージをサーバーに送信
 var sendMessage = function sendMessage(socket, msg, sender_id, receiver_id, sender_type, msg2, url) {
-  var data = {
-    content: msg2,
-    admin_id: sender_id,
-    user_id: receiver_id
-  };
+  // sender_typeに基づいて送信者・受信者を自動設定
+  var actual_sender_id, actual_receiver_id, data;
+  if (sender_type == "admin") {
+    actual_sender_id = sender_id; // 管理者が送信者(管理者ID)
+    actual_receiver_id = receiver_id; // ユーザーが受信者(ユーザーID)
+
+    data = {
+      content: msg2,
+      admin_id: actual_sender_id,
+      user_id: actual_receiver_id
+    };
+  } else if (sender_type == "user") {
+    actual_sender_id = receiver_id; // ユーザーが送信者(ユーザーID)
+    actual_receiver_id = sender_id; // 管理者が受信者(管理者ID)
+
+    data = {
+      content: msg2,
+      admin_id: actual_receiver_id,
+      user_id: actual_sender_id
+    };
+  }
 
   // 管理者メッセージをデータベースに格納
   (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchPostOperation)(data, url).then(function (res) {
@@ -550,8 +577,8 @@ var sendMessage = function sendMessage(socket, msg, sender_id, receiver_id, send
     var admin_login_id = res["admin_login_id"];
     socket.emit('chat message', {
       msg: msg,
-      receiver_id: receiver_id,
-      sender_id: sender_id,
+      actual_receiver_id: actual_receiver_id,
+      actual_sender_id: actual_sender_id,
       sender_type: sender_type,
       time: time,
       message_id: message_id,
@@ -590,6 +617,12 @@ var handleReceivedMessage = function handleReceivedMessage(isON, is_searching, s
   if (sender_id == document.getElementById("js_chatuser_id").value) {
     (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchPostOperation)(data, "/api/user/messages/read");
   }
+};
+var handleReceivedBroadcastingMessage = function handleReceivedBroadcastingMessage(is_searching, sender_id, time, content) {
+  // チャットを画面に表示する処理
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayChatMessage)("js_append_admin", "admin", content, "admin", sender_id, time, "text");
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, "admin", null);
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateUserListMessage)();
 };
 
 // debounce関数を作成
@@ -630,16 +663,19 @@ var handleSearchInput = function handleSearchInput(is_searching, value, sender_i
 // 全ユーザーのメッセージを取得し、表示する処理
 var fetchAndDisplayAllMessages = function fetchAndDisplayAllMessages(admin_id) {
   (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchGetOperation)("/api/users/messages/lineAccounts/".concat(admin_id)).then(function (res) {
+    console.log(res);
     var parentElement = document.getElementById("js_chatUser_wrapper");
     parentElement.innerHTML = "";
 
     // データを作成日時の降順にソート
+
+    console.log(res["mergedData"]);
     var sortedData = Object.entries(res["mergedData"]).sort(function (_ref, _ref2) {
       var _ref3 = _slicedToArray(_ref, 2),
         a = _ref3[1];
       var _ref4 = _slicedToArray(_ref2, 2),
         b = _ref4[1];
-      return new Date(b.message.created_at) - new Date(a.message.created_at);
+      return new Date(b.latest_message.created_at) - new Date(a.latest_message.created_at);
     });
 
     // ソートされたデータをチャットリストに表示
@@ -647,8 +683,8 @@ var fetchAndDisplayAllMessages = function fetchAndDisplayAllMessages(admin_id) {
       var _ref6 = _slicedToArray(_ref5, 2),
         key = _ref6[0],
         res = _ref6[1];
-      var message_type = res["message"]["content"] ? "text" : "image";
-      parentElement.innerHTML += (0,_component_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["uuid"], res, res["message"]["content"], message_type);
+      var message_type = res["latest_message"]["content"] ? "text" : "image";
+      parentElement.innerHTML += (0,_component_elementTemplate_js__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["userUuid"], res, res["latest_message"]["content"], message_type);
     });
     (0,_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.chatNavigator)();
   });
@@ -684,7 +720,6 @@ var playNotificationSound = function playNotificationSound() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkOrReconnectSocket: () => (/* binding */ checkOrReconnectSocket),
 /* harmony export */   getSocket: () => (/* binding */ getSocket),
 /* harmony export */   initSocket: () => (/* binding */ initSocket),
 /* harmony export */   registerUser: () => (/* binding */ registerUser),
@@ -706,44 +741,23 @@ var initSocket = function initSocket(url, sender_id) {
     reconnectionAttempts: Infinity // 再接続の試行回数 (無限に設定)
   });
 
-  // ページの可視性が変更されたときのイベントリスナー
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === 'visible') {
-      checkOrReconnectSocket(sender_id);
-    }
-  });
-
-  // 再接続試行イベント
-  socket.on('reconnect_attempt', function () {
-    console.log('Attempting to reconnect');
-  });
-
-  // 再接続エラーイベント
-  socket.on('reconnect_error', function (error) {
-    console.log('Reconnection failed:', error);
+  // 接続が確立された時点で'register'イベントを送信
+  socket.on('connect', function () {
+    registerUser(socket, sender_id); // 接続後に'registerUser'を呼び出す
   });
 
   // サーバーから切断されたときのイベント
   socket.on('disconnect', function (reason) {
-    console.log("Disconnected from the server due to ".concat(reason));
-    socket.connect();
-    registerUser(sender_id); // 切断時にユーザーを再登録
+    // alertダイアログを表示し、OKを押したら自動的にページをリロード
+    alert("接続が切れました。ページを再リロードします。");
+
+    // ページをリロード
+    window.location.reload();
   });
 };
 
-// ソケットの接続状態を確認し、必要に応じて再接続
-var checkOrReconnectSocket = function checkOrReconnectSocket(sender_id) {
-  if (!socket.connected) {
-    console.log("Socket.IOは接続されていません。再接続を試みます。");
-    registerUser(sender_id);
-    socket.connect();
-  } else {
-    registerUser(sender_id);
-  }
-};
-
 // ユーザーをサーバーに登録する関数
-var registerUser = function registerUser(sender_id) {
+var registerUser = function registerUser(socket, sender_id) {
   if (socket && sender_id) {
     socket.emit('register', sender_id);
     console.log("User ".concat(sender_id, " is registered."));
@@ -752,7 +766,6 @@ var registerUser = function registerUser(sender_id) {
 
 // ハートビートを送信する関数
 var sendHeartbeat = function sendHeartbeat() {
-  console.log('Sending heartbeat');
   socket.emit('heartbeat');
 };
 
@@ -7487,8 +7500,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // サーバーへの接続を初期化
   (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.initSocket)('https://line-chat.tokyo:3000', sender_id);
-  // ユーザーをソケットサーバーに登録する
-  (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.registerUser)(sender_id);
   // 30秒ごとにハートビートを送信
   setInterval(_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.sendHeartbeat, 10000);
   var socket = (0,_module_util_socketHandler_js__WEBPACK_IMPORTED_MODULE_3__.getSocket)();
@@ -7511,13 +7522,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // サーバーからのメッセージを受信
-  socket.on('chat message', function (msg, sender_type, sender_id, time, receiver_id, message_id) {
-    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, msg, "text");
+  socket.on('chat message', function (msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id) {
+    console.log("getting message!!");
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, actual_sender_id, time, actual_receiver_id, message_id, msg, "text");
   });
 
   // サーバーからの画像を受信
   socket.on("send_image", function (sender_type, sender_id, time, receiver_id, message_id, resizedImage) {
     (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
+  });
+  socket.on("broadcast message", function (formatted_body, created_at, userUuids, adminUuid) {
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedBroadcastingMessage)(is_searching, adminUuid, created_at, formatted_body);
+    console.log(is_searching, adminUuid, created_at, formatted_body);
   });
 
   // 選択してチャットを開くユーザーの切り替えをする
@@ -7535,10 +7551,10 @@ document.addEventListener("DOMContentLoaded", function () {
   (0,_module_component_changeStyle_js__WEBPACK_IMPORTED_MODULE_1__.disableSubmitBtn)();
 
   // 画像の処理
-  var user_type = "admin";
+
   var fileInput = document.getElementById("fileInput");
   fileInput.addEventListener("change", function () {
-    (0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.fileOperation)(socket, sender_id, "/api/admin/messages/image", user_type);
+    (0,_module_component_uiController_js__WEBPACK_IMPORTED_MODULE_2__.fileOperation)(socket, sender_id, "/api/admin/messages/image", "admin");
     fileInput.value = "";
   });
 

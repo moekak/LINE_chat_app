@@ -14,6 +14,5 @@ class UserMessage extends Model
         "message_id",
         "user_id",
         "content",
-        "type"
     ];
 }

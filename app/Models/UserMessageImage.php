@@ -13,7 +13,6 @@ class UserMessageImage extends Model
         "user_id",
         "admin_id",
         "message_id",
-        "type",
         "image"
     ];
 }

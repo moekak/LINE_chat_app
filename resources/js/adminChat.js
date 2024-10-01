@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	// サーバーからのメッセージを受信
 	socket.on('chat message', (msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id)=> {
+		console.log("getting message!!");
+		
 		handleReceivedMessage(isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, message_id, msg, "text")
 	});
 

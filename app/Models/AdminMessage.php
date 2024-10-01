@@ -13,8 +13,6 @@ class AdminMessage extends Model
         "admin_id",
         "user_id",
         "content",
-        "type",
         "message_id"
     ];
-   
 }

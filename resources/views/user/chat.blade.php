@@ -62,26 +62,26 @@
 
             <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)
-                        @if ($message->type == "admin")
+                        @if ($message["sender_type"] == "admin")
                               <div class="chat__message-container-left">
                                     <div class="chat__mesgae-main-left">
                                           @yield('icon-msg')
-                                          @if ($message->content)
-                                                <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message->content)) !!}</div>
-                                          @elseif($message->image)
-                                                <img src="{{ asset('storage/images/' . $message->image) }}" alt="" class="chat-margin5">
+                                          @if ($message["type"] == "text")
+                                                <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
+                                          @elseif($message["type"] == "image")
+                                                <img src="{{ asset('storage/images/' . $message["content"]) }}" alt="" class="chat-margin5">
                                           @endif
-                                                <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
+                                                <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
                                     </div> 
                               </div>
                         @else
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
-                                          <div class="chat__message-time-txt">{{$message->created_at->format('H:i')}}</div>
-                                          @if ($message->content)
-                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message->content)) !!}</div>
-                                          @elseif($message->image)
-                                                <img src="{{ asset('storage/images/' . $message->image) }}" alt="" class="chat-margin5">
+                                          <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
+                                          @if ($message["type"] == "text")
+                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
+                                          @elseif($message["type"] == "image")
+                                                <img src="{{ asset('storage/images/' . $message["content"]) }}" alt="" class="chat-margin5">
 
                                           @endif
                                                 
