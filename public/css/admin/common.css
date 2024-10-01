@@ -19,7 +19,7 @@ body{
      overflow: hidden;
 }
 .hidden{
-display: none;
+display: none !important;
 }
 
 .contents{
@@ -239,7 +239,7 @@ margin-bottom: 7px;
      gap: 10px;
      position: fixed;
      bottom: 3%;
-     z-index: 999;
+     z-index: 998;
      width: 800px;
 }
 .chat__form-flex{
@@ -346,3 +346,72 @@ cursor: pointer;
      cursor: pointer;
 }
 
+
+.bg {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background-color: #0000009a;
+     z-index: 999;
+}
+/* modal セクション */
+.modal__container {
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     -webkit-transform: translate(-50%, -50%);
+     -ms-transform: translate(-50%, -50%);
+     background-color: #fff;
+     width: 280px;
+     z-index: 999;
+     padding: 17px;
+     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     border-radius: 4px;
+}
+.modal__container p{
+     font-size: 14px;
+     text-align: center;
+     font-weight: 600;
+}
+.line-btn {
+     background-color: #00C300;
+     color: #fff;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     border: none;
+     width: 100%;
+     padding: 2px 0;
+     border-radius: 4px;
+     gap: 13px;
+     margin-top: 12px;
+     padding-right: 27px;
+}
+.line-btn img{
+     width: 33px;
+}
+.line__btn-container{
+     width: 80%;
+}
+.close_btn{
+     font-size: 9px !important;
+     color: gray;
+     margin-top: 12px;
+     text-decoration: underline;
+     font-weight: lighter !important;
+}
+.line-btn a{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #fff;
+     text-decoration: none;
+     font-size: 13px;
+}

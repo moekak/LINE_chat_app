@@ -12,6 +12,7 @@
 </head>
 <body>
       <div class="contents">
+            <div class="bg hidden"></div>
             <main>
                   @yield('user-list')
                   <section class="chat__message-area">

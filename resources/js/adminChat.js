@@ -3,7 +3,7 @@ import { adjustMesageLength} from './module/component/chatController.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { fileOperation, scrollToBottom } from './module/component/uiController.js';
 import { getSocket, initSocket, sendHeartbeat } from './module/util/socketHandler.js';
-import { debounce, handleReceivedMessage, handleSearchInput, prepareMessageData, sendMessage } from './module/util/messageService.js';
+import { debounce, handleReceivedBroadcastingMessage, handleReceivedMessage, handleSearchInput, prepareMessageData, sendMessage } from './module/util/messageService.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		handleReceivedMessage(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
 	})
 
+
+	socket.on("broadcast message", (formatted_body, created_at, userUuids, adminUuid )=>{
+		handleReceivedBroadcastingMessage(is_searching, adminUuid, created_at, formatted_body)
+		console.log(is_searching, adminUuid, created_at, formatted_body);
+	})
 
 	// 選択してチャットを開くユーザーの切り替えをする
 	const chat_btns = document.querySelectorAll(".js_chat_wrapper")

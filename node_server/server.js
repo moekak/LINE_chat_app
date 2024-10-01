@@ -47,9 +47,11 @@ const https = require('https');
 const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
-const { selectUserIds } = require('./util/database.js');
-const { broadcastMessageToSockets, broadcastImagesToSockets, sendNotificationToLine } = require('./util/socketBroadcast.js');
+const { userIdsOperation} = require('./util/database.js');
+const { broadcastMessageToSockets, broadcastImagesToSockets, broadcastBroadcastingMessageToSockets } = require('./util/socketBroadcast.js');
+const { sendNotificationToLine } = require('./util/lineApi.js');
 require('dotenv').config();
+
 
 
 
@@ -145,6 +147,22 @@ io.on('connection', (socket) => {
         }
     })
 
+    // 一斉送信のブロードキャスト
+    socket.on("broadcast message", async (data)=>{
+        const { formatted_body, admin_account_id, created_at} = data
+        // ユーザーと管理者のuuidを取得
+        const uuids = await userIdsOperation(admin_account_id)
+        if(uuids){
+            const userUuids = uuids[0]
+            const adminUuid = uuids[1]
+
+            const msgData = { formatted_body,  created_at, userUuids, adminUuid} ;
+            broadcastBroadcastingMessageToSockets(userSockets, msgData)
+        }
+        
+        
+    })
+
     // ソケットの切断処理
     socket.on('disconnect', (reason) => {
         console.log(`User ${socket.userId} disconnected due to ${reason}`);
@@ -153,13 +171,7 @@ io.on('connection', (socket) => {
         userSockets.delete(socket.userId);
     });
 
-    socket.on("broadcast message", (data)=>{
-        const {formatted_title, formatted_body, admin_account_id, created_at} = data
-        selectUserIds(admin_account_id)
 
-        console.log(data);
-        
-    })
 });
 
 

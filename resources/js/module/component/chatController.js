@@ -24,7 +24,6 @@ export const displayChatMessage = (className, type, msg, file_name, actual_sende
     } else if (isSenderAdmin || (isSenderUser && isFileFromUser)) {
         addRightChatMessage(msg, parentElement, time, message_type);
     } else if (isCorrectAdminMessage) {
-        console.log("wowowwowowowoow");
         
         addLeftChatMessage(msg, parentElement, time, message_type);
     }
@@ -106,10 +105,14 @@ export const updateMessageTime = (time,sender_id,sender_type,receiver_id) => {
     const elements = document.querySelectorAll(".js_update_message_time");
 
     elements.forEach((element) => {
-        let id = element.getAttribute("data-id");
-        let chat_user_id = sender_type == "user" ? sender_id : receiver_id
+        if(receiver_id){
+            let id = element.getAttribute("data-id");
+            let chat_user_id = sender_type == "user" ? sender_id : receiver_id
 
-        if (id == chat_user_id) element.innerHTML = time;
+            if (id == chat_user_id) element.innerHTML = time;
+        }else{
+            element.innerHTML = time;
+        }
     });
 };
 
@@ -153,6 +156,15 @@ export const createDivForSearch = (data) =>{
             }
 
         });
+}
+
+export const updateUserListMessage = () =>{
+    const message_wrappers = document.querySelectorAll(".js_chatMessage_elment")
+
+    message_wrappers.forEach((wrapper)=>{
+        wrapper.innerHTML = "一斉メッセージを送信しました"
+    })
+
 }
 
 

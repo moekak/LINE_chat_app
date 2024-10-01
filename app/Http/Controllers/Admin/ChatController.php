@@ -55,6 +55,7 @@ class ChatController extends Controller
         $messages       = $messageService->fetchAdminAndUserMessages($id, $account_id);
         $group_message  = $messageService->formatMessage($messages);
 
+ 
 
         return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user, "uuid_admin" => $uuid_admin, "uuid_user"=>$uuid_user]);
     }
@@ -68,7 +69,6 @@ class ChatController extends Controller
             $admin_id = $userEntityService->getAdminID($admin_uuid);
 
             $mergedData = $messageService->getMergedData($admin_id);
-           
             return response()->json(["mergedData" => $mergedData]);
 
         }catch (\Exception $e){

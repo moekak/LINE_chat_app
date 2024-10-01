@@ -42,6 +42,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		displayChatMessage("js_append_user", sender_type, resizedImage, "user", "", time, "image")
 	})
 
+	socket.on("broadcast message", (formatted_body, created_at, userUuids, adminUuid )=>{
+		console.log(formatted_body);
+		
+		displayChatMessage("js_append_user", "admin", formatted_body, "user", "", created_at, "text")
+	})
+	
+
 
 	// 画像の処理
 	const fileInput = document.getElementById("fileInput")
@@ -72,6 +79,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 })
 
+
+// バン誘導モーダル削除
+
+const bg = document.querySelector(".bg")
+const modal = document.querySelector(".js_modal")
+const close_btn = document.querySelector(".js_close")
+
+bg.addEventListener("click", ()=>{
+	bg.classList.add("hidden")
+	modal.classList.add("hidden")
+})
+close_btn.addEventListener("click", ()=>{
+	bg.classList.add("hidden")
+	modal.classList.add("hidden")
+})
 
 
 

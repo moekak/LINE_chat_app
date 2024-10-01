@@ -12,6 +12,24 @@
 @endsection
 @section('script')
       <script src="{{mix("js/userChat.js")}}"></script>
+
+      @if ($admin_info["is_active"] == "0" && $admin_info["account_url"])
+      
+            <script>
+                  document.querySelector(".js_modal").classList.remove("hidden")
+                  document.querySelector(".bg").classList.remove("hidden")
+
+                  const link = document.querySelector(".js_ban_link")
+                   // PHP変数をJavaScriptに渡す
+                  const accountUrl = @json($admin_info["account_url"]);
+                  link.href = accountUrl
+            </script>
+      @endif
+
+      
+      <script>
+            
+      </script>
 @endsection
 
 @section('send_data')
@@ -22,6 +40,7 @@
 
 
 @section('chat-message')
+
 <input type="hidden" id="js_uuid" value="{{$uuid_user}}">
 <div class="chat__message_header">
       <div class="chat__message_header-item js_header_item">
@@ -86,6 +105,17 @@
 
       </form>
 </div>
+
+
+{{-- バン誘導モーダル --}}
+<div class="modal__container js_modal hidden">
+      <p>公式アカウントが変更されました。<br>新しく友達追加をしてください。</p>
+      <div class="line__btn-container">
+            <button class="line-btn"><a href="" class="js_ban_link"><img src="{{asset("img/icons8-line-48.png")}}" alt=""> 友達追加</a></button>
+            <p class="close_btn js_close">閉じる</p>
+      </div>
+</div>
+
 @endsection
 
 

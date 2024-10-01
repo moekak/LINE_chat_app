@@ -49,7 +49,7 @@
       <img src="{{$chat_user->user_picture}}" alt="" class="chat_users-icon-message" id="icon_msg"> 
 @endsection
 @section('script')
-    <script src="{{mix("js/adminChat.js")}}"></script>
+      <script src="{{mix("js/adminChat.js")}}"></script>
 @endsection
  
 @section('send_data')
@@ -69,7 +69,7 @@
 </div>
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_admin" data-id="{{$uuid_user}}">
-           @foreach ($group_message as $date => $messages)
+      @foreach ($group_message as $date => $messages)
                   <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)
 
@@ -112,7 +112,7 @@
             </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1"></textarea>
             @yield('send_data')
-          
+
             <button class="chat__form-submit disable_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
 
       </form>

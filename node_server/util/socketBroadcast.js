@@ -65,8 +65,59 @@ const broadcastImagesToSockets = (userSockets, msgData) =>{
     broadcastMessage(adminUserSockets, false, true);
 }
 
+const broadcastBroadcastingMessageToSockets = (userSockets, msgData) => {
+    const { formatted_body, created_at, userUuids, adminUuid } = msgData;
+
+    let recipientSockets = [];
+
+    // 複数のuserUuidsに対応するソケットを取得
+    // userUuuidsがnullまたはundefinedではないか、配列であるかどうかを確認
+    if(userUuids && Array.isArray(userUuids)){
+        userUuids.forEach((uuid) => {
+            // 各uuidに対応するソケットを userSockets から取得
+            const socketSet = userSockets.get(uuid);
+            if (socketSet) {
+                // 取得したソケットが Set オブジェクトである場合の処理
+                if (socketSet instanceof Set) {
+                    // 複数のソケットがある場合（Setオブジェクト）
+                    socketSet.forEach(socket => {
+                        if (socket && typeof socket.emit === 'function') {
+                            recipientSockets.push(socket);
+                        }
+                    });
+                } else if (typeof socketSet.emit === 'function') {
+                    // 単一のソケットオブジェクトの場合
+                    recipientSockets.push(socketSet);
+                }
+            } else {
+                console.log(`No socket found for UUID: ${uuid}`);
+            }
+        });
+    }
+    const senderSockets   = userSockets.get(adminUuid);
+    
+    // メッセージを送信する関数（重複した処理をまとめる）
+    const broadcastMessage = (sockets) => {
+        if(sockets){
+            sockets.forEach((socket) => {
+                console.log(socket.id);
+                
+                socket.emit("broadcast message", formatted_body, created_at, userUuids, adminUuid);
+            });
+        }
+    };
+
+    // 受信者、送信者のソケットにメッセージを送信
+    if(recipientSockets){
+        broadcastMessage(recipientSockets);
+    }
+    if(senderSockets){
+        broadcastMessage(senderSockets);
+    }
+    
+}
 
 
 module.exports ={
-    broadcastMessageToSockets, broadcastImagesToSockets
+    broadcastMessageToSockets, broadcastImagesToSockets, broadcastBroadcastingMessageToSockets
 }

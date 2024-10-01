@@ -1,6 +1,6 @@
 
 const { generateNotificationMessage } = require('./template.js');
-const { createDbConnection } = require('./database.js');
+const { createDbConnection, selectUserId, selectAdminId } = require('./database.js');
 
 const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, client) =>{
     let connection;
@@ -13,7 +13,10 @@ const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, clie
         const admin_id = await selectAdminId(connection, actual_sender_id)
         // LINEへ送信する際のメッセージテンプレート
         const templateMessage = generateNotificationMessage(admin_id, user_id)
-        await client.pushMessage(user_id, templateMessage)
+
+        console.log("メッセージを送ります");
+        
+        // await client.pushMessage(user_id, templateMessage)
     }catch(error){
         console.log(`LINEへメッセージ通知に失敗しました: ${error}`);
         throw error

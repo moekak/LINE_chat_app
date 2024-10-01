@@ -1,5 +1,5 @@
 
-import { createDivForSearch, displayChatMessage, displayMessage, increaseMessageCount, updateChatUserList, updateMessageTime } from '../component/chatController.js';
+import { createDivForSearch, displayChatMessage, displayMessage, increaseMessageCount, updateChatUserList, updateMessageTime, updateUserListMessage } from '../component/chatController.js';
 import { createChatUserContainer } from '../component/elementTemplate.js';
 import { chatNavigator } from '../component/uiController.js';
 import { fetchGetOperation, fetchPostOperation } from './fetch.js';
@@ -94,6 +94,13 @@ export const handleReceivedMessage = (isON, is_searching, sender_type, sender_id
 	if (sender_id == document.getElementById("js_chatuser_id").value) {
 		fetchPostOperation(data, "/api/user/messages/read");
 	}
+}
+
+export const handleReceivedBroadcastingMessage = (is_searching, sender_id, time, content) =>{
+  // チャットを画面に表示する処理
+  displayChatMessage("js_append_admin", "admin", content, "admin", sender_id, time, "text");
+  updateMessageTime(time, sender_id, "admin", null);
+  updateUserListMessage()
 }
 
 // debounce関数を作成

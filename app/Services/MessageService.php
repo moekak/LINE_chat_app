@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
+use App\Models\BroadcastMessage;
 use App\Models\ChatUser;
 use App\Models\MessageReadUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class MessageService{
     public function formatDate($createdAt){
@@ -207,53 +208,102 @@ class MessageService{
                 return $message;
             })->sortByDesc("created_at");
 
-            $adminMessages = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
-            $adminMessageImages = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
-            $mergedAdminMessages =  $adminMessages->merge($adminMessageImages);
-            $sortedAdminMessages = $mergedAdminMessages->map(function($message) {
+            $adminMessages              = AdminMessage::where("user_id", $user->id)->where("admin_id", $id)->get();
+            $adminMessageImages         = AdminMessageImage::orderBy("created_at")->where("admin_id", $id)->where("user_id", $user->id)->get();
+            $adminBroadcastingMessages  = BroadcastMessage::orderBy("created_at")->where("admin_id", $id)->get();
+
+
+            foreach($adminBroadcastingMessages as $message){
+                $message["message_id"] = "";
+                $message["user_id"] = "";
+                $message["type"] = "";
+            }
+
+
+            $mergedAdminMessages    =  $adminMessages->merge($adminMessageImages);
+            $mergedAllAdminMessages = $mergedAdminMessages->merge($adminBroadcastingMessages);
+
+            // echo "<pre>";
+            // print_r($mergedAllAdminMessages->toArray());
+            // echo "<pre>";
+    
+            // exit;
+            
+
+            $sortedAdminMessages    = $mergedAllAdminMessages->map(function($message) {
                 // created_at を東京時間に変換
                 $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
                 return $message;
             })->sortByDesc("created_at");
+
+
         
             if(count($sortedUserMessages) > 0 || count($sortedAdminMessages) > 0){
+
                 $allMessages = $sortedUserMessages->merge($sortedAdminMessages)
                 ->map(function($message) {
                     // created_at を東京時間に変換
                     $message->created_at = Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
                     return $message;
                 })->sortByDesc('created_at');
-                $latestMessages[] = $allMessages->first();
+
+                $latestMessages[] = $allMessages;
             }
+
+            // echo "<pre>";
+            // print_r($latestMessages-<to);
+            // echo "<pre>";
+    
+            // exit;
+
+
 
         }
 
         // 最新メッセージの時間のフォーマット
         foreach($latestMessages as $message){
-            $message["time"] =$this->formatTime($message->created_at);
+            foreach($message as $msg){
+                $msg["time"] =$this->formatTime($msg["created_at"]);
+            }
+    
+        
         }
+
+
+
+       
 
         $userEntityService = new UserEntityService();
 
 
         if(count($latestMessages) > 0){
               // 最新のメッセージを最新順にソート
-            $latestMessages = collect($latestMessages)->filter()->sortByDesc(function($message) {
-                return Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
-            });
+            // $latestMessages = collect($latestMessages)->filter()->sortByDesc(function($message) {
+            //     return Carbon::parse($message->created_at)->setTimezone('Asia/Tokyo');
+            // });
 
-            foreach($latestMessages as $index => $message){
-                $totalMessageCount =$this->selectTotalMessageCount($message->admin_id, $message->user_id);
-                $mergedData[$index]["userInfo"] = ChatUser::where("id", $message->user_id)->first();
-                $mergedData[$index]["message"] = $message;
-                $mergedData[$index]["formatted_date"] = $message->time;
-                $mergedData[$index]["totalCount"] = $totalMessageCount;
-                $mergedData[$index]["uuid"] = $userEntityService->getUserUuid($message->user_id);
+            foreach($latestMessages as  $message){
+                foreach($message as $index => $msg){
+                    $totalMessageCount =$this->selectTotalMessageCount($msg->admin_id, $msg->user_id);
+                    $mergedData[$index]["userInfo"] = ChatUser::where("id", $msg->user_id)->first();
+                    $mergedData[$index]["message"] = $msg;
+                    $mergedData[$index]["formatted_date"] = $msg->time;
+                    $mergedData[$index]["totalCount"] = $totalMessageCount;
+                    $mergedData[$index]["uuid"] = $userEntityService->getUserUuid($msg->user_id);
+                }
+              
 
 
             }
 
         }
+
+        echo "<pre>";
+        print_r($mergedData);
+        echo "<pre>";
+
+
+        exit;
 
         return $mergedData;
     }
