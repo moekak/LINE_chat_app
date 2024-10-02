@@ -121,17 +121,26 @@ const createNewDivElement = (receiver_id, sender_id, msg, message_type ) => {
     fetchGetOperation(`/api/users/${sender_id}/${receiver_id}`)
         .then((res) => {
 
-            const template      = createChatUserContainer(sender_id, res, msg, message_type)
+
             const parentElement = document.getElementById("js_chatUser_wrapper");
             const firstChild    = parentElement.firstChild; // 最初の子要素を取得
+            if(res["userInfo"].length > 0){
+                res["userInfo"].forEach((res)=>{
 
-            if(firstChild){
-                // 最初の子要素の前に直接HTMLを挿入
-                parentElement.insertAdjacentHTML('afterbegin', template);
-            }else{
-                parentElement.innerHTML += template  // 最初の子要素がない場合、末尾に追加
+                    console.log(res);
+                    
+                    const template      = createChatUserContainer(sender_id, res, msg, message_type)
+
+                    if(firstChild){
+                        // 最初の子要素の前に直接HTMLを挿入
+                        parentElement.insertAdjacentHTML('afterbegin', template);
+                    }else{
+                        parentElement.innerHTML += template  // 最初の子要素がない場合、末尾に追加
+                    }
+                })
             }
-            
+
+
             chatNavigator();
         }
         

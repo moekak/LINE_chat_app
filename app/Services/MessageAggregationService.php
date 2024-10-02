@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
 use App\Models\BroadcastMessage;
+use App\Models\ChatUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
 use Illuminate\Support\Carbon;
@@ -79,15 +80,33 @@ class MessageAggregationService{
                 return $this->formatMessage($message, 'image', "user");
             });
 
+        // 指定された管理者IDに関連するブロードキャストメッセージを取得
         $broadcastMessages = BroadcastMessage::where('admin_id', $adminId)
             ->get()
             ->map(function ($message) use ($userId) {
+                // 各メッセージをフォーマット
                 return $this->formatMessage($message, 'text', "admin", $userId);
             });
 
+        // ユーザーに表示するブロードキャストメッセージを格納する配列
+        $broadcastMessagesAll = [];
+
+        // ユーザーの作成日時を取得
+        $user_createdAt = ChatUser::where("id", $userId)->value("created_at");
+
+        // 各ブロードキャストメッセージをチェック
+        foreach($broadcastMessages as $message){
+            $messge_createdAt = $message["created_at"];
+
+            // ユーザーの作成日時よりも後に作成されたメッセージのみを表示対象とする
+            if($user_createdAt < $messge_createdAt){
+                $broadcastMessagesAll[] = $message;
+            }
+        }
+
         $allSortedMessages = $adminMessages->concat($adminMessageImages)
             ->concat($userMessages)
-            ->concat($broadcastMessages)
+            ->concat($broadcastMessagesAll)
             ->sortBy('created_at')
             ->values();
 

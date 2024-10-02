@@ -108,8 +108,13 @@ class MessageService{
 
         // 各チャットユーザーの最新のメッセージを取得する
         foreach($mergedData as $data){
-            $data["latest_message"] = $this->retrieveLatestMessage($data->id, $admin_id);
-            $data["formatted_date"] = $japaneseDateFormatter->formatTime($data["latest_message"]["created_at"]);
+            // 最新のメッセージの時刻を取得し、ユーザー作成日時よりも前の場合は、最新メッセージを空にする
+            $latest_message = $this->retrieveLatestMessage($data->id, $admin_id);
+            $user_createdAt = $data->created_at;
+            $latest_message_createdAt = $latest_message->created_at;
+
+            $data["latest_message"] = $latest_message_createdAt >= $user_createdAt ?  $this->retrieveLatestMessage($data->id, $admin_id) : "";
+            $data["formatted_date"] = $data["latest_message"] ? $japaneseDateFormatter->formatTime($data["latest_message"]["created_at"]) : "";
             $data["totalCount"]     = $this->selectTotalMessageCount($admin_id, $data->id);
             $data["userUuid"]       = $userEntityService->getUserUuid($data->id);
         }

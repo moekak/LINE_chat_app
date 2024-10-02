@@ -22,23 +22,24 @@
             <div class="chat__users-list-container" id="js_chatUser_wrapper">
 
                   @foreach ($mergedData as $data)
-                  
-                        <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="{{$data["userUuid"]}}" data-id="{{$data->id}}" data-admin-id="{{$admin_info->id}}">
-                              <img src="{{$data->user_picture}}" alt="" class="chat_users-icon"> 
-                              <div class="chat_users-list-flex">
-                                    <div class="chat_users-list-box"> 
-                                          <p class="chat_name_txt">{{$data->line_name}}</p>
-                                          <small class="chat_time js_update_message_time"  data-id="{{$data["userUuid"]}}">{{$data["formatted_date"]}}</small>
-                                    </div>  
-                                    <div class="chat__users-list-msg">
-                                          <small class="chat_message js_chatMessage_elment" data-id="{{$data["userUuid"]}}">{{ $data["latest_message"]->type == "text" ? $data["latest_message"]->content : ($data["latest_message"]->type == "broadcast" ? "一斉メッセージを送信しました"  : "画像が送信されました")}}</small>
-                                          @php
-                                                $count_style = $data["totalCount"] <= 0 ? "none": "flex";
-                                          @endphp
-                                          <div class="message_count js_mesage_count" data-id="{{$data["userUuid"]}}" style="display:{{$count_style}}">{{$data["totalCount"]}}</div>
+                        @if (isset($data["latest_message"]["content"]))
+                              <div class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="{{$data["userUuid"]}}" data-id="{{$data->id}}" data-admin-id="{{$admin_info->id}}">
+                                    <img src="{{$data->user_picture}}" alt="" class="chat_users-icon"> 
+                                    <div class="chat_users-list-flex">
+                                          <div class="chat_users-list-box"> 
+                                                <p class="chat_name_txt">{{$data->line_name}}</p>
+                                                <small class="chat_time js_update_message_time"  data-id="{{$data["userUuid"]}}">{{$data["formatted_date"]}}</small>
+                                          </div>  
+                                          <div class="chat__users-list-msg">
+                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["userUuid"]}}">{{ $data["latest_message"]["type"] == "text" ? $data["latest_message"]["content"] : ($data["latest_message"]["type"] == "broadcast" ? "一斉メッセージを送信しました"  : "画像が送信されました")}}</small>
+                                                @php
+                                                      $count_style = $data["totalCount"] <= 0 ? "none": "flex";
+                                                @endphp
+                                                <div class="message_count js_mesage_count" data-id="{{$data["userUuid"]}}" style="display:{{$count_style}}">{{$data["totalCount"]}}</div>
+                                          </div>
                                     </div>
                               </div>
-                        </div>
+                        @endif   
                   @endforeach
             </div>
       </div>
