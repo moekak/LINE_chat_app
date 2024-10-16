@@ -96,6 +96,7 @@ const io = socketIo(server, {
 
 const userSockets = new Map(); // ユーザーIDとソケットのマッピング
 
+
 // ソケットの接続処理
 io.on('connection', (socket) => {
     socket.on('heartbeat', () => {
@@ -113,7 +114,8 @@ io.on('connection', (socket) => {
             // 新しいユーザーIDの場合、Setを作成してソケットを保存
             userSockets.set(sender_id, new Set([socket]));
         }
-        console.log(`User ${sender_id} connected`);
+        console.log(`User ${sender_id} connected socketID: ${socket.id}`);
+        
     });
 
 
@@ -127,6 +129,7 @@ io.on('connection', (socket) => {
         broadcastMessageToSockets(userSockets, msgData)
 
         // LINEへメッセージ受信通知をする
+        console.log(`userSockets: ${userSockets.get(actual_receiver_id)}`);
         if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
             sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
@@ -142,6 +145,7 @@ io.on('connection', (socket) => {
         broadcastImagesToSockets(userSockets, msgData)
         
         // LINEへメッセージ受信通知をする
+        
         if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
             sendNotificationToLine(receiver_id, sender_id, client)
         }
@@ -149,28 +153,82 @@ io.on('connection', (socket) => {
 
     // 一斉送信のブロードキャスト
     socket.on("broadcast message", async (data)=>{
-        const { formatted_body, admin_account_id, created_at} = data
+        console.log(data);
+        
+        const { sendingDatatoBackEnd, admin_account_id, created_at} = data
         // ユーザーと管理者のuuidを取得
         const uuids = await userIdsOperation(admin_account_id)
         if(uuids){
             const userUuids = uuids[0]
             const adminUuid = uuids[1]
 
-            const msgData = { formatted_body,  created_at, userUuids, adminUuid} ;
+            const msgData = { sendingDatatoBackEnd,  created_at, userUuids, adminUuid} ;
             broadcastBroadcastingMessageToSockets(userSockets, msgData)
+
+            userUuids.forEach((uuid)=>{
+                if(userSockets.get(uuid) == undefined){
+                    sendNotificationToLine(uuid, adminUuid, client)
+                }
+            })
+
         }
         
         
     })
 
-    // ソケットの切断処理
-    socket.on('disconnect', (reason) => {
-        console.log(`User ${socket.userId} disconnected due to ${reason}`);
-        // クライアントに切断理由を送信
-        socket.broadcast.emit('userDisconnected', { userId: socket.userId, reason });
-        userSockets.delete(socket.userId);
-    });
+    socket.on("disconnectHandler", ()=>{
+        // console.log("2222");
+        
+        // const removed = removeSocketById(socket.id);
+        // console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
+        // const removed = removeSocketById(socket.id);
+        socket.disconnect(true);
+        // console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
+        
+    })
+    socket.on("test", ()=>{
+      console.log("yayyay");
+      
+        
+    })
 
+    // ソケットを削除し、必要に応じてユーザーエントリーも削除する関数
+    function removeSocket(sender_id, socketToRemove) {
+        if (userSockets.has(sender_id)) {
+            const sockets = userSockets.get(sender_id);
+            const removed = sockets.delete(socketToRemove);
+        
+            
+            if (sockets.size === 0) {
+                userSockets.delete(sender_id);
+            }
+            
+            return removed;
+        }
+        return false;
+    }
+
+
+    // socket.id を使用してソケットを見つけ、削除する関数
+    function removeSocketById(socketId) {
+        for (const [sender_id, sockets] of userSockets.entries()) {
+            for (const socket of sockets) {
+                if (socket.id === socketId) {
+                    return removeSocket(sender_id, socket);
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    socket.on('disconnect', (reason, sender_id) => {
+        console.log("disconnected!");
+        
+        const removed = removeSocketById(socket.id);
+        console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
+    });
 
 });
 

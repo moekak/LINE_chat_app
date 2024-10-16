@@ -29,7 +29,7 @@ class MessageAggregationService{
     public function getAdminBroadcastingMessages(int $adminId)
     {
         return BroadcastMessage::where("admin_id", $adminId)
-            ->selectRaw("id, content, created_at, 'broadcast' as type");
+            ->select('id', 'resource', 'created_at', 'resource_type as type');
     }
 
     public function getUserMessages(int $userId, int $adminId)
@@ -85,8 +85,11 @@ class MessageAggregationService{
             ->get()
             ->map(function ($message) use ($userId) {
                 // 各メッセージをフォーマット
-                return $this->formatMessage($message, 'text', "admin", $userId);
+                return $this->formatMessage($message, $message->resource_type, "admin", $userId);
             });
+
+        // print_r($broadcastMessages->toArray());
+        // exit;
 
         // ユーザーに表示するブロードキャストメッセージを格納する配列
         $broadcastMessagesAll = [];
@@ -110,6 +113,8 @@ class MessageAggregationService{
             ->sortBy('created_at')
             ->values();
 
+        // print_r($allSortedMessages->toArray());
+        // exit;
         return $allSortedMessages;
         
     }
@@ -119,7 +124,7 @@ class MessageAggregationService{
     {
         return [
             'id' => $message->id,
-            'content' => $message->content ??  $message->image ?? '',
+            'content' => $message->resource ?? $message->content ??  $message->image ?? '',
             'created_at' => $message->created_at,
             'type' => $type,
             'user_id' => $userId ?? $message->user_id ?? null,

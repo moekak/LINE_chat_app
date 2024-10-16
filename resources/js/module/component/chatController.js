@@ -16,15 +16,11 @@ export const displayChatMessage = (className, type, msg, file_name, actual_sende
     // 関数呼び出し元ファイルがadminでなおかつメッセージ送信者がユーザーの場合
     const isCorrectAdminMessage = file_name === "admin" && actual_sender_id === parentElement.getAttribute("data-id") //このdata-idはユーザーIDが入っている
 
-    console.log(actual_sender_id);
-    
-
     if (isSenderAdmin && isFileFromUser) {
         addLeftChatMessage(msg, parentElement, time, message_type);
     } else if (isSenderAdmin || (isSenderUser && isFileFromUser)) {
         addRightChatMessage(msg, parentElement, time, message_type);
     } else if (isCorrectAdminMessage) {
-        
         addLeftChatMessage(msg, parentElement, time, message_type);
     }
 };

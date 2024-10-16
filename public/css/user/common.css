@@ -93,7 +93,8 @@ height: 84vh;
 
 @media (max-width: 450px){
     .chat__form{
-        bottom: 0%;
+        bottom: 1%;
+        padding: 0 1%;
     }
     .chat__message-area {
         padding: 0px 0px 20px 0px;

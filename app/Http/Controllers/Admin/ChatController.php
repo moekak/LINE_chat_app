@@ -57,9 +57,8 @@ class ChatController extends Controller
 
         $userData = ChatUser::where("account_id", $id)->get();
         $mergedData     = $messageService->getMergedData($id, $userData);
-        $messages       = $messageAggregationService->getUnifiedSortedMessages($account_id, $id);
-        // print_r($messages->toArray());
-        // exit;
+
+        $messages= $messageAggregationService->getUnifiedSortedMessages($account_id, $id);
         $group_message  = $messageService->groupMessagesByDate($messages);
 
         return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user, "uuid_admin" => $uuid_admin, "uuid_user"=>$uuid_user]);

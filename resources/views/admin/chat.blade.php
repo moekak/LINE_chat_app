@@ -31,7 +31,7 @@
                                                 <small class="chat_time js_update_message_time"  data-id="{{$data["userUuid"]}}">{{$data["formatted_date"]}}</small>
                                           </div>  
                                           <div class="chat__users-list-msg">
-                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["userUuid"]}}">{{ $data["latest_message"]["type"] == "text" ? $data["latest_message"]["content"] : ($data["latest_message"]["type"] == "broadcast" ? "一斉メッセージを送信しました"  : "画像が送信されました")}}</small>
+                                                <small class="chat_message js_chatMessage_elment" data-id="{{$data["userUuid"]}}">{{ $data["latest_message"]["type"] == "text"  ? $data["latest_message"]["content"] : ($data["latest_message"]["type"] == "broadcast_text" || $data["latest_message"]["type"] == "broadcast_img" ? "一斉メッセージを送信しました" : "画像が送信されました")}}</small>
                                                 @php
                                                       $count_style = $data["totalCount"] <= 0 ? "none": "flex";
                                                 @endphp
@@ -80,9 +80,21 @@
                               <div class="chat__mesgae-main-left">
                                     @yield('icon-msg')
                                     @if ($message["type"]== "text")
-                                          <div class="chat__message-box-left chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
+                                          @php
+                                                // Step 1: エスケープ
+                                                $escapedMessage = e($message["content"]);
+                                                
+                                                // Step 2: URLをリンクに変換
+                                                $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
+                                                $replacement = '<a href="$0" target="_blank" rel="noopener noreferrer">$0</a>';
+                                                $linkedMessage = preg_replace($pattern, $replacement, $escapedMessage);
+                                                
+                                                // Step 3: 改行をHTMLの<br>タグに変換
+                                                $formattedMessage = nl2br($linkedMessage);
+                                          @endphp
+                                          <div class="chat__message-box-left chat-margin5">{!! $formattedMessage !!}</div>
                                     @elseif($message["type"] =="image")
-                                          <img src="{{ asset('storage/images/' . $message["content"]) }}" class="chat-margin5">
+                                          <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5">
                                     @endif
                                     <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
                               </div> 
@@ -91,10 +103,22 @@
                               <div class="chat__message-container-right">
                                     <div class="chat__mesgae-main-right">
                                           <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
-                                          @if ($message["type"] == "text")
-                                                <div class="chat__message-box-right chat-margin5">{!! nl2br(e($message["content"])) !!}</div>
-                                          @elseif($message["type"] == "image")
-                                                <img src="{{ asset('storage/images/' . $message["content"]) }}" class="chat-margin5">
+                                          @if ($message["type"] == "text" || $message["type"] == "broadcast_text")
+                                                @php
+                                                      // Step 1: エスケープ
+                                                      $escapedMessage = e($message["content"]);
+                                                      
+                                                      // Step 2: URLをリンクに変換
+                                                      $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
+                                                      $replacement = '<a href="$0" target="_blank" rel="noopener noreferrer">$0</a>';
+                                                      $linkedMessage = preg_replace($pattern, $replacement, $escapedMessage);
+                                                      
+                                                      // Step 3: 改行をHTMLの<br>タグに変換
+                                                      $formattedMessage = nl2br($linkedMessage);
+                                                @endphp
+                                                <div class="chat__message-box-right chat-margin5"> {!! $formattedMessage !!}</div>
+                                          @elseif($message["type"] == "image" || $message["type"] == "broadcast_img")
+                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5">
                                           @endif
                                     </div>
                               </div>

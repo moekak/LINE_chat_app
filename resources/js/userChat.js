@@ -1,12 +1,11 @@
 import { displayChatMessage } from './module/component/chatController.js';
 import { changeTextareaHeight, disableSubmitBtn } from './module/component/changeStyle.js';
 import { fileOperation, scrollToBottom } from './module/component/uiController.js';
-import { getSocket, initSocket, sendHeartbeat } from './module/util/socketHandler.js';
+import { getSocket, initSocket, registerUser, sendHeartbeat } from './module/util/socketHandler.js';
 import { prepareMessageData, sendMessage } from './module/util/messageService.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
-
 	// グローバル変数
 	//!! sender_id = ユーザーID!!
 	const sender_id = document.getElementById("js_sender_id").value
@@ -16,6 +15,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// 30秒ごとにハートビートを送信
 	setInterval(sendHeartbeat, 10000);
 	const socket      = getSocket()
+
+
+	if (/Android/i.test(navigator.userAgent)){
+		document.addEventListener('visibilitychange', function() {
+			if (document.hidden) {
+				socket.emit("disconnectHandler")
+			}
+		});
+
+	}
+	
+	
 
 
 	changeTextareaHeight()
@@ -42,10 +53,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		displayChatMessage("js_append_user", sender_type, resizedImage, "user", "", time, "image")
 	})
 
-	socket.on("broadcast message", (formatted_body, created_at, userUuids, adminUuid )=>{
-		console.log(formatted_body);
+	socket.on("broadcast message", (sendingDatatoBackEnd, created_at, userUuids, adminUuid )=>{
+		for(let data in sendingDatatoBackEnd){
+			let content = sendingDatatoBackEnd[data]["data"];
+			let type = sendingDatatoBackEnd[data]["type"]
+			displayChatMessage("js_append_user", "admin", content, "user", "", created_at, type)
+		}
 		
-		displayChatMessage("js_append_user", "admin", formatted_body, "user", "", created_at, "text")
 	})
 	
 
@@ -53,6 +67,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// 画像の処理
 	const fileInput = document.getElementById("fileInput")
 	fileInput.addEventListener("change", ()=>{
+
+		console.log(fileInput.value);
+		
 		fileOperation(socket, sender_id, "/api/user/messages/image", "user")
 		fileInput.value = "";
 	})
@@ -76,12 +93,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 			item.querySelector(".chat__message_header-item-text").classList.add("active_font");
 		});
 	});
-
 })
 
-
 // バン誘導モーダル削除
-
 const bg = document.querySelector(".bg")
 const modal = document.querySelector(".js_modal")
 const close_btn = document.querySelector(".js_close")

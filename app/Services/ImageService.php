@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 class ImageService
 {
       public function saveBase64Image($base64Image)
@@ -19,19 +21,16 @@ class ImageService
                   }
                   // Base64のデータ部分を取り出す
 
-
-
                   // Base64をデコードしてバイナリデータに変換
                   $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);  // プレフィックスを削除
 
 
                   // 画像を保存するパス（例えば、storage/app/public/imagesに保存）
                   $imageName = uniqid() . '.' . $imageType;
-                  $path = storage_path('app/public/images/' . $imageName);
+                  $path = 'images/' . $imageName;
 
-
-                  // 画像データをファイルに保存
-                  file_put_contents($path, base64_decode($base64Image));
+                  // S3に画像を保存
+                  Storage::disk('s3')->put($path, base64_decode($base64Image));
 
                   return $imageName;
 

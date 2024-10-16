@@ -21,5 +21,7 @@ yarn add laravel-mix
 6. npm install cors
 
 
+composer require league/flysystem-aws-s3-v3
+
 
 yarn add axios

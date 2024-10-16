@@ -49,7 +49,7 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
 		}
 	}
 
-    // 管理者メッセージをデータベースに格納
+   
     fetchPostOperation(data, url)
 	.then((res)=>{
 		const time            = res["created_at"]
@@ -87,18 +87,28 @@ export const handleReceivedMessage = (isON, is_searching, sender_type, sender_id
 	// メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
 	const data = {
 		"message_id": message_id,
-		"admin_id": sender_id,
-		"chat_user_id": receiver_id
+		"admin_id": receiver_id,
+		"chat_user_id": sender_id
 	};
 
+  console.log(`senderID: ${sender_id}`);
+  console.log(`js_chatuser_id: ${document.getElementById("js_chatuser_id").value}`);
+  
 	if (sender_id == document.getElementById("js_chatuser_id").value) {
 		fetchPostOperation(data, "/api/user/messages/read");
 	}
 }
 
-export const handleReceivedBroadcastingMessage = (is_searching, sender_id, time, content) =>{
+export const handleReceivedBroadcastingMessage = (is_searching, sender_id, time, sendingDatatoBackEnd) =>{
   // チャットを画面に表示する処理
-  displayChatMessage("js_append_admin", "admin", content, "admin", sender_id, time, "text");
+  console.log(sendingDatatoBackEnd);
+
+  for(let data in sendingDatatoBackEnd){
+      let content = sendingDatatoBackEnd[data]["data"];
+      let type = sendingDatatoBackEnd[data]["type"]
+      displayChatMessage("js_append_admin", "admin", content, "admin", sender_id, time, type);
+  }
+  
   updateMessageTime(time, sender_id, "admin", null);
   updateUserListMessage()
 }

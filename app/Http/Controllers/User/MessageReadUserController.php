@@ -8,6 +8,7 @@ use App\Models\MessageReadUser;
 use App\Services\UserEntityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class MessageReadUserController extends Controller
 {
@@ -19,8 +20,6 @@ class MessageReadUserController extends Controller
 
             $userEntityService = new UserEntityService();
             $validated = $request->validated();
-
-            
 
             $admin_id = $userEntityService->getAdminID($validated["admin_id"]);
             $chat_user_id = $userEntityService->getUserID($validated["chat_user_id"]);
@@ -36,7 +35,7 @@ class MessageReadUserController extends Controller
             MessageReadUser::create($message_read_data);
 
             return response()->noContent();  // 204 No Content
-   
+
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()]);
         }

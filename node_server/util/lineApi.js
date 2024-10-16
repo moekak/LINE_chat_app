@@ -3,6 +3,10 @@ const { generateNotificationMessage } = require('./template.js');
 const { createDbConnection, selectUserId, selectAdminId } = require('./database.js');
 
 const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, client) =>{
+
+    console.log(`actual_receiver_id: ${actual_receiver_id}`);
+    console.log(`actual_sender_id: ${actual_sender_id}`);
+    
     let connection;
     try{
         // DB接続を確立
@@ -16,7 +20,7 @@ const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, clie
 
         console.log("メッセージを送ります");
         
-        // await client.pushMessage(user_id, templateMessage)
+        await client.pushMessage(user_id, templateMessage)
     }catch(error){
         console.log(`LINEへメッセージ通知に失敗しました: ${error}`);
         throw error

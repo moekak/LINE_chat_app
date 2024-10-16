@@ -66,7 +66,7 @@ const broadcastImagesToSockets = (userSockets, msgData) =>{
 }
 
 const broadcastBroadcastingMessageToSockets = (userSockets, msgData) => {
-    const { formatted_body, created_at, userUuids, adminUuid } = msgData;
+    const { sendingDatatoBackEnd, created_at, userUuids, adminUuid } = msgData;
 
     let recipientSockets = [];
 
@@ -100,9 +100,7 @@ const broadcastBroadcastingMessageToSockets = (userSockets, msgData) => {
     const broadcastMessage = (sockets) => {
         if(sockets){
             sockets.forEach((socket) => {
-                console.log(socket.id);
-                
-                socket.emit("broadcast message", formatted_body, created_at, userUuids, adminUuid);
+                socket.emit("broadcast message", sendingDatatoBackEnd, created_at, userUuids, adminUuid);
             });
         }
     };

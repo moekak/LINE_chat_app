@@ -69,8 +69,6 @@ class UserMessageController extends Controller
             $admin_id = $userEntityService->getAdminID($validated["admin_id"]);
             $user_id = $userEntityService->getUserID($validated["user_id"]);
 
-            // return response()->json(["adminID" => $validated["admin_id"], "userID" => $validated["user_id"]]);
-
 
             // エラーが起きたら早期リターンさせる
             if(isset($imageName["error"])){
