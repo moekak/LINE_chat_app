@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
         // LINEへメッセージ受信通知をする
         console.log(`userSockets: ${userSockets.get(actual_receiver_id)}`);
         if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
-            sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
+            // sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
     });
     
@@ -167,7 +167,7 @@ io.on('connection', (socket) => {
 
             userUuids.forEach((uuid)=>{
                 if(userSockets.get(uuid) == undefined){
-                    sendNotificationToLine(uuid, adminUuid, client)
+                    // sendNotificationToLine(uuid, adminUuid, client)
                 }
             })
 
