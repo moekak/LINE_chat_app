@@ -47,7 +47,7 @@ const https = require('https');
 const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
-const { userIdsOperation} = require('./util/database.js');
+const { userIdsOperation, selectBlockUser} = require('./util/database.js');
 const { broadcastMessageToSockets, broadcastImagesToSockets, broadcastBroadcastingMessageToSockets } = require('./util/socketBroadcast.js');
 const { sendNotificationToLine } = require('./util/lineApi.js');
 require('dotenv').config();
@@ -131,13 +131,15 @@ io.on('connection', (socket) => {
         // LINEへメッセージ受信通知をする
         console.log(`userSockets: ${userSockets.get(actual_receiver_id)}`);
         if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
-            sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
+            // sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
     });
     
 
     // メッセージ画像のブロードキャスト
     socket.on("send_image", (data)=>{
+        console.log("メッセージが送信されました");
+        
         const {resizedImage, receiver_id, sender_id, sender_type, time, message_id,admin_login_id} = data
 
         // 受信者、送信者、管理者のソケットを取得
@@ -147,14 +149,12 @@ io.on('connection', (socket) => {
         // LINEへメッセージ受信通知をする
         
         if(sender_type == "admin" && userSockets.get(receiver_id) == undefined){
-            sendNotificationToLine(receiver_id, sender_id, client)
+            // sendNotificationToLine(receiver_id, sender_id, client)
         }
     })
 
     // 一斉送信のブロードキャスト
     socket.on("broadcast message", async (data)=>{
-        console.log(data);
-        
         const { sendingDatatoBackEnd, admin_account_id, created_at} = data
         // ユーザーと管理者のuuidを取得
         const uuids = await userIdsOperation(admin_account_id)
@@ -167,15 +167,15 @@ io.on('connection', (socket) => {
 
             userUuids.forEach((uuid)=>{
                 if(userSockets.get(uuid) == undefined){
-                    sendNotificationToLine(uuid, adminUuid, client)
+                    // sendNotificationToLine(uuid, adminUuid, client)
                 }
             })
-
         }
-        
-        
     })
 
+
+
+    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!
     socket.on("disconnectHandler", ()=>{
         // console.log("2222");
         

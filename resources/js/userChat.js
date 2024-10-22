@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	const socket      = getSocket()
 
 
-	if (/Android/i.test(navigator.userAgent)){
-		document.addEventListener('visibilitychange', function() {
-			if (document.hidden) {
-				socket.emit("disconnectHandler")
-			}
-		});
+	// if (/Android/i.test(navigator.userAgent)){
+	// 	document.addEventListener('visibilitychange', function() {
+	// 		if (document.hidden) {
+	// 			socket.emit("disconnectHandler")
+	// 		}
+	// 	});
 
-	}
+	// }
 	
 	
 
@@ -67,9 +67,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// 画像の処理
 	const fileInput = document.getElementById("fileInput")
 	fileInput.addEventListener("change", ()=>{
-
-		console.log(fileInput.value);
-		
 		fileOperation(socket, sender_id, "/api/user/messages/image", "user")
 		fileInput.value = "";
 	})

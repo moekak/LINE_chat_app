@@ -75,7 +75,10 @@ class AdminMessageController extends Controller
             
             $validated      = $request->validated();
             $base64Image    = $validated["image"];
-            $imageName      = $imageService ->saveBase64Image($base64Image);
+            $imageName      = $imageService->saveBase64Image($base64Image);
+
+            Log::debug($imageName);
+    
 
             $admin_id   = $userEntityService->getAdminID($validated["admin_id"]);
             $user_id    = $userEntityService->getUserID($validated["user_id"]);

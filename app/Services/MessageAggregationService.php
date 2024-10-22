@@ -66,6 +66,7 @@ class MessageAggregationService{
                 return $this->formatMessage($message, 'image', "admin");
             });
 
+
         $userMessages = UserMessage::where('user_id', $userId)
             ->where('admin_id', $adminId)
             ->get()
@@ -73,7 +74,7 @@ class MessageAggregationService{
                 return $this->formatMessage($message, 'text', "user");
             });
 
-        $adminMessageImages = UserMessageImage::where('user_id', $userId)
+        $userMessageImages = UserMessageImage::where('user_id', $userId)
             ->where('admin_id', $adminId)
             ->get()
             ->map(function ($message) {
@@ -88,8 +89,7 @@ class MessageAggregationService{
                 return $this->formatMessage($message, $message->resource_type, "admin", $userId);
             });
 
-        // print_r($broadcastMessages->toArray());
-        // exit;
+        
 
         // ユーザーに表示するブロードキャストメッセージを格納する配列
         $broadcastMessagesAll = [];
@@ -109,12 +109,11 @@ class MessageAggregationService{
 
         $allSortedMessages = $adminMessages->concat($adminMessageImages)
             ->concat($userMessages)
+            ->concat($userMessageImages)
             ->concat($broadcastMessagesAll)
             ->sortBy('created_at')
             ->values();
 
-        // print_r($allSortedMessages->toArray());
-        // exit;
         return $allSortedMessages;
         
     }

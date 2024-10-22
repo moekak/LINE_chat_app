@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ImageService
@@ -31,6 +32,8 @@ class ImageService
 
                   // S3に画像を保存
                   Storage::disk('s3')->put($path, base64_decode($base64Image));
+
+                  Log::debug($path);
 
                   return $imageName;
 

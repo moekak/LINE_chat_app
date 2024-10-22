@@ -1,11 +1,13 @@
+const { selectBlockUser} = require("./database");
 
-const broadcastMessageToSockets = (userSockets, msgData) =>{
-
+const broadcastMessageToSockets = async (userSockets, msgData) =>{
+    // ブロックしているユーザーのuuidsをすべて取得する
+    const ids = await selectBlockUser()
     const { msg, actual_sender_id, sender_type, time, actual_receiver_id, message_id, admin_login_id } = msgData;
-    const recipientSockets  = userSockets.get(actual_receiver_id);
+    const recipientSockets  = Object.values(ids).includes(actual_receiver_id) == false &&  Object.values(ids).includes(actual_sender_id) == false ? userSockets.get(actual_receiver_id) : undefined;
     const senderSockets     = userSockets.get(actual_sender_id);
-    const adminSockets      = userSockets.get(`admin${actual_receiver_id}`);
-    const adminUserSockets  = userSockets.get(`user${admin_login_id}`);
+    const adminSockets      = Object.values(ids).includes(actual_sender_id) == false ? userSockets.get(`admin${actual_receiver_id}`) : undefined; //詳細の場合はadmin_accountID
+    const adminUserSockets  = Object.values(ids).includes(actual_sender_id) == false ? userSockets.get(`user${admin_login_id}`)  : undefined;  //ダッシュボードの場合はloginID
 
     // メッセージを送信する関数（重複した処理をまとめる）
     const broadcastMessage = (sockets,isAdmin = false, isAdminUser = false) => {
@@ -32,15 +34,15 @@ const broadcastMessageToSockets = (userSockets, msgData) =>{
 }
 
 
-const broadcastImagesToSockets = (userSockets, msgData) =>{
-
+const broadcastImagesToSockets = async(userSockets, msgData) =>{
+    const ids = await selectBlockUser()
     const { sender_type, sender_id, time, receiver_id, message_id, resizedImage, admin_login_id} = msgData;
-
-    const recipientSockets  = userSockets.get(receiver_id);
+    const recipientSockets  = Object.values(ids).includes(receiver_id) == false &&  Object.values(ids).includes(sender_id) == false ? userSockets.get(receiver_id) : undefined;
     const senderSockets     = userSockets.get(sender_id);
-    const adminSockets      = userSockets.get(`admin${receiver_id}`) //詳細の場合はadmin_accountID
-    const adminUserSockets  = userSockets.get(`user${admin_login_id}`) //ダッシュボードの場合はloginID
+    const adminSockets      = Object.values(ids).includes(sender_id) == false ? userSockets.get(`admin${receiver_id}`) : undefined; //詳細の場合はadmin_accountID
+    const adminUserSockets  = Object.values(ids).includes(sender_id) == false ? userSockets.get(`user${admin_login_id}`)  : undefined;  //ダッシュボードの場合はloginID
 
+    
       // メッセージを送信する関数（重複した処理をまとめる）
     const broadcastMessage = (sockets, isAdmin = false, isAdminUser = false) => {
         if (sockets) {
@@ -65,18 +67,19 @@ const broadcastImagesToSockets = (userSockets, msgData) =>{
     broadcastMessage(adminUserSockets, false, true);
 }
 
-const broadcastBroadcastingMessageToSockets = (userSockets, msgData) => {
+const broadcastBroadcastingMessageToSockets = async(userSockets, msgData) => {
     const { sendingDatatoBackEnd, created_at, userUuids, adminUuid } = msgData;
-
     let recipientSockets = [];
+    const ids = await selectBlockUser()
 
     // 複数のuserUuidsに対応するソケットを取得
     // userUuuidsがnullまたはundefinedではないか、配列であるかどうかを確認
     if(userUuids && Array.isArray(userUuids)){
         userUuids.forEach((uuid) => {
+            
             // 各uuidに対応するソケットを userSockets から取得
             const socketSet = userSockets.get(uuid);
-            if (socketSet) {
+            if (socketSet !== undefined && Object.values(ids).includes(uuid) == false) {
                 // 取得したソケットが Set オブジェクトである場合の処理
                 if (socketSet instanceof Set) {
                     // 複数のソケットがある場合（Setオブジェクト）
@@ -90,7 +93,7 @@ const broadcastBroadcastingMessageToSockets = (userSockets, msgData) => {
                     recipientSockets.push(socketSet);
                 }
             } else {
-                console.log(`No socket found for UUID: ${uuid}`);
+                console.log("blocked acccount!!!!!!!!!!!!");
             }
         });
     }

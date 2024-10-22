@@ -99,17 +99,32 @@ const userIdsOperation = async(admin_account_id)=>{
         }else{
             return []
         }
-        
-
     }catch(error){
         throw error
     }
-
 }
+
+
+const selectBlockUser = async() =>{
+    const select_blockUserID_query = "SELECT chat_user_id FROM block_chat_users";
+    let connection;
+    try{
+        // 1. ブロックユーザーを取得する
+        connection = await createDbConnection()
+        const [accountIds] = await connection.query(select_blockUserID_query);
+        //entity_uuid の値だけを抽出した配列を作成
+        return selectUserUuids(connection, accountIds.map(accountId => accountId.chat_user_id))
+    }catch(error){
+        throw error
+    }
+}
+
+
 
 module.exports = {
     selectUserId,
     selectAdminId,
     userIdsOperation,
     createDbConnection,
+    selectBlockUser
 };
