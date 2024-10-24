@@ -5,106 +5,140 @@ namespace App\Services;
 use App\Models\AdminMessage;
 use App\Models\AdminMessageImage;
 use App\Models\BroadcastMessage;
-use App\Models\ChatUser;
 use App\Models\UserMessage;
 use App\Models\UserMessageImage;
-use Illuminate\Support\Carbon;
+use App\Services\MessageRepository;
 
 class MessageAggregationService{
 
-    public function getAdminMessages(int $userId, int $adminId)
+    public function getAdminMessages(int $userId, int $adminId, $periods)
     {
-        return AdminMessage::where("user_id", $userId)
+
+        $query = AdminMessage::where("user_id", $userId)
             ->where("admin_id", $adminId)
             ->selectRaw("id, content, created_at, 'text' as type");
+
+        if($periods){
+            $query->where(function($q) use($periods){
+                foreach($periods as $period){
+                    $q->whereNotBetween("created_at", [
+                        $period["start"],
+                        $period["end"]
+                    ]);
+                }
+            });
+        }
+
+        return $query;
     }
 
-    public function getAdminMessageImages(int $userId, int $adminId)
+    public function getAdminMessageImages(int $userId, int $adminId, $periods)
     {
-        return AdminMessageImage::where("admin_id", $adminId)
+        $query = AdminMessageImage::where("admin_id", $adminId)
             ->where("user_id", $userId)
             ->selectRaw("id, image as content, created_at, 'image' as type");
+
+        if($periods){
+            $query->where(function($q) use($periods){
+                foreach($periods as $period){
+                    $q->whereNotBetween("created_at", [
+                        $period["start"],
+                        $period["end"]
+                    ]);
+                }
+            });
+        }
+
+        return $query;
     }
 
-    public function getAdminBroadcastingMessages(int $adminId)
+    public function getAdminBroadcastingMessages(int $adminId, $periods)
     {
-        return BroadcastMessage::where("admin_id", $adminId)
+        $query = BroadcastMessage::where("admin_id", $adminId)
             ->select('id', 'resource', 'created_at', 'resource_type as type');
+
+        if($periods){
+            $query->where(function($q) use($periods){
+                foreach($periods as $period){
+                    $q->whereNotBetween("created_at", [
+                        $period["start"],
+                        $period["end"]
+                    ]);
+                }
+            });
+        }
+
+        return $query;
     }
 
-    public function getUserMessages(int $userId, int $adminId)
+    public function getUserMessages(int $userId, int $adminId, $periods)
     {
-        return UserMessage::where("user_id", $userId)
+        $query = UserMessage::where("user_id", $userId)
             ->where("admin_id", $adminId)
             ->selectRaw("id, content, created_at, 'text' as type");
+
+        if($periods){
+            $query->where(function($q) use($periods){
+                foreach($periods as $period){
+                    $q->whereNotBetween("created_at", [
+                        $period["start"],
+                        $period["end"]
+                    ]);
+                }
+            });
+        }
+
+        return $query;
     }
 
-    public function getUserMessageImages(int $userId, int $adminId)
+    public function getUserMessageImages(int $userId, int $adminId, $periods)
     {
-        return UserMessageImage::where("admin_id", $adminId)
+        $query = UserMessageImage::where("admin_id", $adminId)
             ->where("user_id", $userId)
             ->selectRaw("id, image as content, created_at, 'image' as type");
+
+
+        if($periods){
+            $query->where(function($q) use($periods){
+                foreach($periods as $period){
+                    $q->whereNotBetween("created_at", [
+                        $period["start"],
+                        $period["end"]
+                    ]);
+                }
+            });
+        }
+
+        return $query;
     }
 
 
+    public function getUnifiedSortedMessages(int $userId, int $adminId, string $user_type)
+    {   
+        $messageService = new MessageService();
+        $messageRepository = new MessageRepository();
+        $block_history =  $messageService->hasUserBlockHistroy($userId);
 
-
-
-    public function getUnifiedSortedMessages(int $userId, int $adminId)
-    {
-        $adminMessages = AdminMessage::where('user_id', $userId)
-            ->where('admin_id', $adminId)
-            ->get()
-            ->map(function ($message) {
-                return $this->formatMessage($message, 'text', "admin");
-            });
-
-        $adminMessageImages = AdminMessageImage::where('user_id', $userId)
-            ->where('admin_id', $adminId)
-            ->get()
-            ->map(function ($message) {
-                return $this->formatMessage($message, 'image', "admin");
-            });
-
-
-        $userMessages = UserMessage::where('user_id', $userId)
-            ->where('admin_id', $adminId)
-            ->get()
-            ->map(function ($message) {
-                return $this->formatMessage($message, 'text', "user");
-            });
-
-        $userMessageImages = UserMessageImage::where('user_id', $userId)
-            ->where('admin_id', $adminId)
-            ->get()
-            ->map(function ($message) {
-                return $this->formatMessage($message, 'image', "user");
-            });
-
-        // 指定された管理者IDに関連するブロードキャストメッセージを取得
-        $broadcastMessages = BroadcastMessage::where('admin_id', $adminId)
-            ->get()
-            ->map(function ($message) use ($userId) {
-                // 各メッセージをフォーマット
-                return $this->formatMessage($message, $message->resource_type, "admin", $userId);
-            });
-
-        
-
-        // ユーザーに表示するブロードキャストメッセージを格納する配列
-        $broadcastMessagesAll = [];
-
-        // ユーザーの作成日時を取得
-        $user_createdAt = ChatUser::where("id", $userId)->value("created_at");
-
-        // 各ブロードキャストメッセージをチェック
-        foreach($broadcastMessages as $message){
-            $messge_createdAt = $message["created_at"];
-
-            // ユーザーの作成日時よりも後に作成されたメッセージのみを表示対象とする
-            if($user_createdAt < $messge_createdAt){
-                $broadcastMessagesAll[] = $message;
+        if($block_history){
+            if($user_type == "admin"){
+                $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin", $block_history);
+                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin", $block_history);
+                $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user", $block_history);
+                $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user", $block_history);
+                $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId, $block_history);
+            }else if($user_type == "user"){
+                $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin", $block_history);
+                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin", $block_history);
+                $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user");
+                $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user");
+                $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId, $block_history);
             }
+        }else{
+            $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin");
+            $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin");
+            $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user");
+            $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user");
+            $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId);
         }
 
         $allSortedMessages = $adminMessages->concat($adminMessageImages)
@@ -115,21 +149,5 @@ class MessageAggregationService{
             ->values();
 
         return $allSortedMessages;
-        
     }
-
-    // メッセージを共通のフォーマットに変換する
-    private function formatMessage($message, string $type, string $sender_type, ?int $userId = null): array
-    {
-        return [
-            'id' => $message->id,
-            'content' => $message->resource ?? $message->content ??  $message->image ?? '',
-            'created_at' => $message->created_at,
-            'type' => $type,
-            'user_id' => $userId ?? $message->user_id ?? null,
-            'admin_id' => $message->admin_id,
-            "sender_type" => $sender_type
-        ];
-    }
-
 }

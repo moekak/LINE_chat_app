@@ -3,27 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminMessage;
-use App\Models\AdminMessageImage;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\MessageReadUser;
 use App\Models\UserEntity;
-use App\Models\UserMessage;
-use App\Models\UserMessageImage;
-use App\Services\MergedData;
 use App\Services\MessageAggregationService;
 use App\Services\MessageService;
 use App\Services\UserEntityService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 
 class ChatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index($id, $account_id)
     {   
 
@@ -42,7 +34,6 @@ class ChatController extends Controller
                 "admin_id"      => $id,
                 "read_at"       => Carbon::now()
             ];
-
             // 既読を管理するデータベースに保存
             MessageReadUser::create($message_read_data);
         }
@@ -55,12 +46,19 @@ class ChatController extends Controller
         $chat_user  = ChatUser::where("id", $account_id)->first();
         $admin_info = LineAccount::where("id", $id)->first();
 
-        $userData = ChatUser::where("account_id", $id)->get();
-        $mergedData     = $messageService->getMergedData($id, $userData);
+        // ブロックされていないユーザーを取得
+        $userData = ChatUser::whereNotIn("id", function($query){
+            $query->select("chat_user_id")
+                ->from("block_chat_users")
+                ->where("is_blocked", '1');
+        })
+        ->where("account_id", $id)
+        ->get();
 
-        $messages= $messageAggregationService->getUnifiedSortedMessages($account_id, $id);
+        $mergedData = $messageService->getMergedData($id, $userData);
+        $messages= $messageAggregationService->getUnifiedSortedMessages($account_id, $id, "admin");
         $group_message  = $messageService->groupMessagesByDate($messages);
-
+        
         return view("admin.chat", ["admin_info"=> $admin_info, "mergedData" => $mergedData, "user_id" => $account_id, "group_message" => $group_message, "chat_user" => $chat_user, "uuid_admin" => $uuid_admin, "uuid_user"=>$uuid_user]);
     }
 
@@ -70,7 +68,6 @@ class ChatController extends Controller
             $messageService = new MessageService();
             $userEntityService = new UserEntityService();
             
-
             $admin_id = $userEntityService->getAdminID($admin_uuid);
             $userData = ChatUser::where("account_id", $admin_id)->get();
 
@@ -81,5 +78,4 @@ class ChatController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-
 }

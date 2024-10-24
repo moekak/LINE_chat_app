@@ -3,6 +3,7 @@ const { selectBlockUser} = require("./database");
 const broadcastMessageToSockets = async (userSockets, msgData) =>{
     // ブロックしているユーザーのuuidsをすべて取得する
     const ids = await selectBlockUser()
+    
     const { msg, actual_sender_id, sender_type, time, actual_receiver_id, message_id, admin_login_id } = msgData;
     const recipientSockets  = Object.values(ids).includes(actual_receiver_id) == false &&  Object.values(ids).includes(actual_sender_id) == false ? userSockets.get(actual_receiver_id) : undefined;
     const senderSockets     = userSockets.get(actual_sender_id);

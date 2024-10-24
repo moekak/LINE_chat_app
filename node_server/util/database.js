@@ -106,7 +106,7 @@ const userIdsOperation = async(admin_account_id)=>{
 
 
 const selectBlockUser = async() =>{
-    const select_blockUserID_query = "SELECT chat_user_id FROM block_chat_users";
+    const select_blockUserID_query = "SELECT chat_user_id FROM block_chat_users WHERE is_blocked = '1'";
     let connection;
     try{
         // 1. ブロックユーザーを取得する

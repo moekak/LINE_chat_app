@@ -38,8 +38,7 @@ class ChatController extends Controller
         
         // ユーザーアカウント情報を取得する
         $user_id = ChatUser::where("user_id", $userId)->first();
-
-        $messages       = $messageAggregationService->getUnifiedSortedMessages($user_id["id"], $admin_info["line_account_id"]);
+        $messages = $messageAggregationService->getUnifiedSortedMessages($user_id["id"], $admin_info["line_account_id"], "user");
         $group_message  = $messageService->groupMessagesByDate($messages);
 
         // uuidを取得する

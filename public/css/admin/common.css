@@ -236,10 +236,9 @@ margin-bottom: 7px;
      align-items: center;
      background-color: #f5f6fa;
      gap: 10px;
-     position: fixed;
+     position: sticky;
      z-index: 998;
      width: 100%;
-     max-width: 840px;
 }
 .chat__form-flex{
      display: flex;
