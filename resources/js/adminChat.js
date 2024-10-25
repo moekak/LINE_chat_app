@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	})
 
 
-	socket.on("broadcast message", (sendingDatatoBackEnd, created_at, userUuids, adminUuid )=>{
-		handleReceivedBroadcastingMessage(is_searching, adminUuid, created_at, sendingDatatoBackEnd)
+	socket.on("broadcast message", (sendingDatatoBackEnd, created_at, userUuids, adminUuid, ids)=>{
+		handleReceivedBroadcastingMessage(is_searching, adminUuid, created_at, sendingDatatoBackEnd, ids)
 	})
 
 	// 選択してチャットを開くユーザーの切り替えをする

@@ -8,20 +8,24 @@ import { chatNavigator, scrollToBottom } from "./uiController.js";
 
 //メッセージをチャット画面に表示する
 // file_name = 呼び出し元ファイル
-export const displayChatMessage = (className, type, msg, file_name, actual_sender_id, time, message_type) => {
+export const displayChatMessage = (className, type, msg, file_name, actual_sender_id, time, message_type, ids = []) => {
     const parentElement = document.querySelector(`.${className}`);
     const isSenderAdmin = type === "admin";
     const isFileFromUser = file_name === "user";
     const isSenderUser = type === "user";
     // 関数呼び出し元ファイルがadminでなおかつメッセージ送信者がユーザーの場合
     const isCorrectAdminMessage = file_name === "admin" && actual_sender_id === parentElement.getAttribute("data-id") //このdata-idはユーザーIDが入っている
-
+    
+    if(ids.includes(parentElement.getAttribute("data-id"))){
+        return
+    }
+    
     if (isSenderAdmin && isFileFromUser) {
-        addLeftChatMessage(msg, parentElement, time, message_type);
+        addLeftChatMessage(msg, parentElement, time, message_type, ids);
     } else if (isSenderAdmin || (isSenderUser && isFileFromUser)) {
-        addRightChatMessage(msg, parentElement, time, message_type);
+        addRightChatMessage(msg, parentElement, time, message_type, ids);
     } else if (isCorrectAdminMessage) {
-        addLeftChatMessage(msg, parentElement, time, message_type);
+        addLeftChatMessage(msg, parentElement, time, message_type, ids);
     }
 };
 
@@ -97,19 +101,20 @@ export const adjustMesageLength = () => {
 };
 
 // 新しいメッセージの時間をリアルタイムでチャットユーザーリストの時間箇所に表示する
-export const updateMessageTime = (time,sender_id,sender_type,receiver_id) => {
+export const updateMessageTime = (time,sender_id,sender_type,receiver_id, ids) => {
     const elements = document.querySelectorAll(".js_update_message_time");
 
-    elements.forEach((element) => {
+    for(let element of elements){
+        let id = element.getAttribute("data-id");
+        if(ids.includes(id)) continue
         if(receiver_id){
-            let id = element.getAttribute("data-id");
             let chat_user_id = sender_type == "user" ? sender_id : receiver_id
 
             if (id == chat_user_id) element.innerHTML = time;
         }else{
             element.innerHTML = time;
         }
-    });
+    }
 };
 
 // チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
@@ -165,11 +170,14 @@ export const createDivForSearch = (data) =>{
         });
 }
 
-export const updateUserListMessage = () =>{
+export const updateUserListMessage = (ids) =>{
     const message_wrappers = document.querySelectorAll(".js_chatMessage_elment")
 
     message_wrappers.forEach((wrapper)=>{
-        wrapper.innerHTML = "一斉メッセージを送信しました"
+        let id = wrapper.getAttribute("data-id")
+        if(!ids.includes(id)){
+            wrapper.innerHTML = "一斉メッセージを送信しました"
+        }
     })
 
 }

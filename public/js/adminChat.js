@@ -74,6 +74,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 //メッセージをチャット画面に表示する
 // file_name = 呼び出し元ファイル
 var displayChatMessage = function displayChatMessage(className, type, msg, file_name, actual_sender_id, time, message_type) {
+  var ids = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : [];
   var parentElement = document.querySelector(".".concat(className));
   var isSenderAdmin = type === "admin";
   var isFileFromUser = file_name === "user";
@@ -81,12 +82,15 @@ var displayChatMessage = function displayChatMessage(className, type, msg, file_
   // 関数呼び出し元ファイルがadminでなおかつメッセージ送信者がユーザーの場合
   var isCorrectAdminMessage = file_name === "admin" && actual_sender_id === parentElement.getAttribute("data-id"); //このdata-idはユーザーIDが入っている
 
+  if (ids.includes(parentElement.getAttribute("data-id"))) {
+    return;
+  }
   if (isSenderAdmin && isFileFromUser) {
-    addLeftChatMessage(msg, parentElement, time, message_type);
+    addLeftChatMessage(msg, parentElement, time, message_type, ids);
   } else if (isSenderAdmin || isSenderUser && isFileFromUser) {
-    addRightChatMessage(msg, parentElement, time, message_type);
+    addRightChatMessage(msg, parentElement, time, message_type, ids);
   } else if (isCorrectAdminMessage) {
-    addLeftChatMessage(msg, parentElement, time, message_type);
+    addLeftChatMessage(msg, parentElement, time, message_type, ids);
   }
 };
 
@@ -150,17 +154,27 @@ var adjustMesageLength = function adjustMesageLength() {
 };
 
 // 新しいメッセージの時間をリアルタイムでチャットユーザーリストの時間箇所に表示する
-var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id) {
+var updateMessageTime = function updateMessageTime(time, sender_id, sender_type, receiver_id, ids) {
   var elements = document.querySelectorAll(".js_update_message_time");
-  elements.forEach(function (element) {
-    if (receiver_id) {
+  var _iterator = _createForOfIteratorHelper(elements),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var element = _step.value;
       var id = element.getAttribute("data-id");
-      var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
-      if (id == chat_user_id) element.innerHTML = time;
-    } else {
-      element.innerHTML = time;
+      if (ids.includes(id)) continue;
+      if (receiver_id) {
+        var chat_user_id = sender_type == "user" ? sender_id : receiver_id;
+        if (id == chat_user_id) element.innerHTML = time;
+      } else {
+        element.innerHTML = time;
+      }
     }
-  });
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
 };
 
 // チャットユーザー一覧(左側)にユーザーがいなかったときに新しくdivタグを作りparentタグの一番最初に挿入する
@@ -199,10 +213,13 @@ var createDivForSearch = function createDivForSearch(data) {
     }
   });
 };
-var updateUserListMessage = function updateUserListMessage() {
+var updateUserListMessage = function updateUserListMessage(ids) {
   var message_wrappers = document.querySelectorAll(".js_chatMessage_elment");
   message_wrappers.forEach(function (wrapper) {
-    wrapper.innerHTML = "一斉メッセージを送信しました";
+    var id = wrapper.getAttribute("data-id");
+    if (!ids.includes(id)) {
+      wrapper.innerHTML = "一斉メッセージを送信しました";
+    }
   });
 };
 
@@ -221,11 +238,11 @@ var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id
   // 検索中でない場合の処理
   if (!is_searching.flag) {
     // 既にチャットリストに送信者のリストがある場合の処理
-    var _iterator = _createForOfIteratorHelper(wrappers),
-      _step;
+    var _iterator2 = _createForOfIteratorHelper(wrappers),
+      _step2;
     try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var wrapper = _step.value;
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var wrapper = _step2.value;
         var user_id = wrapper.getAttribute("data-uuid");
         var chat_user_id = sender_type === "admin" ? receiver_id : sender_id;
         if (chat_user_id === user_id && wrappers.length > 0) {
@@ -245,9 +262,9 @@ var updateChatUserList = function updateChatUserList(receiver_id, msg, sender_id
 
       // 新しい要素が必要な場合
     } catch (err) {
-      _iterator.e(err);
+      _iterator2.e(err);
     } finally {
-      _iterator.f();
+      _iterator2.f();
     }
     if (!hasDiv && firstChild) {
       createNewDivElement(receiver_id, sender_id, msg, message_type);
@@ -612,7 +629,7 @@ var handleReceivedMessage = function handleReceivedMessage(isON, is_searching, s
   (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayChatMessage)("js_append_admin", sender_type, content, "admin", sender_id, time, message_type);
 
   // チャットリストのリアルタイムでデータを表示する処理
-  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, sender_type, receiver_id);
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, sender_type, receiver_id, []);
   (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayMessage)(sender_id, message_type === "text" ? content : "", sender_type, receiver_id, message_type);
   (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateChatUserList)(receiver_id, content, sender_id, message_type, sender_type, is_searching);
   if (sender_type === "user") {
@@ -632,16 +649,15 @@ var handleReceivedMessage = function handleReceivedMessage(isON, is_searching, s
     (0,_fetch_js__WEBPACK_IMPORTED_MODULE_3__.fetchPostOperation)(data, "/api/user/messages/read");
   }
 };
-var handleReceivedBroadcastingMessage = function handleReceivedBroadcastingMessage(is_searching, sender_id, time, sendingDatatoBackEnd) {
+var handleReceivedBroadcastingMessage = function handleReceivedBroadcastingMessage(is_searching, sender_id, time, sendingDatatoBackEnd, ids) {
   // チャットを画面に表示する処理
-  console.log(sendingDatatoBackEnd);
   for (var data in sendingDatatoBackEnd) {
     var content = sendingDatatoBackEnd[data]["data"];
     var type = sendingDatatoBackEnd[data]["type"];
-    (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayChatMessage)("js_append_admin", "admin", content, "admin", sender_id, time, type);
+    (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.displayChatMessage)("js_append_admin", "admin", content, "admin", sender_id, time, type, ids);
   }
-  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, "admin", null);
-  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateUserListMessage)();
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateMessageTime)(time, sender_id, "admin", null, ids);
+  (0,_component_chatController_js__WEBPACK_IMPORTED_MODULE_0__.updateUserListMessage)(ids);
 };
 
 // debounce関数を作成
@@ -7554,8 +7570,8 @@ document.addEventListener("DOMContentLoaded", function () {
   socket.on("send_image", function (sender_type, sender_id, time, receiver_id, message_id, resizedImage) {
     (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedMessage)(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
   });
-  socket.on("broadcast message", function (sendingDatatoBackEnd, created_at, userUuids, adminUuid) {
-    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedBroadcastingMessage)(is_searching, adminUuid, created_at, sendingDatatoBackEnd);
+  socket.on("broadcast message", function (sendingDatatoBackEnd, created_at, userUuids, adminUuid, ids) {
+    (0,_module_util_messageService_js__WEBPACK_IMPORTED_MODULE_4__.handleReceivedBroadcastingMessage)(is_searching, adminUuid, created_at, sendingDatatoBackEnd, ids);
   });
 
   // 選択してチャットを開くユーザーの切り替えをする

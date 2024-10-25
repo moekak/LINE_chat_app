@@ -75,7 +75,7 @@ export const handleReceivedMessage = (isON, is_searching, sender_type, sender_id
 		displayChatMessage("js_append_admin", sender_type, content, "admin", sender_id, time, message_type);
 
 		// チャットリストのリアルタイムでデータを表示する処理
-		updateMessageTime(time, sender_id, sender_type, receiver_id);
+		updateMessageTime(time, sender_id, sender_type, receiver_id, []);
 		displayMessage(sender_id, message_type === "text" ? content : "", sender_type, receiver_id, message_type);
 		updateChatUserList(receiver_id, content, sender_id, message_type, sender_type, is_searching);
 
@@ -99,18 +99,16 @@ export const handleReceivedMessage = (isON, is_searching, sender_type, sender_id
 	}
 }
 
-export const handleReceivedBroadcastingMessage = (is_searching, sender_id, time, sendingDatatoBackEnd) =>{
+export const handleReceivedBroadcastingMessage = (is_searching, sender_id, time, sendingDatatoBackEnd, ids) =>{
   // チャットを画面に表示する処理
-  console.log(sendingDatatoBackEnd);
-
   for(let data in sendingDatatoBackEnd){
       let content = sendingDatatoBackEnd[data]["data"];
       let type = sendingDatatoBackEnd[data]["type"]
-      displayChatMessage("js_append_admin", "admin", content, "admin", sender_id, time, type);
+      displayChatMessage("js_append_admin", "admin", content, "admin", sender_id, time, type, ids);
   }
   
-  updateMessageTime(time, sender_id, "admin", null);
-  updateUserListMessage()
+  updateMessageTime(time, sender_id, "admin", null, ids);
+  updateUserListMessage(ids)
 }
 
 // debounce関数を作成
