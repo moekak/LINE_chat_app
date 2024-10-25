@@ -1,9 +1,9 @@
 .chat__mesgae-main-right {
     gap: 11px !important;
 }
-.chat__message-main{
+/* .chat__message-main{
 height: 84vh;
-}
+} */
 .chat__mesgae-main-right {
     width: 84% !important;
 }
@@ -13,6 +13,9 @@ height: 84vh;
 
 .chat__form{
     width: -webkit-fill-available !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 /* ユーザーメッセージ上部ヘッダー */
@@ -23,6 +26,9 @@ height: 84vh;
     gap: 18px;
     padding: 0px 10px;
     border-bottom: 1px solid rgba(128, 128, 128, 0.514);
+    position: fixed;
+    width: 100%;
+    top: 0;
 }
 .chat__message_header-item-text{
     font-size: 10px;
@@ -93,11 +99,13 @@ height: 84vh;
 
 @media (max-width: 450px){
     .chat__form{
-        bottom: 1%;
-        padding: 0 1%;
+        bottom: env(safe-area-inset-bottom); /* iOSのSafe Area対応 */
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
     }
     .chat__message-area {
         padding: 0px 0px 20px 0px;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+        margin-top: 60px;
     }
     .chat__message-time-txt {
         font-size: 7px;
@@ -110,9 +118,9 @@ height: 84vh;
         width: 94% !important;
     }
     .chat__message-main {
-        margin-top: 0 !important;
-        height: 80vh !important;
-        padding: 3px 5px !important;
+        /* margin-top: 0 !important;
+        height: calc(80dvh - env(safe-area-inset-bottom, 0)) !important; */
+        padding: 3px 6px !important;
     }
     .chat__message-main-time{
         font-size: 9px;

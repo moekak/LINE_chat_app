@@ -7616,6 +7616,20 @@ close_btn.addEventListener("click", function () {
   bg.classList.add("hidden");
   modal.classList.add("hidden");
 });
+
+// ページ上のすべてのinput要素を選択
+var input = document.getElementById("js_msg");
+
+// フォーカス時のイベントリスナーを設定
+
+input.addEventListener('focus', function () {
+  document.querySelector(".chat__message-main").style.height = "80vh";
+  // フォーカス時の処理をここに記述
+});
+input.addEventListener('blur', function () {
+  document.querySelector(".chat__message-main").style.height = "calc(80dvh - env(safe-area-inset-bottom, 0))";
+  // フォーカス解除時の処理をここに記述
+});
 })();
 
 /******/ })()

@@ -114,11 +114,3 @@ close_btn.addEventListener("click", ()=>{
 
 
 
-
-
-
-
-
-
-
-
