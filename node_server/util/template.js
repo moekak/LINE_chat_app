@@ -1,10 +1,10 @@
-const generateNotificationMessage = (admin_id, user_id) =>{
+const generateNotificationMessage = (admin_id, user_id, message) =>{
     return {
         type: 'template',
-        altText: 'チャットメッセージを受信しました',
+        altText: message,
         template: {
             type: 'buttons',
-            text: 'チャットメッセージを受信しました',
+            text: message,
             actions: [
                 {
                     type: 'uri',

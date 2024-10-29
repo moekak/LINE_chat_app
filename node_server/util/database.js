@@ -52,6 +52,19 @@ const selectAdminId = async(connection, entity_uuid) =>{
         throw error
     }
 }
+const selectLoginId = async(connection, entity_uuid) =>{
+    const select_loginID_query = "SELECT user_id FROM line_accounts WHERE id = ?";
+    try{
+        // 1. 管理者uuidから実際に管理者IDを取得
+        const admin_user_id = await selectRelatedId(connection, entity_uuid, "admin");
+
+        // 2. 管理者アカウントIDを取得する(13文字)
+        const [loginIds] = await connection.query(select_loginID_query, [admin_user_id]);
+        return loginIds[0]["user_id"]
+    }catch(error){
+        throw error
+    }
+}
 
 const selectAdminUUid = async(connection, admin_id) =>{
     const select_user_uuids = "SELECT entity_uuid FROM user_entities WHERE related_id = ? AND entity_type = 'admin'";
@@ -119,6 +132,18 @@ const selectBlockUser = async() =>{
     }
 }
 
+const selectLineMessage = async(admin_id)=>{
+    const select_lineMessage_query = "SELECT messages FROM line_messages WHERE admin_id = ?";
+    let connection;
+    try{
+        connection = await createDbConnection()
+        const [rows] = await connection.query(select_lineMessage_query, [admin_id])
+
+        return rows.length > 0  ? rows.map(row => row.messages)[0] : "チャットメッセージを受信しました。";
+    }catch(error){
+        throw error
+    }
+}
 
 
 module.exports = {
@@ -126,5 +151,7 @@ module.exports = {
     selectAdminId,
     userIdsOperation,
     createDbConnection,
-    selectBlockUser
+    selectBlockUser,
+    selectLineMessage,
+    selectLoginId
 };

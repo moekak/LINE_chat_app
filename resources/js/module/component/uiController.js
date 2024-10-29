@@ -1,5 +1,6 @@
 import { fetchPostOperation } from "../util/fetch";
 
+
 // 特定のチャットユーザー画面を開く
 export const chatNavigator = () =>{
     const chat_btns = document.querySelectorAll(".js_chat_wrapper");
@@ -13,17 +14,18 @@ export const chatNavigator = () =>{
     });
 }
 
+
 export const scrollToBottom = () => {
-    const scroll_el = document.querySelector(".chat__message-main");
-    if (scroll_el) {
-        scroll_el.scrollTop = scroll_el.scrollHeight;
-    }
+    setTimeout(() => {
+        const scroll_el = document.querySelector(".chat__message-main");
+        if (scroll_el) {
+            scroll_el.scrollTop = scroll_el.scrollHeight;
+        }
+    }, 100);
 };
 
 
 export const fileOperation = (socket, sender_id, url, sender_type)=>{
-
-
         const file = fileInput.files[0]
         const reader = new FileReader();
         const maxSizeMB = 5;
@@ -85,9 +87,7 @@ export const fileOperation = (socket, sender_id, url, sender_type)=>{
             })
         };
     };
-
     reader.readAsDataURL(file);
-
 }
 
 

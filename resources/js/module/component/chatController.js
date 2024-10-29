@@ -32,13 +32,11 @@ export const displayChatMessage = (className, type, msg, file_name, actual_sende
 // チャット画面右側(青)にメッセージを表示する処理
 const addRightChatMessage = (content, parentElement, time, message_type) => {
     parentElement.innerHTML += createRightMessageContainer(message_type, time, content)
-    scrollToBottom()
 
 };
 // チャット画面右側(白)にメッセージを表示する処理
 const addLeftChatMessage = (content, parentElement, time, message_type) => {
     parentElement.innerHTML += createLeftMessageContainer(message_type, time, content)
-    scrollToBottom()
 };
 
 // #####################################################################

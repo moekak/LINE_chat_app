@@ -47,13 +47,10 @@ const https = require('https');
 const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
-const { userIdsOperation, selectBlockUser} = require('./util/database.js');
+const { userIdsOperation } = require('./util/database.js');
 const { broadcastMessageToSockets, broadcastImagesToSockets, broadcastBroadcastingMessageToSockets } = require('./util/socketBroadcast.js');
 const { sendNotificationToLine } = require('./util/lineApi.js');
 require('dotenv').config();
-
-
-
 
 
 const config = {
@@ -131,7 +128,7 @@ io.on('connection', (socket) => {
         // LINEへメッセージ受信通知をする
         console.log(`userSockets: ${userSockets.get(actual_receiver_id)}`);
         if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
-            // sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
+            sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
     });
     
@@ -174,8 +171,6 @@ io.on('connection', (socket) => {
     })
 
 
-
-    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!
     socket.on("disconnectHandler", ()=>{
         // console.log("2222");
         
@@ -184,11 +179,6 @@ io.on('connection', (socket) => {
         // const removed = removeSocketById(socket.id);
         socket.disconnect(true);
         // console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
-        
-    })
-    socket.on("test", ()=>{
-      console.log("yayyay");
-      
         
     })
 

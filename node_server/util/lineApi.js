@@ -1,6 +1,6 @@
 
 const { generateNotificationMessage } = require('./template.js');
-const { createDbConnection, selectUserId, selectAdminId } = require('./database.js');
+const { createDbConnection, selectUserId, selectAdminId, selectLoginId, selectLineMessage } = require('./database.js');
 
 const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, client) =>{
 
@@ -15,10 +15,10 @@ const sendNotificationToLine = async (actual_receiver_id, actual_sender_id, clie
         const user_id = await selectUserId(connection, actual_receiver_id)
         // 管理者LINEアカウントIDを取得
         const admin_id = await selectAdminId(connection, actual_sender_id)
+        const login_id = await selectLoginId(connection, actual_sender_id)
+        const message = await selectLineMessage(login_id)
         // LINEへ送信する際のメッセージテンプレート
-        const templateMessage = generateNotificationMessage(admin_id, user_id)
-
-        console.log("メッセージを送ります");
+        const templateMessage = generateNotificationMessage(admin_id, user_id, message)
         
         await client.pushMessage(user_id, templateMessage)
     }catch(error){

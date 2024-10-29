@@ -1,9 +1,7 @@
 .chat__mesgae-main-right {
     gap: 11px !important;
 }
-/* .chat__message-main{
-height: 84vh;
-} */
+
 .chat__mesgae-main-right {
     width: 84% !important;
 }
