@@ -18,15 +18,16 @@
 
 /* ユーザーメッセージ上部ヘッダー */
 .chat__message_header{
-    background-color: #fff;
+    background-color:#fff;
     display: flex;
     align-items: center;
     gap: 18px;
     padding: 0px 10px;
     border-bottom: 1px solid rgba(128, 128, 128, 0.514);
-    position: fixed;
+    position: absolute;
     width: 100%;
     top: 0;
+    height: 59px;
 }
 .chat__message_header-item-text{
     font-size: 10px;
@@ -65,6 +66,7 @@
     margin: 0 auto;
     width: max-content;
     margin-bottom: 8px;
+
 }
 .chat_default-txt{
     font-size: 12px;
@@ -99,11 +101,12 @@
     .chat__form{
         bottom: env(safe-area-inset-bottom); /* iOSのSafe Area対応 */
         padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+        height: 56px;
     }
     .chat__message-area {
         padding: 0px 0px 20px 0px;
         padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
-        margin-top: 60px;
+        /* margin-top: 60px; */
     }
     .chat__message-time-txt {
         font-size: 7px;
@@ -119,6 +122,8 @@
         /* margin-top: 0 !important;
         height: calc(80dvh - env(safe-area-inset-bottom, 0)) !important; */
         padding: 3px 6px !important;
+        height: calc(100dvh - 210px);
+        /* height: calc(calc(var(--vh, 1vh) * 100) - 115px); */
     }
     .chat__message-main-time{
         font-size: 9px;
@@ -134,4 +139,8 @@
     .chat__message-box-right, .chat__message-box-left {
         font-size: 15px;
     }
+}
+
+.chat__message-area{
+    padding-top: 60px;
 }

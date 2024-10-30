@@ -38,10 +38,7 @@
       <input type="hidden" value="user" id="js_sender_type">
 @endsection
 
-
-@section('chat-message')
-
-<input type="hidden" id="js_uuid" value="{{$uuid_user}}">
+@section('header')
 <div class="chat__message_header">
       <div class="chat__message_header-item js_header_item">
             <a href="{{route("announcements", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><i class="far fa-envelope header-icon"></i></a>
@@ -52,6 +49,10 @@
             <a href="{{route("chat", ["adminId"=> Route::current()->parameter('adminId'), "userId" => Route::current()->parameter("userId")])}}"><p class="chat__message_header-item-text active_font">サポート</p></a>
       </div>
 </div>
+@endsection
+@section('chat-message')
+
+<input type="hidden" id="js_uuid" value="{{$uuid_user}}">
 <input type="hidden" value="{{$admin_info->user_picture}}" id="js_user_icon_img">
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_user">

@@ -13,8 +13,9 @@
 <body>
       <div class="contents">
             <div class="bg hidden"></div>
-            <main>
+            <main class="main">
                   @yield('user-list')
+                  @yield('header')
                   <section class="chat__message-area">
                         @yield('chat-message')
                   </section>

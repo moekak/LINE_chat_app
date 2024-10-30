@@ -30,10 +30,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// サーバーからのメッセージを受信
 	socket.on('chat message',( msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id) => {
 		displayChatMessage("js_append_user", sender_type, msg, "user", "", time, "text")
+		scrollToBottom()
 	});
 
 	socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
 		displayChatMessage("js_append_user", sender_type, resizedImage, "user", "", time, "image")
+		scrollToBottom()
 	})
 
 	socket.on("broadcast message", (sendingDatatoBackEnd, created_at, userUuids, adminUuid )=>{
@@ -42,6 +44,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 			let type = sendingDatatoBackEnd[data]["type"]
 			displayChatMessage("js_append_user", "admin", content, "user", "", created_at, type)
 		}
+		scrollToBottom()
 	})
 
 	// 画像の処理
@@ -89,7 +92,42 @@ close_btn.addEventListener("click", ()=>{
 
 
 
+// ユーザーチャット画面の表示(ブラウザや端末ごとで変わるので)
+document.addEventListener('DOMContentLoaded', () => {
+	const element =document.querySelector(".chat__message-main")
 
+	const isIOS = (
+		/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+		(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+	) && !window.MSStream;
+	
+	const isSafari = /Version\/([0-9._]+).*Safari/.test(navigator.userAgent) && !navigator.userAgent.includes('Chrome');
+	const isIOSSafari = isIOS && isSafari;
 
-
+	if(isIOSSafari){
+		element.style.height = "calc(100vh - 210px)"; // 元の高さに戻す
+		// header.style.position = "absolute"
+		// header.style.top = "0px"
+		// input.addEventListener("focusin", ()=>{
+		// 	element.style.height = "calc(100vh - 210px)"
+		// })
+	
+		// input.addEventListener("focusout", () => {
+		// 	element.style.height = "calc(100vh - 210px)"; // 元の高さに戻す
+		// 	header.style.position = "fixed"
+		// 	header.style.top = "0px"
+		// });
+	
+	}else{
+		element.style.height = "calc(100dvh - 115px)"; // 元の高さに戻す
+		// input.addEventListener("focusin", ()=>{
+		// 	element.style.height = "calc(100dvh - 115px)"
+		// })
+	
+		// input.addEventListener("focusout", () => {
+		// 	element.style.height = "calc(100dvh - 115px)"; // 元の高さに戻す
+		// });
+	
+	}
+});
 
