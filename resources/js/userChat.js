@@ -78,6 +78,8 @@ bg.addEventListener("click", ()=>{
 	bg.classList.add("hidden")
 	modal.classList.add("hidden")
 })
+
+
 close_btn.addEventListener("click", ()=>{
 	bg.classList.add("hidden")
 	modal.classList.add("hidden")
