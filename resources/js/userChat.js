@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const isSafari = /Version\/([0-9._]+).*Safari/.test(navigator.userAgent) && !navigator.userAgent.includes('Chrome');
 	const isIOSSafari = isIOS && isSafari;
 
+	// サファリかつIOSだった場合
 	if(isIOSSafari){
 		element.style.height = "calc(100vh - 210px)"; // 元の高さに戻す
 		// header.style.position = "absolute"

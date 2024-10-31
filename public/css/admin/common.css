@@ -35,6 +35,8 @@ position: relative;
 }
 main{
      position: relative;
+     display: flex;
+     align-items: center;
 }
 /* text common */
 .user_name_txt{
