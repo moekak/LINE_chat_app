@@ -18,10 +18,15 @@ export const chatNavigator = () =>{
 export const scrollToBottom = () => {
     setTimeout(() => {
         const scroll_el = document.querySelector(".chat__message-main");
+        console.log(scroll_el.scrollHeight);
+        
         if (scroll_el) {
-            scroll_el.scrollTop = scroll_el.scrollHeight;
+            scroll_el.scrollTo({
+                top: scroll_el.scrollHeight,
+                behavior: 'auto'
+            });
         }
-    }, 100);
+    }, 300);
 };
 
 

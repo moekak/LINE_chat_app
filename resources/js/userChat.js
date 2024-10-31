@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// クライアントからソケットサーバーへメッセージを送信する
 	document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
 		e.preventDefault();
+		
 		const { msg, formattedMsg, receiver_id, sender_type } = prepareMessageData();
 		// メッセージをサーバーに送信する
 		sendMessage(socket, formattedMsg, receiver_id, sender_id, sender_type, msg, "/api/user/messages")
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// サーバーからのメッセージを受信
 	socket.on('chat message',( msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id) => {
 		displayChatMessage("js_append_user", sender_type, msg, "user", "", time, "text")
+		document.querySelector(".chat__form-submit").classList.add("disable_btn");
 		scrollToBottom()
 	});
 
@@ -120,7 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		// });
 	
 	}else{
-		element.style.height = "calc(100dvh - 115px)"; // 元の高さに戻す
+		const mediaQuery = window.matchMedia('(min-width: 641px)');
+		if(mediaQuery.matches){
+			element.style.height = "81vh"; // 元の高さに戻す
+		}else{
+			element.style.height = "calc(100dvh - 115px)"; // 元の高さに戻す
+		}
+		
 		// input.addEventListener("focusin", ()=>{
 		// 	element.style.height = "calc(100dvh - 115px)"
 		// })

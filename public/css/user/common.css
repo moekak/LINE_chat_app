@@ -2,8 +2,11 @@ main{
     position: relative;
     display: flex !important;
     align-items: center !important;
+    justify-content: center;
 }
-
+.contents{
+    max-width: 840px !important;
+}
 .chat__mesgae-main-right {
     gap: 11px !important;
 }
@@ -14,13 +17,18 @@ main{
 .chat__mesgae-main-left {
     width: 84% !important;
 }
+.chat__message-area{
+    max-width: 840px;
+}
 
 .chat__form{
     width: -webkit-fill-available !important;
     padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
     padding-right: 5px;
     padding-left: 5px;
+    bottom: 5px !important;
 }
+
 
 /* ユーザーメッセージ上部ヘッダー */
 .chat__message_header{
@@ -34,6 +42,7 @@ main{
     width: 100%;
     top: 0;
     height: 59px;
+    max-width: 830px;
 }
 .chat__message_header-item-text{
     font-size: 10px;
@@ -107,7 +116,6 @@ main{
     .chat__form{
         bottom: env(safe-area-inset-bottom); /* iOSのSafe Area対応 */
         padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
-        height: 56px;
     }
     .chat__message-area {
         padding: 0px 0px 20px 0px;

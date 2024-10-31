@@ -37,19 +37,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	// サーバーからのメッセージを受信
 	socket.on('chat message', (msg, sender_type, actual_sender_id, time, actual_receiver_id, message_id)=> {
-		console.log("getting message!!");
-		
 		handleReceivedMessage(isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, message_id, msg, "text")
+		scrollToBottom()
 	});
 
 	// サーバーからの画像を受信
 	socket.on("send_image", (sender_type, sender_id, time, receiver_id, message_id, resizedImage)=>{
 		handleReceivedMessage(isON, is_searching, sender_type, sender_id, time, receiver_id, message_id, resizedImage, "image");
+		scrollToBottom()
 	})
 
 
 	socket.on("broadcast message", (sendingDatatoBackEnd, created_at, userUuids, adminUuid, ids)=>{
 		handleReceivedBroadcastingMessage(is_searching, adminUuid, created_at, sendingDatatoBackEnd, ids)
+		scrollToBottom()
 	})
 
 	// 選択してチャットを開くユーザーの切り替えをする

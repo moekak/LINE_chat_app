@@ -36,7 +36,7 @@ position: relative;
 main{
      position: relative;
      display: flex;
-     align-items: center;
+     align-items: start;
 }
 /* text common */
 .user_name_txt{
@@ -52,6 +52,7 @@ main{
 }
 .chat_message{
      color: rgba(0, 0, 0, 0.782);
+     max-width: 240px;
 }
 .chat_time{
      color: gray;
@@ -82,8 +83,7 @@ main{
      margin: 30px 0;
      width: auto;
      border-radius: 10px;
-     height:80%;
-
+     height:76vh;
 }
 
 .chat__users-list-area-input {
@@ -140,7 +140,7 @@ main{
 /* チャット画面右側 */
 .chat__message-area{
      width: 100%;
-     max-width: 840px;
+     max-width: 800px;
      padding: 20px 20px;
 }
 .chat__message-top{
@@ -152,10 +152,10 @@ main{
      border-radius: 15px;
      position: sticky;
      top: 0;
-}
+     }
 .chat__message-main{
      text-align: center;
-     height: calc(100dvh - 210px);
+     height: 78vh;
      overflow-y: auto;
      padding: 13px 0;
 }
@@ -174,8 +174,8 @@ main{
      border-radius: 90px;
 }
 .chat__message-wrapper{
-padding-bottom: 20px;
-padding-top: 15px;
+     padding-bottom: 20px;
+     padding-top: 15px;
 }
 .chat__message-container-left{
      width: 100%;
@@ -192,14 +192,14 @@ padding-top: 15px;
      gap: 15px;
 }
 .chat__mesgae-main-right {
-width: 50%;
-float: right;
-display: flex;
-/* flex-direction: column; */
-align-items: end;
-align-items: end;
-justify-content: end;
-gap: 5px;
+     width: 50%;
+     float: right;
+     display: flex;
+     /* flex-direction: column; */
+     align-items: end;
+     align-items: end;
+     justify-content: end;
+     gap: 5px;
 }
 .chat__message-box-left{
      background-color: #fff;
@@ -208,15 +208,15 @@ gap: 5px;
      padding: 8px 15px;
      width: max-content;
      font-weight: 400;
-}
+     }
 .chat__message-time-txt{
-color: #000000;
-font-size: 9px;
-font-weight: normal;
-align-items: end;
-display: flex;
-margin-left: -2%;
-margin-bottom: 7px;
+     color: #000000;
+     font-size: 9px;
+     font-weight: normal;
+     align-items: end;
+     display: flex;
+     margin-left: -2%;
+     margin-bottom: 7px;
 }
 .chat__message-box-right{
      background-color: #1a7aea;
@@ -242,6 +242,7 @@ margin-bottom: 7px;
      gap: 10px;
      position: fixed;
      z-index: 998;
+     bottom: 22px; /* iOSのSafe Area対応 */
      width: 100%;
 
 }
@@ -282,7 +283,7 @@ margin-bottom: 7px;
 }
 
 .attachment_container {
-cursor: pointer;
+     cursor: pointer;
 }
 .attachemnt-icon{
      width: 20px;
@@ -294,7 +295,6 @@ cursor: pointer;
      height: 19px;
      border: none;
      width: 100%;
-
 }
 
 #js_msg:focus{
@@ -330,7 +330,6 @@ cursor: pointer;
      background-color: #fff;
      border-radius: 12px;
      width: 248px;
-
 }
 .file_menu ul li{
      list-style: none;
@@ -399,6 +398,7 @@ cursor: pointer;
 }
 .line-btn img{
      width: 33px;
+
 }
 .line__btn-container{
      width: 80%;

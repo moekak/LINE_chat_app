@@ -60,7 +60,7 @@ export const increaseMessageCount = (sender_id) => {
     
     count_elements.forEach((count) => {
         let id = count.getAttribute("data-id");
-      
+
         // メッセージを送信したユーザーが一覧に表示されて、なおかつそのゆざーのチャット画面を開いていない場合
         if (id == sender_id && id !== chat_user_id) {
             let currentCount = Number(count.innerHTML) || 0;
@@ -81,9 +81,10 @@ export const displayMessage = (sender_id,msg,sender_type,receiver_id,message_typ
         let id = element.getAttribute("data-id");
         let chat_user_id = sender_type == "user" ? sender_id : receiver_id
         let txt = message_type == "image" ? (sender_type == "user" ? "画像が送信されました" : "画像を送信しました") : msg
+        let formatted_msg = txt.replace(/<br>/g, '');
 
-        if (id == chat_user_id) element.innerHTML = txt
 
+        if (id == chat_user_id) element.innerHTML = formatted_msg.length >= 30 ? formatted_msg.substring(0, 30) + "..." : formatted_msg;
     });
 };
 
@@ -92,8 +93,9 @@ export const displayMessage = (sender_id,msg,sender_type,receiver_id,message_typ
 export const adjustMesageLength = () => {
     const elements = document.querySelectorAll(".js_chatMessage_elment");
     elements.forEach((element) => {
-        if (element.innerHTML.length >= 40) {
-            element.innerHTML = element.innerHTML.substring(0, 40) + "...";
+        const text = element.innerHTML.replace(/[\n\r]/g, '');
+        if (text.length >= 30) {
+            element.innerHTML = text.substring(0, 30) + "...";
         }
     });
 };

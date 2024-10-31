@@ -13,7 +13,6 @@ export const prepareMessageData = () => {
   // スタイル変更
   document.getElementById('js_msg').style.height = "19px";
   document.querySelector(".chat__form-submit").classList.add("disable_btn");
-
   // サーバーに送信するデータをすべて取得する
   const msg = document.getElementById("js_msg").value;
   const formattedMsg = msg.replace(/\n/g, '<br>'); // 改行文字を <br> タグに置き換える
@@ -49,8 +48,7 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
 		}
 	}
 
-   
-    fetchPostOperation(data, url)
+  fetchPostOperation(data, url)
 	.then((res)=>{
 		const time            = res["created_at"]
 		const message_id      = res["message_id"]

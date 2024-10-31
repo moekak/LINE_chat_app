@@ -4,13 +4,13 @@ export const changeTextareaHeight = () =>{
     textarea.addEventListener('input', autoResize, false);
     
     function autoResize() {
-
         if(this.scrollHeight > height){
-
-                    
-        this.style.height = 'auto'; // 高さをリセット
-        this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定
-            
+            this.style.height = 'auto'; // 高さをリセット
+            this.style.maxHeight = "200px"
+            this.style.height = this.scrollHeight + 'px'; // 内容に合わせて高さを設定
+            document.querySelector(".chat__form-flex").style.alignItems = "end"
+        }else{
+            document.querySelector(".chat__form-flex").style.alignItems = "center"
         }
     }
 }
