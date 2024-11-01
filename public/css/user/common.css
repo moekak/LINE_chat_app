@@ -113,6 +113,10 @@ main{
 }
 
 @media (max-width: 450px){
+    .image_modal{
+        width: 80%;
+
+    }
     .chat__form{
         bottom: env(safe-area-inset-bottom); /* iOSのSafe Area対応 */
         padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */

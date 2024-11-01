@@ -140,3 +140,31 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
+{
+	// 画像を拡大する
+	const images = document.querySelectorAll(".chat_image");
+	const image_modal = document.querySelector(".js_image_modal")
+	const bg = document.querySelector(".bg")
+	const close_btn = document.querySelector(".js_close_image_btn")
+
+	images.forEach((img)=>{
+		img.addEventListener("click", (e)=>{
+			let target_img = e.currentTarget.src
+			bg.classList.remove("hidden")
+			image_modal.classList.remove("hidden")
+
+			document.querySelector(".js_image_src").src = target_img
+			
+		})
+	})
+
+	bg.addEventListener("click", ()=>{
+		bg.classList.add("hidden")
+		image_modal.classList.add("hidden")
+	})
+	close_btn.addEventListener("click", ()=>{
+		bg.classList.add("hidden")
+		image_modal.classList.add("hidden")
+	})
+}
+

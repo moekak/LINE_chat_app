@@ -6,7 +6,7 @@ export const createRightMessageContainer = (message_type, time, content) =>{
                         ${message_type === "text" || message_type === "broadcast_text" ? 
                         `<div class="chat__message-box-right chat-margin5">${content.replace(/\n/g, "<br>")}</div>` 
                         : 
-                        `<img src="${content}" class="chat-margin5">`
+                        `<img src="${content}" class="chat-margin5 chat_image">`
                         }
                   </div>
             </div>
@@ -21,7 +21,7 @@ export const createLeftMessageContainer = (message_type, time, content) =>{
                         ${message_type === "text" || message_type === "broadcast_text" ? 
                         `<div class="chat__message-box-left chat-margin5">${content.replace(/\n/g, "<br>")}</div>` 
                         : 
-                        `<img src="${content}" class="chat-margin5">`
+                        `<img src="${content}" class="chat-margin5 chat_image">`
                         }
                         <div class="chat__message-time-txt">${time}</div>
                   </div> 

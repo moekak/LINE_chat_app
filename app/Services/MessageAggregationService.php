@@ -122,20 +122,20 @@ class MessageAggregationService{
         if($block_history){
             if($user_type == "admin"){
                 $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin", $block_history);
-                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin", $block_history);
+                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "image", "admin", $block_history);
                 $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user", $block_history);
                 $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user", $block_history);
                 $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId, $block_history);
             }else if($user_type == "user"){
                 $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin", $block_history);
-                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin", $block_history);
+                $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "image", "admin", $block_history);
                 $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user");
                 $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user");
                 $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId, $block_history);
             }
         }else{
             $adminMessages = $messageRepository->getMessages(AdminMessage::class, $userId, $adminId, "text", "admin");
-            $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "text", "admin");
+            $adminMessageImages  = $messageRepository->getMessages(AdminMessageImage::class, $userId, $adminId, "image", "admin");
             $userMessages  = $messageRepository->getMessages(UserMessage::class, $userId, $adminId, "text", "user");
             $userMessageImages  = $messageRepository->getMessages(UserMessageImage::class, $userId, $adminId, "image", "user");
             $broadcastMessagesAll = $messageRepository->getBroadcastMessages($userId, $adminId);

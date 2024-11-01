@@ -82,7 +82,7 @@
                                                 @endphp
                                                 <div class="chat__message-box-left chat-margin5">{!! $formattedMessage !!}</div>
                                           @elseif($message["type"] == "image" || $message["type"] == "broadcast_img")
-                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" alt="" class="chat-margin5">
+                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" alt="" class="chat-margin5 chat_image">
                                           @endif
                                                 <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
                                     </div> 
@@ -106,7 +106,7 @@
                                                 @endphp
                                                 <div class="chat__message-box-right chat-margin5">{!! $formattedMessage!!}</div>
                                           @elseif($message["type"] == "image" || $message["type"] == "broadcast_img")
-                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" alt="" class="chat-margin5">
+                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" alt="" class="chat-margin5 chat_image">
 
                                           @endif
                                                 
@@ -141,6 +141,12 @@
       </div>
 </div>
 
+
+{{-- 画像モーダル --}}
+<section class="image_modal js_image_modal hidden">
+      <p class="close_img_btn js_close_image_btn">×</p>
+      <img src="" alt="" class="js_image_src image_display">
+</section>
 @endsection
 
 

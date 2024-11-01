@@ -45,7 +45,6 @@ export const initSocket = (url, sender_id) => {
 export const registerUser = (socket, sender_id) => {
 	if (socket && sender_id) {
 		socket.emit('register', sender_id);
-		console.log(`User ${sender_id} is registered.`);
 	}
 };
 

@@ -73,8 +73,6 @@
       @foreach ($group_message as $date => $messages)
                   <small class="chat__message-main-time">{{ $date }}</small>
                   @foreach ($messages as $message)
-
-
                         @if ($message['sender_type'] == "user")
                         <div class="chat__message-container-left">
                               <div class="chat__mesgae-main-left">
@@ -93,8 +91,8 @@
                                                 $formattedMessage = nl2br($linkedMessage);
                                           @endphp
                                           <div class="chat__message-box-left chat-margin5">{!! $formattedMessage !!}</div>
-                                    @elseif($message["type"] =="image")
-                                          <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5">
+                                    @elseif($message["type"] =="image" || $message["type"] == "broadcast_img")
+                                          <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5 chat_image">
                                     @endif
                                     <div class="chat__message-time-txt">{{$message["created_at"]->format('H:i')}}</div>
                               </div> 
@@ -118,7 +116,7 @@
                                                 @endphp
                                                 <div class="chat__message-box-right chat-margin5"> {!! $formattedMessage !!}</div>
                                           @elseif($message["type"] == "image" || $message["type"] == "broadcast_img")
-                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5">
+                                                <img src="{{ Storage::disk('s3')->url($message["content"]);}}" class="chat-margin5 chat_image">
                                           @endif
                                     </div>
                               </div>
@@ -142,9 +140,14 @@
             <button class="chat__form-submit disable_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
 
       </form>
-      
-      
 </div>
+
+
+{{-- 画像モーダル --}}
+<section class="image_modal js_image_modal hidden">
+      <p class="close_img_btn js_close_image_btn">×</p>
+      <img src="" alt="" class="js_image_src image_display">
+</section>
 @endsection
 
 

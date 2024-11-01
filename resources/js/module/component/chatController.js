@@ -20,7 +20,7 @@ export const displayChatMessage = (className, type, msg, file_name, actual_sende
         return
     }
     
-    if (isSenderAdmin && isFileFromUser) {
+    if (isSenderAdmin && isFileFromUser) {   
         addLeftChatMessage(msg, parentElement, time, message_type, ids);
     } else if (isSenderAdmin || (isSenderUser && isFileFromUser)) {
         addRightChatMessage(msg, parentElement, time, message_type, ids);
