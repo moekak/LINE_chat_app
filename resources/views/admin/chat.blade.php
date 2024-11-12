@@ -8,7 +8,12 @@
       {{-- 管理者アカウントの情報を表示 --}}
       <div class="chat__users-list-top">
             <a href="https://twitter-clone.click/account/show/{{Route::current()->parameter('id')}}">
-                  <img src="{{ $admin_info->user_picture }}" alt="" class="chat_users-icon">
+                  @if ($admin_info->user_picture )
+                        <img src="{{ $admin_info->user_picture }}" alt="" class="chat_users-icon">
+                  @else
+                        <img src="{{ asset("img/user-icon.png") }}" alt="" class="chat_users-icon">
+                  @endif
+                  
             </a> 
             <div class="chat__users-list-top-detail">
                   <p class="user_name_txt">{{$admin_info->account_name}}</p>

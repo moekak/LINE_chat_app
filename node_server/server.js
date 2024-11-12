@@ -47,18 +47,31 @@ const https = require('https');
 const fs = require('fs');
 const { Client } = require('@line/bot-sdk');
 const socketIo = require('socket.io');
-const { userIdsOperation } = require('./util/database.js');
+const { userIdsOperation, getChannelTokenAndSecretToekn } = require('./util/database.js');
 const { broadcastMessageToSockets, broadcastImagesToSockets, broadcastBroadcastingMessageToSockets } = require('./util/socketBroadcast.js');
 const { sendNotificationToLine } = require('./util/lineApi.js');
+const { decryptLaravelData } = require('./util/decryptor.js');
 require('dotenv').config();
 
 
-const config = {
-    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.CHANNEL_SECRET
-};
+// const config = {
+//     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+//     channelSecret: process.env.CHANNEL_SECRET
+// };
 
-const client = new Client(config);
+// チャネルアクセストークンとチャネルシークレットを復号化する
+// (async () => {
+// 	try {
+// 		const tokens = await getChannelTokenAndSecretToekn(mysql);
+// 		const decryptedData = await decryptLaravelData(tokens);
+//         configs = decryptedData
+// 	} catch (error) {
+// 		console.error('Error fetching tokens:', error);
+// 	}
+// })();
+
+
+let client;
 
 
 // アプリケーションの初期化
@@ -117,17 +130,27 @@ io.on('connection', (socket) => {
 
 
     // メッセージの受信とブロードキャスト
-    socket.on('chat message', (data) => {
+    socket.on('chat message', async (data) => {
         const {msg, actual_receiver_id, actual_sender_id, sender_type, time, message_id, admin_login_id} = data
-        console.log(` Recipient ID: ${actual_receiver_id}, senderID: ${actual_sender_id}`);
-
         // 受信者、送信者、管理者のソケットを取得
         const msgData = { msg, actual_sender_id, sender_type, time, actual_receiver_id, message_id, admin_login_id } ;
         broadcastMessageToSockets(userSockets, msgData)
 
-        // LINEへメッセージ受信通知をする
-        console.log(`userSockets: ${userSockets.get(actual_receiver_id)}`);
+        console.log(sender_type);
+        console.log(userSockets.get(actual_receiver_id));
+        
+        // LINEへメッセージ受信通知をする);
         if(sender_type == "admin" && userSockets.get(actual_receiver_id) == undefined){
+
+            const ids = await getChannelTokenAndSecretToekn(actual_sender_id)
+            const decryptedData = await decryptLaravelData(ids);
+
+            let config = decryptedData[0]
+            let client = new Client(config)
+
+            console.log(config);
+            
+            
             sendNotificationToLine(actual_receiver_id, actual_sender_id, client)
         }
     });
@@ -172,13 +195,7 @@ io.on('connection', (socket) => {
 
 
     socket.on("disconnectHandler", ()=>{
-        // console.log("2222");
-        
-        // const removed = removeSocketById(socket.id);
-        // console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
-        // const removed = removeSocketById(socket.id);
         socket.disconnect(true);
-        // console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
         
     })
 
@@ -187,8 +204,7 @@ io.on('connection', (socket) => {
         if (userSockets.has(sender_id)) {
             const sockets = userSockets.get(sender_id);
             const removed = sockets.delete(socketToRemove);
-        
-            
+    
             if (sockets.size === 0) {
                 userSockets.delete(sender_id);
             }
@@ -208,16 +224,10 @@ io.on('connection', (socket) => {
                 }
             }
         }
-
         return false;
     }
-
-
     socket.on('disconnect', (reason, sender_id) => {
-        console.log("disconnected!");
-        
         const removed = removeSocketById(socket.id);
-        console.log(`Socket ${socket.id} disconnect handled. Removed: ${removed}`);
     });
 
 });
@@ -237,3 +247,20 @@ server.setTimeout(0);  // タイムアウトを無効化
 app.get('/test', (req, res) => {
     res.send('Hello World!');
 });
+
+//リクエストボディをJSONフォーマットとして解析するための設定
+app.use(express.json());
+// URL-encodedボディパーサーも追加
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/notify", (req, res)=>{
+    const { channel_access_token, channel_secret } = req.body;
+    // configs.push({
+    //     channelAccessToken: channel_access_token,
+    //     channelSecret: channel_secret
+    // })
+
+    console.log("Channel Access Token:", channel_access_token);
+    console.log("Channel Secret:", channel_secret);
+    res.json({ message: "Received", data: req.body });
+})

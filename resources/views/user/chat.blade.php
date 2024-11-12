@@ -8,7 +8,12 @@
       <img src="<?= $admin_info["user_picture"]?>" alt="" class="chat_users-icon"> 
 @endsection
 @section('icon-msg')
-      <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message" id="icon_msg"> 
+@if ($admin_info["user_picture"])
+      <img src="<?=$admin_info["user_picture"]?>" alt="" class="chat_users-icon-message" id="icon_msg">  
+@else
+      <img src="{{ asset("img/user-icon.png") }}" alt="" class="chat_users-icon">
+@endif
+      
 @endsection
 @section('script')
       <script src="{{mix("js/userChat.js")}}"></script>
@@ -25,11 +30,6 @@
                   link.href = accountUrl
             </script>
       @endif
-
-      
-      <script>
-            
-      </script>
 @endsection
 
 @section('send_data')

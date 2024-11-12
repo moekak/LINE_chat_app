@@ -145,6 +145,29 @@ const selectLineMessage = async(admin_id)=>{
     }
 }
 
+const getChannelTokenAndSecretToekn = async (entity_uuid) =>{
+	let connection = await mysql.createConnection({
+		host: process.env.DB_HOST,      // データベースホスト
+		user: process.env.DB_USER,      // データベースユーザー
+		password: process.env.DB_PASS, 	// データベースパスワード
+		database: process.env.DB_NAME,  // データベース名
+	});
+
+    const id = await selectRelatedId(connection, entity_uuid, "admin")
+
+    console.log(id + "iddayo");
+    
+	const query = 'SELECT channel_access_token,channel_secret FROM line_accounts WHERE id = ?';
+	try{
+		const [results] = await connection.query(query, [id]);
+		await connection.end()
+		return results
+		
+	}catch(error){
+		console.log(error);
+		
+	}
+}
 
 module.exports = {
     selectUserId,
@@ -153,5 +176,6 @@ module.exports = {
     createDbConnection,
     selectBlockUser,
     selectLineMessage,
-    selectLoginId
+    selectLoginId,
+    getChannelTokenAndSecretToekn
 };

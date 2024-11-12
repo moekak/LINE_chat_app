@@ -23,14 +23,13 @@ class ChatController extends Controller
 
         $second_account_url = "";
         // 管理者アカウント情報を取得する
-        $admin_info = LineAccount::join("second_accounts", "second_accounts.current_account_id", "=", "line_accounts.id")
+        $admin_info = LineAccount::leftJoin("second_accounts", "second_accounts.current_account_id", "=", "line_accounts.id")
                         ->where("line_accounts.account_id", $adminId)
                         ->select(
                             "line_accounts.id as line_account_id",
                             "line_accounts.*",
                             "second_accounts.*"
                         )->first();
-
 
         if($admin_info->second_account_id){
             $second_account_url = LineAccount::where("id", $admin_info->second_account_id)->value("account_url");  
