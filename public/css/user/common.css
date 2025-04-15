@@ -1,0 +1,189 @@
+main{
+    position: relative;
+    display: block !important;
+}
+.contents{
+    max-width: 840px !important;
+}
+.chat__mesgae-main-right {
+    gap: 11px !important;
+}
+
+.chat__mesgae-main-right {
+    width: 84% !important;
+}
+.chat__mesgae-main-left {
+    width: 100% !important;
+}
+.chat__message-area{
+    max-width: 840px;
+    padding: 0 !important;
+}
+
+.chat__form{
+    width: -webkit-fill-available !important;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+    padding-right: 5px;
+    padding-left: 5px;
+    bottom: 5px !important;
+}
+
+
+/* ユーザーメッセージ上部ヘッダー */
+.chat__message_header{
+    background-color:#fff;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0px 10px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.514);
+    width: 100%;
+    height: 59px;
+    max-width: 830px;
+    top: 0;
+    position: sticky;
+}
+.chat__message_header-item-text{
+    font-size: 10px;
+    color: gray;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+
+}
+.chat__message_header-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    cursor: pointer;
+    z-index: 999;
+    margin-left: 10px;
+}
+.chat__message_header-item a{
+    text-decoration: none;
+}
+.active{
+    border-bottom: 2px solid #07556e;
+}
+.active_font{
+    color: #07556e !important;
+}
+.header-icon{
+    font-size: 20px;
+    color: gray;
+    padding-bottom: 2px;
+
+}
+.chat_default-area{
+    border: 2px solid #07556e;
+    border-radius: 5px;
+    background: #fff;
+    padding: 10px;
+    margin: 0 auto;
+    max-width: 80%;
+    width: max-content;
+    margin-bottom: 8px;
+    text-align: left;
+
+}
+.chat_default-txt{
+    font-size: 12px;
+    width: 100%;
+    display: block;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+}
+
+/* お知らせ箇所 */
+.annoucement_wrapper{
+    background-color: #fff;
+    margin-top: 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.annoucement_wrapper p{
+    font-size: 13px;
+}
+.announcement_container-left-icon{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+.announcement_container{
+    display: flex;
+    gap: 20px;
+    padding: 14px 20px;
+    border-bottom: .5px solid rgba(128, 128, 128, 0.081);
+}
+.announcement_container-right-date{
+    font-size: 11px;
+    color: gray;
+}
+
+
+
+@media (min-width: 450px){
+    .chat__message-wrapper{
+        padding-bottom: 20px;
+        padding-top: 15px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }  
+    .chat__form {
+        max-width: 771px;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+@media (max-width: 450px){
+    .chat__message-wrapper{
+        padding-bottom: 20px;
+        padding-top: 15px;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    .image_modal{
+        width: 80%;
+
+    }
+    .chat__form{
+        bottom: env(safe-area-inset-bottom); /* iOSのSafe Area対応 */
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+    }
+    .chat__message-area {
+        padding: 0px 0px 20px 0px;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 10px); /* 追加の余白 */
+        /* margin-top: 60px; */
+    }
+    .chat__message-time-txt {
+        font-size: 7px;
+    }
+    .chat__mesgae-main-right {
+        gap: 5px !important;
+    }
+    .chat__mesgae-main-left {
+        gap: 7px;
+    }
+    .chat__message-main {
+        /* margin-top: 0 !important;
+        height: calc(80dvh - env(safe-area-inset-bottom, 0)) !important; */
+        padding: 3px 6px !important;
+        height: calc(100dvh - 210px);
+        /* height: calc(calc(var(--vh, 1vh) * 100) - 115px); */
+    }
+    .chat__message-main-time{
+        font-size: 9px;
+    }
+}
+@media (max-width: 376px){
+    #js_msg{
+        font-size: 16px;
+    }
+    input, textarea {
+        font-size: 20px;  /* 最低でも16pxに設定 */
+    }
+    .chat__message-box-right, .chat__message-box-left {
+        font-size: 15px;
+    }
+}
+
