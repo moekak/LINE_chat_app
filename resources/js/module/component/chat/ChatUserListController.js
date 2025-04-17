@@ -78,9 +78,6 @@ class ChatUserListController{
             // 送信者のリストが存在しない場合、新規要素を作成
             await this.#createNewDivElement();
         }
-
-        // チャットナビゲーションを更新
-        ChatUIHelper.chatNavigator()
     };
 
     /**

@@ -13,6 +13,9 @@ import MessageEditor from './module/util/bulk-messaging/util/MessageEditor.js';
 import MessageFormController from './module/util/bulk-messaging/component/forms/MessageFormController.js';
 import UpdateTemplateView from './module/component/messageTemplates/UpdateTemplateView.js';
 import MessageTemplate from './module/component/messageTemplates/MessageTemplate.js';
+import Fetch from './module/util/api/Fetch.js';
+import { API_ENDPOINTS } from './config/apiEndPoints.js';
+import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -26,11 +29,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	const userUuid = document.getElementById("js_receiver_id").value
 	const infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
 
-
-
-
-	// 選択してチャットを開くユーザーの切り替えをする
-	ChatUIHelper.chatNavigator()
 	FromController.changeTextareaHeight()
 	FromController.disableSubmitBtn()
 	ModalController.close_modal()
@@ -77,6 +75,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	{
 		const selectBtn = document.getElementById("js_select_btn")
 		selectBtn.addEventListener("click", ()=>{
+			InitializeTemplate.initialize()
 			document.querySelector(".bg").classList.remove("hidden")
 			document.querySelector(".message-template-container").classList.remove("hidden")
 		})
@@ -175,23 +174,46 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 		await handleSearchInput(is_searching, value, sender_id);
 	  }, 500)); // 500ミリ秒の間隔を指定
+
+
+		// チャットユーザーリストの無限スクロール
+	{
+		const element = document.querySelector(".chat__users-list-area")
+		const adminId = document.getElementById("js_admin_id").value
+		new InfiniteScrollForList(element, adminId)
+	}
+
+	{
+		new MessageTemplate()
+		const updateTemplateView = new UpdateTemplateView()
+
+		const form = document.getElementById("template_form")
+
+		form.addEventListener("submit", async(e)=>{
+			e.preventDefault()
+			document.querySelector(".loader").classList.remove("hidden")
+			document.querySelector(".message-template-container").classList.add("hidden")
+			updateTemplateView.resetIndex()
+
+			const formData = new FormData(form)
+			const response = await fetch(API_ENDPOINTS.TEMPLATE_SELECT, {
+				method: "POST",
+				body: formData,
+			});
+			if (!response.ok) {
+					throw new Error("サーバーからエラー応答が返されました。");
+			}
+
+			const res = await response.json();
+			socket.emit("send_messages", {
+					data: res["data"],
+					adminUuid: res["data"][0]["adminUuid"],
+					userUuid: res["data"][0]["userUuid"],
+			});
+			
+		})
+	}
 })
 
 
 
-// チャットユーザーリストの無限スクロール
-{
-	const element = document.querySelector(".chat__users-list-area")
-	const adminId = document.getElementById("js_admin_id").value
-	new InfiniteScrollForList(element, adminId)
-}
-
-
-
-
-
-
-
-{
-	new MessageTemplate()
-}

@@ -38,3 +38,5 @@ Route::post("/search/users", [ChatUserController::class, "getUserDataBySearch"])
 Route::get("/users/messages/lineAccounts/{admin_id}", [AdminChatController::class, "getMergedDataAPI"]);
 Route::get("/users/messages/fetch/{start}/{userUuid}/{adminUuid}", [UserChatController::class, "fetchChatMessageByScroll"]);
 
+
+Route::post("/template/select", [AdminMessageController::class, "insertTemplateData"]);

@@ -20,6 +20,10 @@ body{
      overflow: hidden;
      overscroll-behavior-y: contain;
 }
+a{
+     text-decoration: none;
+     color: inherit;
+}
 .hidden{
 display: none !important;
 }

@@ -21,11 +21,26 @@ class CheckReferrer
         // リファラーを取得
         $referer = $request->headers->get('referer');
         
-        // システムAのURLパターンを定義
-        $allowedReferer = 'https://manager.line-chat-system-dev.tokyo';
+        // 許可するリファラーを配列で定義
+        $allowedReferers = [
+            'https://manager.line-chat-system-dev.tokyo',
+            'https://chat.line-chat-system-dev.tokyo/',
+            // 必要に応じて他のドメインを追加
+        ];
         
-        // システムAからの遷移でない場合はリダイレクトまたはエラーを返す
-        if (!$referer || !str_starts_with($referer, $allowedReferer)) {
+        // いずれかの許可されたリファラーから来ているか確認
+        $isAllowed = false;
+        if ($referer) {
+            foreach ($allowedReferers as $allowedReferer) {
+                if (str_starts_with($referer, $allowedReferer)) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+        }
+        
+        // 許可されたリファラーからの遷移でない場合はエラーを返す
+        if (!$isAllowed) {
             // アクセス拒否時の処理（リダイレクトまたは403エラーなど）
             return response()->view('errors.403');
         }

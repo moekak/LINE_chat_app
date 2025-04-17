@@ -38,10 +38,7 @@
 
                               @foreach ($mergedData as $data)
                                     @if (isset($data["latest_message_date"]))
-                                          <form action={{ route('admin.chat', ['userId' => $data->id, 'adminId' => $admin_info->id]) }}  method="POST" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
-                                                <input type="hidden" name="admin_id" class="js_admin_el">
-                                                <input type="hidden" name="user_id" class="js_user_el">
-                                                <input type="hidden" name="token" class="js_token">
+                                          <a href={{ route('admin.chat', ['userId' => $data->id, 'adminId' => $admin_info->id]) }} class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
                                                 <img src="{{ $data->user_picture }}" alt="" onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon">
                                                 <div class="chat_users-list-flex">
                                                       <div class="chat_users-list-box"> 
@@ -56,7 +53,7 @@
                                                             <div class="message_count js_mesage_count" data-id={{$data["entity_uuid"]}} style="display:{{$count_style}}">{{$data["unread_count"]}}</div>
                                                       </div>
                                                 </div>
-                                          </form>
+                                          </a>
                                     @endif   
                               @endforeach
                         </div>  
@@ -304,6 +301,7 @@
             let hasUnreadMessage = false
 
             messagesElements.forEach((el)=>{
+                  
                   if(el.getAttribute("data-id") == lastMessageId && el.getAttribute("data-type") == lastMessageType && unreadCount > 0){
                         const parentElement = el.parentElement.parentElement
 

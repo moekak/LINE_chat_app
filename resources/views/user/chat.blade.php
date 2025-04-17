@@ -161,14 +161,10 @@
                         if(el.getAttribute("data-id") == lastMessageId && el.getAttribute("data-type") == lastMessageType && unreadCount > 0){
                               
                               const parentElement = (lastMessageType === "text" || lastMessageType === "broadcast_text") ? el.parentElement.parentElement : el.parentElement.parentElement.parentElement
-                              
-
                               const newElement = document.createElement("p")
                               newElement.classList.add("unread_message-description")
                               newElement.innerHTML = "ここから未読メッセージ"
-
                               parentElement.insertAdjacentElement('beforebegin', newElement);
-
                               hasUnreadMessage = true
                               
 

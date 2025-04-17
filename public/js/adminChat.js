@@ -8490,7 +8490,8 @@ var API_ENDPOINTS = {
   REGISTER: "/api/auth/register",
   FETCH_MESSAGES: "/api/messages/fetch",
   GENERATE_TOKEN: "/api/token/generate",
-  ADMIN_MESSAGES_STORE: "/api/admin/messages/store"
+  ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
+  TEMPLATE_SELECT: "/api/template/select"
 };
 
 /***/ }),
@@ -8734,7 +8735,6 @@ var ChatSearchController = /*#__PURE__*/function () {
                     parentElement.innerHTML += (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__.createChatUserContainer)(res["entity_uuid"], res);
                   }
                 });
-                _ChatUIHelper__WEBPACK_IMPORTED_MODULE_3__["default"].chatNavigator();
               } else {
                 parentElement.innerHTML = '<p class="text_info">ユーザーが見つかりませんでした</p>';
               }
@@ -8768,9 +8768,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ui_FormController_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ui/FormController.js */ "./resources/js/module/component/ui/FormController.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -8806,48 +8803,15 @@ var ChatUIHelper = /*#__PURE__*/function () {
       }, DELAY_TIME);
     }
   }, {
-    key: "chatNavigator",
+    key: "adjustMesageLength",
     value:
-    /**
-     * 特定のチャットユーザー画面を開く
-     */
-    function chatNavigator() {
-      var chat_btns = document.querySelectorAll(".js_chat_wrapper");
-      chat_btns.forEach(function (btn) {
-        btn.addEventListener("click", /*#__PURE__*/function () {
-          var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
-            var user_id, admin_id, formController;
-            return _regeneratorRuntime().wrap(function _callee$(_context) {
-              while (1) switch (_context.prev = _context.next) {
-                case 0:
-                  e.preventDefault();
-                  user_id = e.currentTarget.getAttribute("data-id");
-                  admin_id = e.currentTarget.getAttribute("data-admin-id");
-                  formController = new _ui_FormController_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
-                  _context.next = 6;
-                  return formController.submitRedirectForm(admin_id, user_id, btn);
-                case 6:
-                case "end":
-                  return _context.stop();
-              }
-            }, _callee);
-          }));
-          return function (_x) {
-            return _ref.apply(this, arguments);
-          };
-        }());
-      });
-    }
-
     /**
      * メッセージの長さ制限処理
      * 指定した文字数以上の場合は省略記号 "..." を付ける
      * @param {String} text - 省略記法を適応する文字列
      * @returns {String} -　フォーマットした文字列を返す
      */
-  }, {
-    key: "adjustMesageLength",
-    value: function adjustMesageLength(text) {
+    function adjustMesageLength(text) {
       var formattedText = text.replace(/[\n\r]|<br>/g, '');
       if (formattedText.length >= MAX_LENGTH) {
         return formattedText.substring(0, MAX_LENGTH) + "...";
@@ -9018,9 +8982,6 @@ var ChatUserListController = /*#__PURE__*/function () {
               _context.next = 13;
               return _assertClassBrand(_ChatUserListController_brand, this, _createNewDivElement).call(this);
             case 13:
-              // チャットナビゲーションを更新
-              _ChatUIHelper__WEBPACK_IMPORTED_MODULE_3__["default"].chatNavigator();
-            case 14:
             case "end":
               return _context.stop();
           }
@@ -9154,6 +9115,50 @@ function _createNewDivElement2() {
 
 /***/ }),
 
+/***/ "./resources/js/module/component/messageTemplates/InitializeTemplate.js":
+/*!******************************************************************************!*\
+  !*** ./resources/js/module/component/messageTemplates/InitializeTemplate.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InitializeTemplate)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var InitializeTemplate = /*#__PURE__*/function () {
+  function InitializeTemplate() {
+    _classCallCheck(this, InitializeTemplate);
+  }
+  return _createClass(InitializeTemplate, null, [{
+    key: "initialize",
+    value: function initialize() {
+      document.querySelectorAll(".template-card").forEach(function (card) {
+        return card.classList.remove("selected");
+      });
+      document.querySelectorAll(".select-btn").forEach(function (card) {
+        return card.classList.remove("selected");
+      });
+      document.querySelectorAll(".select-btn").forEach(function (card) {
+        return card.innerHTML = "選択";
+      });
+      document.querySelector(".selected-templates-chat").style.dispay = "none";
+      document.querySelector(".selected-templates-messages").innerHTML = "";
+      document.querySelector(".use-all-templates-btn").innerHTML = "選択したテンプレートを使用 (0)";
+      document.querySelector(".use-all-templates-btn").disabled = true;
+    }
+  }]);
+}();
+
+
+/***/ }),
+
 /***/ "./resources/js/module/component/messageTemplates/MessageTemplate.js":
 /*!***************************************************************************!*\
   !*** ./resources/js/module/component/messageTemplates/MessageTemplate.js ***!
@@ -9165,7 +9170,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MessageTemplate)
 /* harmony export */ });
-/* harmony import */ var _UpdateTemplateView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UpdateTemplateView */ "./resources/js/module/component/messageTemplates/UpdateTemplateView.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -9175,7 +9179,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
 function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
-
 var _MessageTemplate_brand = /*#__PURE__*/new WeakSet();
 var MessageTemplate = /*#__PURE__*/function () {
   function MessageTemplate() {
@@ -9199,7 +9202,6 @@ var MessageTemplate = /*#__PURE__*/function () {
     // アクティブなフィルターを追跡する配列
     this.activeFilters = [];
     this.initialize();
-    new _UpdateTemplateView__WEBPACK_IMPORTED_MODULE_0__["default"]();
   }
   return _createClass(MessageTemplate, [{
     key: "initialize",
@@ -9338,14 +9340,19 @@ var UpdateTemplateView = /*#__PURE__*/function () {
     this.generateChatViewContainer();
     this.addChatViewContainer();
     this.addClickEventToSelectButton();
+    this.index = 0;
   }
-
-  /**
-   * 選択されたテンプレートを表示するためのチャットビューコンテナを生成する
-   * 
-   * @returns {HTMLElement} 設定済みのチャットビューコンテナ要素
-   */
   return _createClass(UpdateTemplateView, [{
+    key: "resetIndex",
+    value: function resetIndex() {
+      this.index = 0;
+    }
+    /**
+     * 選択されたテンプレートを表示するためのチャットビューコンテナを生成する
+     * 
+     * @returns {HTMLElement} 設定済みのチャットビューコンテナ要素
+     */
+  }, {
     key: "generateChatViewContainer",
     value: function generateChatViewContainer() {
       this.chatViewContainer.className = 'selected-templates-chat';
@@ -9482,7 +9489,7 @@ var UpdateTemplateView = /*#__PURE__*/function () {
                 "content": image.src,
                 "order": image.dataset.order,
                 "type": "image",
-                "cropArea": (_image$dataset$cropAr = image.dataset.cropArea) !== null && _image$dataset$cropAr !== void 0 ? _image$dataset$cropAr : ""
+                "cropArea": (_image$dataset$cropAr = image.dataset.cropArea) !== null && _image$dataset$cropAr !== void 0 ? _image$dataset$cropAr : null
               };
               contentsArr.push(data);
             });
@@ -9533,24 +9540,22 @@ function _updateBtnTextAndState() {
  * @returns {HTMLElement} 生成されたテンプレート要素
  */
 function _generateSelectedTemplateElement() {
+  var _this3 = this;
   var contents = _assertClassBrand(_UpdateTemplateView_brand, this, _formatContents).call(this);
   var messageEl = document.createElement('div');
   messageEl.className = 'chat-message-container';
   messageEl.dataset.templateId = this.selectedTemplates["template_id"];
   var messageContents = "";
+  console.log(contents);
   contents.forEach(function (content) {
     if (content.content_type === "text") {
-      messageContents += "<textarea class=\"template_textarea\" name=\"contents[]\" readonly>".concat(content.content, "</textarea>");
+      messageContents += "\n                        <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
     } else if (content.content_type === "image") {
-      var imageData = JSON.stringify({
-        content: content.content,
-        cropArea: content.cropArea
-      }).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      console.log(imageData);
-      messageContents += "<div><input type=\"hidden\" name=\"contents[]\" value=\"".concat(imageData, "\"/><img src='").concat(content.content, "'/></div>");
+      messageContents += "\n                        <div style=\"display: flex;\">\n                              <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"image\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][image_path]\" value=\"").concat(content.content, "\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][cropArea]\" value='").concat(content.cropArea, "'/>\n                              <img src='").concat(content.content, "'/>\n                        </div>");
     }
+    _this3.index++;
   });
-  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(this.selectedTemplates.title, " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">").concat(messageContents, "</div>\n            ");
+  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(this.selectedTemplates.title, " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">\n                        <input type=\"hidden\" name=\"admin_uuid\" value=\"").concat(document.getElementById("js_sender_id").value, "\"/>\n                        <input type=\"hidden\" name=\"user_uuid\" value=\"").concat(document.getElementById("js_receiver_id").value, "\"/>\n                        ").concat(messageContents, "\n                  </div>\n            ");
   return messageEl;
 }
 /**
@@ -9639,7 +9644,7 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <form method=\"POST\" action=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </form>\n      ");
+  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
 };
 
 /***/ }),
@@ -10476,7 +10481,7 @@ var MessageEditor = /*#__PURE__*/function () {
                 });
                 hasData = formData.entries().next().done === false;
                 if (!hasData) {
-                  _context.next = 20;
+                  _context.next = 21;
                   break;
                 }
                 _context.next = 13;
@@ -10496,12 +10501,13 @@ var MessageEditor = /*#__PURE__*/function () {
                 return response.json();
               case 18:
                 res = _context.sent;
+                console.log(res);
                 _this2.socket.emit("send_messages", {
                   data: res["data"],
                   adminUuid: res["data"][0]["adminUuid"],
                   userUuid: res["data"][0]["userUuid"]
                 });
-              case 20:
+              case 21:
               case "end":
                 return _context.stop();
             }
@@ -12106,10 +12112,7 @@ var fetchAndDisplayAllMessages = /*#__PURE__*/function () {
           element = document.querySelector(".chat__users-list-area");
           adminId = document.getElementById("js_admin_id").value;
           new _scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_6__["default"](element, adminId);
-
-          // チャットナビゲーションを更新
-          _component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].chatNavigator();
-        case 10:
+        case 9:
         case "end":
           return _context4.stop();
       }
@@ -12429,12 +12432,12 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               if (!(!this.hasNoValue && !this.isFetchFlag)) {
-                _context.next = 26;
+                _context.next = 25;
                 break;
               }
               _this$element = this.element, scrollTop = _this$element.scrollTop, scrollHeight = _this$element.scrollHeight, clientHeight = _this$element.clientHeight; // 一番下までスクロールしたかを判定
               if (!(scrollTop + clientHeight + 50 >= scrollHeight)) {
-                _context.next = 26;
+                _context.next = 25;
                 break;
               }
               this.loader.classList.remove("hidden");
@@ -12464,25 +12467,22 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
               elements.forEach(function (element) {
                 element.innerHTML = _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_0__["default"].adjustMesageLength(element.innerHTML);
               });
-
-              // チャットナビゲーションを更新
-              _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_0__["default"].chatNavigator();
-              _context.next = 22;
+              _context.next = 21;
               break;
-            case 19:
-              _context.prev = 19;
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context["catch"](7);
               console.error("Failed to fetch data:", _context.t0);
-            case 22:
-              _context.prev = 22;
+            case 21:
+              _context.prev = 21;
               this.isFetchFlag = false;
               this.dataCount = this.dataCount + MESSAGES_PER_PAGE;
-              return _context.finish(22);
-            case 26:
+              return _context.finish(21);
+            case 25:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[7, 19, 22, 26]]);
+        }, _callee, this, [[7, 18, 21, 25]]);
       }));
       function handleScroll() {
         return _handleScroll.apply(this, arguments);
@@ -12709,10 +12709,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_util_bulk_messaging_component_forms_MessageFormController_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./module/util/bulk-messaging/component/forms/MessageFormController.js */ "./resources/js/module/util/bulk-messaging/component/forms/MessageFormController.js");
 /* harmony import */ var _module_component_messageTemplates_UpdateTemplateView_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./module/component/messageTemplates/UpdateTemplateView.js */ "./resources/js/module/component/messageTemplates/UpdateTemplateView.js");
 /* harmony import */ var _module_component_messageTemplates_MessageTemplate_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./module/component/messageTemplates/MessageTemplate.js */ "./resources/js/module/component/messageTemplates/MessageTemplate.js");
+/* harmony import */ var _module_util_api_Fetch_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./module/util/api/Fetch.js */ "./resources/js/module/util/api/Fetch.js");
+/* harmony import */ var _config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./config/apiEndPoints.js */ "./resources/js/config/apiEndPoints.js");
+/* harmony import */ var _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./module/component/messageTemplates/InitializeTemplate.js */ "./resources/js/module/component/messageTemplates/InitializeTemplate.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
+
 
 
 
@@ -12733,9 +12739,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var adminUuid = document.getElementById("js_sender_id").value;
   var userUuid = document.getElementById("js_receiver_id").value;
   var infiniteScrollInstance = new _module_util_scrolling_InfiniteScroll_js__WEBPACK_IMPORTED_MODULE_3__["default"](element, adminUuid, userUuid, "admin", true);
-
-  // 選択してチャットを開くユーザーの切り替えをする
-  _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].chatNavigator();
   _module_component_ui_FormController_js__WEBPACK_IMPORTED_MODULE_6__["default"].changeTextareaHeight();
   _module_component_ui_FormController_js__WEBPACK_IMPORTED_MODULE_6__["default"].disableSubmitBtn();
   _module_component_ui_ModalController_js__WEBPACK_IMPORTED_MODULE_7__["default"].close_modal();
@@ -12780,6 +12783,7 @@ document.addEventListener("DOMContentLoaded", function () {
   {
     var selectBtn = document.getElementById("js_select_btn");
     selectBtn.addEventListener("click", function () {
+      _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_15__["default"].initialize();
       document.querySelector(".bg").classList.remove("hidden");
       document.querySelector(".message-template-container").classList.remove("hidden");
     });
@@ -12977,17 +12981,63 @@ document.addEventListener("DOMContentLoaded", function () {
       return _ref7.apply(this, arguments);
     };
   }(), 500)); // 500ミリ秒の間隔を指定
-});
 
-// チャットユーザーリストの無限スクロール
-{
-  var element = document.querySelector(".chat__users-list-area");
-  var adminId = document.getElementById("js_admin_id").value;
-  new _module_util_scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_4__["default"](element, adminId);
-}
-{
-  new _module_component_messageTemplates_MessageTemplate_js__WEBPACK_IMPORTED_MODULE_12__["default"]();
-}
+  // チャットユーザーリストの無限スクロール
+  {
+    var _element = document.querySelector(".chat__users-list-area");
+    var adminId = document.getElementById("js_admin_id").value;
+    new _module_util_scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_4__["default"](_element, adminId);
+  }
+  {
+    new _module_component_messageTemplates_MessageTemplate_js__WEBPACK_IMPORTED_MODULE_12__["default"]();
+    var updateTemplateView = new _module_component_messageTemplates_UpdateTemplateView_js__WEBPACK_IMPORTED_MODULE_11__["default"]();
+    var form = document.getElementById("template_form");
+    form.addEventListener("submit", /*#__PURE__*/function () {
+      var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
+        var formData, response, res;
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
+            case 0:
+              e.preventDefault();
+              document.querySelector(".loader").classList.remove("hidden");
+              document.querySelector(".message-template-container").classList.add("hidden");
+              updateTemplateView.resetIndex();
+              formData = new FormData(form);
+              _context8.next = 7;
+              return fetch(_config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_14__.API_ENDPOINTS.TEMPLATE_SELECT, {
+                method: "POST",
+                body: formData
+              });
+            case 7:
+              response = _context8.sent;
+              if (response.ok) {
+                _context8.next = 10;
+                break;
+              }
+              throw new Error("サーバーからエラー応答が返されました。");
+            case 10:
+              _context8.next = 12;
+              return response.json();
+            case 12:
+              res = _context8.sent;
+              console.log(res);
+              socket.emit("send_messages", {
+                data: res["data"],
+                adminUuid: res["data"][0]["adminUuid"],
+                userUuid: res["data"][0]["userUuid"]
+              });
+            case 15:
+            case "end":
+              return _context8.stop();
+          }
+        }, _callee8);
+      }));
+      return function (_x20) {
+        return _ref8.apply(this, arguments);
+      };
+    }());
+  }
+});
 })();
 
 /******/ })()

@@ -13,8 +13,13 @@ export default class UpdateTemplateView{
             this.generateChatViewContainer()
             this.addChatViewContainer()
             this.addClickEventToSelectButton()
+            this.index = 0
       }
 
+
+      resetIndex(){
+            this.index = 0
+      }
       /**
        * 選択されたテンプレートを表示するためのチャットビューコンテナを生成する
        * 
@@ -50,8 +55,6 @@ export default class UpdateTemplateView{
        * @returns {void}
        */
       #updateBtnTextAndState(){
-            console.log(document.querySelectorAll(".chat-message-container").length);
-            
             this.useAllBtn.textContent = `選択したテンプレートを使用 (${document.querySelectorAll(".chat-message-container").length})`;
             this.useAllBtn.disabled = document.querySelectorAll(".chat-message-container").length === 0;
       }
@@ -74,19 +77,20 @@ export default class UpdateTemplateView{
 
             contents.forEach((content)=>{
                   if(content.content_type === "text"){
-                        messageContents += `<textarea class="template_textarea" name="contents[]" readonly>${content.content}</textarea>`
+                        messageContents += `
+                        <input type="hidden" name="contents[${this.index}][type]" value="text"/>
+                        <textarea class="template_textarea" name="contents[${this.index}][content]" readonly>${content.content}</textarea>
+                        `
                   }else if(content.content_type === "image"){
-                        const imageData = JSON.stringify({
-                              content: content.content,
-                              cropArea: content.cropArea
-                              }).replace(/&/g, '&amp;')
-                              .replace(/"/g, '&quot;')
-                              .replace(/'/g, '&#39;')
-                              .replace(/</g, '&lt;')
-                              .replace(/>/g, '&gt;');
-
-                        messageContents += `<div><input type="hidden" name="contents[]" value="${imageData}"/><img src='${content.content}'/></div>`
+                        messageContents += `
+                        <div style="display: flex;">
+                              <input type="hidden" name="contents[${this.index}][type]" value="image"/>
+                              <input type="hidden" name="contents[${this.index}][image_path]" value="${content.content}"/>
+                              <input type="hidden" name="contents[${this.index}][cropArea]" value='${content.cropArea}'/>
+                              <img src='${content.content}'/>
+                        </div>`
                   }
+                  this.index ++
             })
 
             messageEl.innerHTML = `
@@ -94,7 +98,11 @@ export default class UpdateTemplateView{
                         <span class="template-title">${this.selectedTemplates.title} / <i class="fa-solid fa-pen-to-square js_edit_btn"></i></span>
                         <button class="remove-template-btn" data-template-id="${this.selectedTemplates.template_id}">✕</button>
                   </div>
-                  <div class="chat-message-body">${messageContents}</div>
+                  <div class="chat-message-body">
+                        <input type="hidden" name="admin_uuid" value="${document.getElementById("js_sender_id").value}"/>
+                        <input type="hidden" name="user_uuid" value="${document.getElementById("js_receiver_id").value}"/>
+                        ${messageContents}
+                  </div>
             `;
 
             return messageEl
@@ -245,7 +253,7 @@ export default class UpdateTemplateView{
                                           "content" : image.src,
                                           "order" : image.dataset.order,
                                           "type" : "image",
-                                          "cropArea" : image.dataset.cropArea ?? ""
+                                          "cropArea" : image.dataset.cropArea ?? null
                                     }
                                     contentsArr.push(data)
       

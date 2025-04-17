@@ -1,4 +1,3 @@
-import UpdateTemplateView from "./UpdateTemplateView";
 
 export default class MessageTemplate{
       constructor(){
@@ -19,7 +18,7 @@ export default class MessageTemplate{
             // アクティブなフィルターを追跡する配列
             this.activeFilters = [];
             this.initialize()
-            new UpdateTemplateView()
+
             
       }
 
@@ -37,9 +36,6 @@ export default class MessageTemplate{
 
       // 展開ボタンの機能
       #handleExpand(event){
-
-            console.log(event);
-            
             const card = event.target.closest('.template-card');
             const content = card.querySelector('.template-content');
 

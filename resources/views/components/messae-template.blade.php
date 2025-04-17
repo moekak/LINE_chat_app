@@ -46,7 +46,7 @@
                             @if ($content["content_type"] === "text")
                                 <p class="template-message" data-order="{{$content["display_order"]}}">{{$content["content_text"]}}</p>
                             @elseif($content["content_type"] === "image")
-                                <img src="{{ Storage::disk('s3')->url('images/' . $content['image_path']) }}" class="template-image" data-crop-area={{$content["cropArea"]}}  data-order="{{$content["display_order"]}}">
+                                <img src="{{ Storage::disk('s3')->url('images/' . $content['image_path']) }}" class="template-image" data-crop-area="{{$content["cropArea"]}}"  data-order="{{$content["display_order"]}}">
 
                             @endif
                         </div>
@@ -63,8 +63,7 @@
         @endforeach
     </div>
     <!-- 選択されたテンプレートの表示エリア -->
-    <form method="post" action="{{ route('test') }}">
-        @csrf
+    <form id="template_form">
         <div class="selected-template-display"></div>
     </form>
 </div>

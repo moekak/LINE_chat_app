@@ -11,10 +11,12 @@ use App\Models\AdminMessageImage;
 use App\Models\ChatIdentity;
 use App\Models\LineAccount;
 use App\Services\Message\Admin\AdminMessageReadManager;
+use App\Services\Message\Admin\GenerateMessageData;
 use App\Services\Message\Common\MessageService;
 use App\Services\Message\Common\MessageSummaryService;
 use App\Services\Util\EntityUuidResolver;
 use App\Services\Util\ImageService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -226,8 +228,86 @@ class AdminMessageController extends Controller
     }
 
 
-    public function test(Request $request){
-        print_r($request->all());
+    public function insertTemplateData(Request $request){
+        try{
+            Log::debug($request->all());
+            //クライアントに返すデータを格納
+            DB::beginTransaction();
+            $responseData = [];
+            $admin_id = EntityUuidResolver::getAdminID($request->input("admin_uuid"));
+            $user_id = EntityUuidResolver::getUserID($request->input("user_uuid"));
+            $messages = $request->input("contents");
+            $generateMessageData = new GenerateMessageData($admin_id, $user_id);
+
+            foreach($messages as $index => $message){
+                if($message["type"] === "text"){
+                    $insertingData = $generateMessageData->generateMessageData($message["content"]);
+                    $adminMessage = AdminMessage::create($insertingData);
+
+                    // クライアントに返すデータを格納
+                    $responseData[$index] = [
+                        "resource" => $adminMessage["content"], 
+                        "type" => "text",
+                        "userUuid" => $request->input("user_uuid"),
+                        "adminUuid" => $request->input("admin_uuid"),
+                        "created_at" => $adminMessage["created_at"]->format('H:i'),
+                    ];
+
+                }else if($message["type"] === "image"){
+                    $insertingData = $generateMessageData->generateImageData(basename($message["image_path"]));
+                    $adminMessageImage = AdminMessageImage::create($insertingData);
+                    if(isset($message["cropArea"]) && $message["cropArea"] !== "") {
+                        $insertingCropData = GenerateMessageData::generateImageCropData($adminMessageImage->id, $message["cropArea"]);
+                        AdminCropArea::create($insertingCropData);
+                    }
+
+
+                    $responseData[$index] = [
+                        "resource" => $adminMessageImage["image"], 
+                        "type" => "image",
+                        "userUuid" => $request->input("user_uuid"),
+                        "adminUuid" => $request->input("admin_uuid"),
+                        "created_at" => $adminMessageImage["created_at"]->format('H:i'),
+                        "cropArea" => $message["cropArea"] ?? [],
+                    ];
+                }
+
+                if($index === 0){
+                    // 未読管理テーブルにデータを挿入
+                    if($message["type"] === "text"){
+                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessage->id, "text", count($messages), true);
+                    }else if($message["type"] === "image"){
+                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessageImage->id, "image",count($messages), true);
+                    }
+            
+                };
+    
+                if($index + 1 === count($messages)){
+                      // 未読管理テーブルにデータを挿入
+                    if($message["type"] === "text"){
+                        // 最新メッセージ管理テーブルの更新
+                        MessageSummaryService::updateLatestMessage($user_id, $admin_id, $adminMessage->content, $adminMessage->created_at, "admin_txt");
+                    }else if($message["type"] === "image"){
+                        // 最新メッセージ管理テーブルの更新
+                        MessageSummaryService::updateLatestMessage($user_id, $admin_id, "画像を送信しました", $adminMessageImage->created_at, "admin_img");
+                    }
+                }
+
+                
+                sleep(1);
+            }
+
+
+            DB::commit();
+            Log::debug($responseData);
+            return response()->json(["data" =>$responseData]);
+        }catch(\Exception $e){
+            DB::rollBack();
+            Log::debug($e);
+            // エラーが発生した場合にエラーメッセージを返す
+            return response()->json(["error" => "Upload failed"], 500);
+        }
+        
     }
 }
     

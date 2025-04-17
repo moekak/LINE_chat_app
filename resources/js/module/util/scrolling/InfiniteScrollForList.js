@@ -60,9 +60,6 @@ class InfiniteScrollForList{
                                     element.innerHTML = ChatUIHelper.adjustMesageLength(element.innerHTML)
                               });
 
-                              // チャットナビゲーションを更新
-                              ChatUIHelper.chatNavigator()
-
                         } catch (error) {
                               console.error("Failed to fetch data:", error);
                         } finally {

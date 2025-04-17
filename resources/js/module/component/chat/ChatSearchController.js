@@ -32,7 +32,7 @@ class ChatSearchController{
                 }
                 
             })
-            ChatUIHelper.chatNavigator()
+
         }else{
             parentElement.innerHTML = '<p class="text_info">ユーザーが見つかりませんでした</p>'
         }

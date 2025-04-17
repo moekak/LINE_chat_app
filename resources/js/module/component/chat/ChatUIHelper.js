@@ -24,24 +24,7 @@ class ChatUIHelper{
         }, DELAY_TIME);
     };
 
-    /**
-     * 特定のチャットユーザー画面を開く
-     */
-    static chatNavigator(){
-        const chat_btns = document.querySelectorAll(".js_chat_wrapper");
 
-        chat_btns.forEach((btn) => {
-            btn.addEventListener("click", async (e) => {
-
-                e.preventDefault();
-                let user_id = e.currentTarget.getAttribute("data-id");
-                let admin_id = e.currentTarget.getAttribute("data-admin-id");
-
-                const formController = new FromController()
-                await formController.submitRedirectForm(admin_id, user_id, btn);
-            });
-        });
-    }
 
     /**
      * メッセージの長さ制限処理

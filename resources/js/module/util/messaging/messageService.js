@@ -238,10 +238,6 @@ export const fetchAndDisplayAllMessages = async (admin_id) => {
 	const adminId = document.getElementById("js_admin_id").value
 	new InfiniteScrollForList(element, adminId)
 
-
-
-	// チャットナビゲーションを更新
-	ChatUIHelper.chatNavigator()
 };
 
 // テキストに含まれてるURLをaタグに変換する

@@ -18,7 +18,6 @@
 
 <body>
       <div class="contents">
-            <form method="post" action="{{ route('test') }}">@csrf</form>
             <div class="bg hidden"></div>
             <div class="black_bg hidden"></div>
             <div class="template_bg hidden"></div>
