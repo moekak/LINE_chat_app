@@ -8512,14 +8512,14 @@ __webpack_require__.r(__webpack_exports__);
 // export default {
 //     SOCKET_URL: 'https://chat-socket.info:3000',
 //     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat-system.info/api/chat"
+//     CHAT_URL: "https://chat-system.info/admin/chat"
 // };
 
 // 開発用
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
   S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/api/chat"
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
 });
 
 /***/ }),
@@ -9188,7 +9188,6 @@ var MessageTemplate = /*#__PURE__*/function () {
     // カード要素の取得
     this.templateCards = document.querySelectorAll('.template-card');
     this.expandBtns = document.querySelectorAll('.expand-btn');
-    this.selectBtns = document.querySelectorAll('.select-btn');
     this.selectedName = document.getElementById('selected-template-name');
     this.selectedContent = document.getElementById('selected-template-content');
     this.copyBtn = document.getElementById('copy-template');
@@ -9218,7 +9217,6 @@ var MessageTemplate = /*#__PURE__*/function () {
   }]);
 }();
 function _handleExpand(event) {
-  console.log(event);
   var card = event.target.closest('.template-card');
   var content = card.querySelector('.template-content');
   content.classList.toggle('active');
@@ -9436,6 +9434,8 @@ var UpdateTemplateView = /*#__PURE__*/function () {
       var card = Array.from(document.querySelectorAll(".template-card")).find(function (container) {
         return container.dataset.templateId === id;
       });
+      this.index = this.index - Number(targetTemplate.dataset.count);
+      console.log(this.index);
       this.messagesContainer.removeChild(targetTemplate);
       if (card) {
         card.classList.remove('selected');
@@ -9504,12 +9504,15 @@ var UpdateTemplateView = /*#__PURE__*/function () {
               card.classList.remove('selected');
               newBtn.classList.remove('selected');
               newBtn.textContent = '選択';
+              _this2.index = _this2.index - Number(targetTemplate.dataset.count);
+              console.log(_this2.index);
             } else {
               _this2.selectedTemplates = {
                 id: templateId,
                 title: templateTitle,
                 contents: contentsArr,
-                template_id: card.dataset.templateId
+                template_id: card.dataset.templateId,
+                count: templateContents.length + templateImages.length
               };
 
               // Update UI
@@ -9528,7 +9531,6 @@ var UpdateTemplateView = /*#__PURE__*/function () {
   }]);
 }();
 function _updateBtnTextAndState() {
-  console.log(document.querySelectorAll(".chat-message-container").length);
   this.useAllBtn.textContent = "\u9078\u629E\u3057\u305F\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8\u3092\u4F7F\u7528 (".concat(document.querySelectorAll(".chat-message-container").length, ")");
   this.useAllBtn.disabled = document.querySelectorAll(".chat-message-container").length === 0;
 }
@@ -9544,9 +9546,9 @@ function _generateSelectedTemplateElement() {
   var contents = _assertClassBrand(_UpdateTemplateView_brand, this, _formatContents).call(this);
   var messageEl = document.createElement('div');
   messageEl.className = 'chat-message-container';
+  messageEl.dataset.count = this.selectedTemplates["count"];
   messageEl.dataset.templateId = this.selectedTemplates["template_id"];
   var messageContents = "";
-  console.log(contents);
   contents.forEach(function (content) {
     if (content.content_type === "text") {
       messageContents += "\n                        <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
@@ -9644,7 +9646,7 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
+  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
 };
 
 /***/ }),

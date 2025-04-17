@@ -72,6 +72,7 @@ export default class UpdateTemplateView{
             const contents = this.#formatContents()
             const messageEl = document.createElement('div');
             messageEl.className = 'chat-message-container';
+            messageEl.dataset.count = this.selectedTemplates["count"]
             messageEl.dataset.templateId = this.selectedTemplates["template_id"]
             let messageContents = ""
 
@@ -200,6 +201,9 @@ export default class UpdateTemplateView{
             const id = event.target.dataset.templateId
             const targetTemplate = Array.from(document.querySelectorAll(".chat-message-container")).find((container)=> container.dataset.templateId === id)
             const card = Array.from(document.querySelectorAll(".template-card")).find((container)=> container.dataset.templateId === id)
+            this.index = this.index - Number(targetTemplate.dataset.count)
+
+            console.log(this.index);
             
             this.messagesContainer.removeChild(targetTemplate)
             if (card) {
@@ -243,7 +247,7 @@ export default class UpdateTemplateView{
                                     const data = {
                                           "content" : content.textContent,
                                           "order" : content.dataset.order,
-                                          "type" : "text"
+                                          "type" : "text",
                                     }
                                     contentsArr.push(data)
       
@@ -268,13 +272,19 @@ export default class UpdateTemplateView{
                                     card.classList.remove('selected');
                                     newBtn.classList.remove('selected');
                                     newBtn.textContent = '選択';
+
+                                    this.index = this.index - Number(targetTemplate.dataset.count)
+
+                                    console.log(this.index);
+                                    
                               } else {
 
                                     this.selectedTemplates = {
                                           id: templateId,
                                           title: templateTitle,
                                           contents: contentsArr,
-                                          template_id : card.dataset.templateId
+                                          template_id : card.dataset.templateId,
+                                          count : templateContents.length + templateImages.length
                                     }
       
                                     // Update UI

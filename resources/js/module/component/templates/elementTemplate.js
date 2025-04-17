@@ -81,7 +81,7 @@ export const createChatUserContainer = (sender_id, res) =>{
       const countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || (res["unread_count"] == null || res["unread_count"] === 0) ? 0 : res["unread_count"];
 
       return `
-            <a href="${config.CHAT_URL}" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="${sender_id}" data-id="${res["id"]}" data-admin-id="${document.getElementById("js_admin_id").value}">
+            <a href="${config.CHAT_URL}/${res["id"]}/${document.getElementById("js_admin_id").value}" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="${sender_id}" data-id="${res["id"]}" data-admin-id="${document.getElementById("js_admin_id").value}">
                   <input type="hidden" name="admin_id" class="js_admin_el">
                   <input type="hidden" name="user_id" class="js_user_el">
                   <input type="hidden" name="token" class="js_token">

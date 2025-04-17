@@ -8512,14 +8512,14 @@ __webpack_require__.r(__webpack_exports__);
 // export default {
 //     SOCKET_URL: 'https://chat-socket.info:3000',
 //     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat-system.info/api/chat"
+//     CHAT_URL: "https://chat-system.info/admin/chat"
 // };
 
 // 開発用
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
   S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/api/chat"
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
 });
 
 /***/ }),
@@ -9161,7 +9161,7 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
+  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(res["latest_all_message"], "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
 };
 
 /***/ }),

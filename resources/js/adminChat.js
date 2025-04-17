@@ -205,6 +205,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 			}
 
 			const res = await response.json();
+
+			console.log(res);
+			
 			socket.emit("send_messages", {
 					data: res["data"],
 					adminUuid: res["data"][0]["adminUuid"],

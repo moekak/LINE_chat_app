@@ -97,12 +97,7 @@ class AdminMessageController extends Controller
             if (isset($request->images) && is_array($request->images)) {
                 $imageService = new ImageService();
                 foreach ($request->images as $index => $imageData) {
-                    Log::debug($imageData);
-
-
-    
                     $fileName = $imageService->saveImage($imageData["file"]);
-
                     $cropData = [];
     
                     if(isset($imageData["url"])){
@@ -230,16 +225,24 @@ class AdminMessageController extends Controller
 
     public function insertTemplateData(Request $request){
         try{
-            Log::debug($request->all());
             //クライアントに返すデータを格納
             DB::beginTransaction();
             $responseData = [];
             $admin_id = EntityUuidResolver::getAdminID($request->input("admin_uuid"));
             $user_id = EntityUuidResolver::getUserID($request->input("user_uuid"));
             $messages = $request->input("contents");
+            $formattedMessages = [];
+
+            foreach($messages as $message){
+        
+                if(isset($message)){
+                    array_push($formattedMessages, $message);
+                }
+            }
+            Log::debug($formattedMessages);
             $generateMessageData = new GenerateMessageData($admin_id, $user_id);
 
-            foreach($messages as $index => $message){
+            foreach($formattedMessages as $index => $message){
                 if($message["type"] === "text"){
                     $insertingData = $generateMessageData->generateMessageData($message["content"]);
                     $adminMessage = AdminMessage::create($insertingData);
@@ -275,14 +278,14 @@ class AdminMessageController extends Controller
                 if($index === 0){
                     // 未読管理テーブルにデータを挿入
                     if($message["type"] === "text"){
-                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessage->id, "text", count($messages), true);
+                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessage->id, "text", count($formattedMessages), true);
                     }else if($message["type"] === "image"){
-                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessageImage->id, "image",count($messages), true);
+                        AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id, $admin_id, $adminMessageImage->id, "image",count($formattedMessages), true);
                     }
             
                 };
     
-                if($index + 1 === count($messages)){
+                if($index + 1 === count($formattedMessages)){
                       // 未読管理テーブルにデータを挿入
                     if($message["type"] === "text"){
                         // 最新メッセージ管理テーブルの更新
@@ -299,7 +302,7 @@ class AdminMessageController extends Controller
 
 
             DB::commit();
-            Log::debug($responseData);
+            // Log::debug($responseData);
             return response()->json(["data" =>$responseData]);
         }catch(\Exception $e){
             DB::rollBack();

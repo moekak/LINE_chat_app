@@ -4,7 +4,6 @@ export default class MessageTemplate{
             // カード要素の取得
             this.templateCards = document.querySelectorAll('.template-card');
             this.expandBtns = document.querySelectorAll('.expand-btn');
-            this.selectBtns = document.querySelectorAll('.select-btn')
             this.selectedName = document.getElementById('selected-template-name');
             this.selectedContent = document.getElementById('selected-template-content');
             this.copyBtn = document.getElementById('copy-template');

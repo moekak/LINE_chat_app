@@ -6,7 +6,7 @@
         <div class="filter-title">カテゴリーでフィルター</div>
         <div class="filter-buttons">
             @foreach ($template_categories as $category)
-                <button class="filter-button" data-tag="{{$category["category_name"]}}">{{strlen($category["category_name"]) > 20 ? substr($category["category_name"], 0, 20) . '...' : $category["category_name"]}}</button> 
+                <button class="filter-button" data-tag="{{$category["category_name"]}}">{{mb_strlen($category["category_name"]) > 20 ? mb_substr($category["category_name"], 0, 20) . '...' : $category["category_name"]}}</button> 
             @endforeach
         </div>
         <div class="filter-actions">
