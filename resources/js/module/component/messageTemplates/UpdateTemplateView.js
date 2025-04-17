@@ -80,7 +80,7 @@ export default class UpdateTemplateView{
                   if(content.content_type === "text"){
                         messageContents += `
                         <input type="hidden" name="contents[${this.index}][type]" value="text"/>
-                        <textarea class="template_textarea" name="contents[${this.index}][content]" readonly>${content.content}</textarea>
+                        <textarea maxlength="1000"class="template_textarea" name="contents[${this.index}][content]" readonly>${content.content}</textarea>
                         `
                   }else if(content.content_type === "image"){
                         messageContents += `

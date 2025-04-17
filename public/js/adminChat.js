@@ -9551,7 +9551,7 @@ function _generateSelectedTemplateElement() {
   var messageContents = "";
   contents.forEach(function (content) {
     if (content.content_type === "text") {
-      messageContents += "\n                        <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
+      messageContents += "\n                        <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea maxlength=\"1000\"class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
     } else if (content.content_type === "image") {
       messageContents += "\n                        <div style=\"display: flex;\">\n                              <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"image\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][image_path]\" value=\"").concat(content.content, "\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][cropArea]\" value='").concat(content.cropArea, "'/>\n                              <img src='").concat(content.content, "'/>\n                        </div>");
     }
