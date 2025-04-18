@@ -8612,9 +8612,7 @@ var ChatMessageController = /*#__PURE__*/function () {
 }();
 function _isRightAlignedMessage() {
   var senderType = this.senderType,
-    fileName = this.fileName,
-    senderId = this.senderId,
-    parentElement = this.parentElement;
+    fileName = this.fileName;
   return senderType === "admin" && fileName === "admin" || senderType === "user" && fileName === "user";
 }
 /**
@@ -8629,8 +8627,9 @@ function _addChatMessage(isRight) {
   this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
   // this.cropAreaがある場合は処理を適用
+
   if (this.cropArea && Object.entries(this.cropArea).length > 0) {
-    _assertClassBrand(_ChatMessageController_brand, this, _applyCropArea).call(this, this.cropArea);
+    _assertClassBrand(_ChatMessageController_brand, this, _applyCropArea).call(this);
   }
 }
 /**
@@ -8656,6 +8655,9 @@ function _applyCropArea() {
 function _updateOverlayStyles(container, overlay) {
   var imageRect = container.querySelector(".overlay-target").getBoundingClientRect();
   var cropData = JSON.parse(container.dataset.crop);
+  if (typeof cropData === "string") {
+    cropData = JSON.parse(cropData);
+  }
   overlay.style.left = "".concat(cropData.x_percent / 100 * imageRect.width, "px");
   overlay.style.top = "".concat(cropData.y_percent / 100 * imageRect.height, "px");
   overlay.style.width = "".concat(cropData.width_percent / 100 * imageRect.width, "px");
@@ -9133,6 +9135,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea) {
+  if (typeof cropArea === "string") {
+    cropArea = JSON.parse(cropArea);
+  }
+  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");

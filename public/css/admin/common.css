@@ -329,6 +329,9 @@ width: -webkit-fill-available; /* Webkit対応のブラウザでのみ適用 */
      max-width: 100%;
      text-align: left;
      word-wrap: break-word;
+     overflow-wrap: break-word;
+     word-break: break-all
+     
 }
 
 @supports (width: -webkit-fill-available) {

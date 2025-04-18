@@ -3,6 +3,13 @@ import config from '../../../config/config.js';
 
 
 export const createRightMessageContainer = (message_type, time, content, cropArea) =>{
+
+      if(typeof(cropArea) === "string"){
+            cropArea = JSON.parse(cropArea)
+      }
+      
+      console.log(cropArea);
+      
       let rawHtml = "";
       if (Object.entries(cropArea).length > 0) {
             rawHtml = `

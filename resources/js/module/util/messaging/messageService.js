@@ -87,6 +87,8 @@ export const handleReceivedMessage = async (isON, is_searching, sender_type, sen
 			fileName: "admin",
 			senderId: sender_id
 		}
+
+		
 		// `ChatMessageController` のインスタンスを作成
 		const chatMessageController = new ChatMessageController(data)
 

@@ -50,8 +50,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 	// 着信音処理
-	document.querySelector(".js_bell").addEventListener("click", ()=>{
-		isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
+	document.querySelector(".js_bell").addEventListener("click", function(){
+
+		if(this.classList.contains("on")){
+			isON["isSoundOn"] = confirm("着信音をオフにしますか？") ? false : true
+		}else{
+			isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
+		}
+		this.classList.toggle("on")
+
+		
+		
 	})
 
 
@@ -117,6 +126,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	})
 
 	socket.on('send_messages', async (res) => {
+
+		console.log(res);
+		
 
 		ModalController.close_loader()
 		ModalController.open_image_modal(true)

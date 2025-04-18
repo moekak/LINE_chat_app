@@ -48,7 +48,7 @@ class ChatMessageController{
      * @returns {boolean} - メッセージが右側に表示される場合は true、それ以外は false
      */
     #isRightAlignedMessage() {
-        const { senderType, fileName, senderId, parentElement } = this;
+        const { senderType, fileName} = this;
         return (
             (senderType === "admin" && fileName === "admin") ||
             (senderType === "user" && fileName === "user") 
@@ -68,8 +68,9 @@ class ChatMessageController{
         this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
         // this.cropAreaがある場合は処理を適用
+
         if (this.cropArea && Object.entries(this.cropArea).length > 0) {
-            this.#applyCropArea(this.cropArea);
+            this.#applyCropArea();
         }
     }
 
@@ -94,12 +95,18 @@ class ChatMessageController{
      */
     #updateOverlayStyles (container, overlay) {
         const imageRect = container.querySelector(".overlay-target").getBoundingClientRect();
-        const cropData = JSON.parse(container.dataset.crop);
-    
+        let cropData = JSON.parse(container.dataset.crop);
+
+
+        if(typeof(cropData) === "string"){
+            cropData = JSON.parse(cropData)
+        }
+        
         overlay.style.left = `${(cropData.x_percent / 100) * imageRect.width}px`;
         overlay.style.top = `${(cropData.y_percent / 100) * imageRect.height}px`;
         overlay.style.width = `${(cropData.width_percent / 100) * imageRect.width}px`;
         overlay.style.height = `${(cropData.height_percent / 100) * imageRect.height}px`;
+
         overlay.style.display = "inline-block";
     }
 }
