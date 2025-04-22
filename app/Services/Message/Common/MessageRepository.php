@@ -137,11 +137,7 @@ class MessageRepository{
                         })
                   ->exists();
 
-            Log::debug($adminId);
-            Log::debug($userId);
-
             if($isChatIdentityExists){
-                  Log::debug("おおおおおおおおおおお");
                   // AdminMessageImage クエリ
                   $adminImageQuery = AdminMessageImage::select(
                         'id',
@@ -713,8 +709,6 @@ class MessageRepository{
 
             $user = ChatUser::where("account_id", $original_admin_id)->where("user_id", $line_user_id)->first();
             $user_createdAt = $user->created_at;
-
-            Log::debug($user_createdAt);
             $line_name = $user->line_name;
 
             $greetingMessages = $query->get();
@@ -756,22 +750,11 @@ class MessageRepository{
                   return $this->formatMessage($message, $message["resource_type"], "admin", $user_createdAt, $message["crop_data"], $message["url"]);
             });
 
-            // Log::debug($greetingMessagesAll->toArray());
+
             return $greetingMessagesAll;
       }
 
-      // public function addPeriodConditions($query, $periods){
-      //       return $query->where(function($q) use ($periods){
-      //             foreach($periods as $userId => $userPeriods){
-      //                   foreach($userPeriods as $period){
-      //                         $q->whereNotBetween("created_at", [
-      //                               $period["start"],
-      //                               $period["end"]
-      //                         ]);
-      //                   }
-      //             }
-      //       });
-      // }
+
        // メッセージを共通のフォーマットに変換する
       private function formatMessage($message, string $type, string $sender_type, $date, $cropData, $url): array
       {

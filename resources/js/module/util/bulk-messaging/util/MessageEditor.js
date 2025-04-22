@@ -283,9 +283,6 @@ class MessageEditor{
     
                     const res = await response.json();
 
-
-                    console.log(res);
-                    
                     this.socket.emit("send_messages", {
                             data: res["data"],
                             adminUuid: res["data"][0]["adminUuid"],

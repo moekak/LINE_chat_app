@@ -154,10 +154,10 @@
             <div class="attachment_container relative">
                   <div class="message_icon_box">
                         <label for="fileInput" style="display: flex; order: 1;">
-                              <i class="fa-solid fa-paperclip js_attachment_icon"></i>
+                              <i class="fa-solid fa-paperclip js_attachment_icon operation-icon"></i>
                         </label>
-                        <i class="fa-solid fa-pen-to-square" id="js_template_btn"></i>
-                        <i class="fa-solid fa-comment-dots" style="order: 3;" id="js_select_btn"></i>
+                        <button class="operation-icon-btn" title="複数メッセージ一括送信"><i class="fa-solid fa-pen-to-square operation-icon" id="js_template_btn"></i></button>
+                        <button class="operation-icon-btn" title="テンプレート" style="order: 3;"><i class="fa-solid fa-comment-dots operation-icon"  id="js_select_btn"></i></button>
                         {{-- <img src="{{asset("img/icons8-create-24.png")}}" alt="" class="template_icon" id="js_template_btn"> --}}
                   </div>
                   
@@ -236,7 +236,7 @@
 <section class="js_modal bulk_message_modal hidden"  id="js_messageSetting_modal" >
       <div class="message-editor-container">
             <div class="editor-header">
-                  <h2 style="font-size: 17px;">メッセージ生成</h2>
+                  <h2 style="font-size: 17px;">複数メッセージ一括送信</h2>
             </div>
             <div class="message-list" id="js_message-list">
                   <!-- メッセージアイテム -->

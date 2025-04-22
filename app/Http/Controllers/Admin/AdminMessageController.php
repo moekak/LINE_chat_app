@@ -239,7 +239,7 @@ class AdminMessageController extends Controller
                     array_push($formattedMessages, $message);
                 }
             }
-            Log::debug($formattedMessages);
+     
             $generateMessageData = new GenerateMessageData($admin_id, $user_id);
 
             foreach($formattedMessages as $index => $message){
@@ -302,7 +302,6 @@ class AdminMessageController extends Controller
 
 
             DB::commit();
-            // Log::debug($responseData);
             return response()->json(["data" =>$responseData]);
         }catch(\Exception $e){
             DB::rollBack();

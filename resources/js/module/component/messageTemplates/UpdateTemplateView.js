@@ -203,8 +203,7 @@ export default class UpdateTemplateView{
             const card = Array.from(document.querySelectorAll(".template-card")).find((container)=> container.dataset.templateId === id)
             this.index = this.index - Number(targetTemplate.dataset.count)
 
-            console.log(this.index);
-            
+
             this.messagesContainer.removeChild(targetTemplate)
             if (card) {
                   card.classList.remove('selected');
@@ -275,8 +274,6 @@ export default class UpdateTemplateView{
 
                                     this.index = this.index - Number(targetTemplate.dataset.count)
 
-                                    console.log(this.index);
-                                    
                               } else {
 
                                     this.selectedTemplates = {

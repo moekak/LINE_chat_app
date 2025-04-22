@@ -1,5 +1,5 @@
 <div class="message-template-container hidden js_modal">
-    <h1>チャットメッセージテンプレート選択</h1>
+    <h1>テンプレート</h1>
     
     <!-- フィルターUI -->
     <div class="filter-container">

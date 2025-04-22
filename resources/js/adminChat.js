@@ -126,10 +126,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	})
 
 	socket.on('send_messages', async (res) => {
-
-		console.log(res);
-		
-
 		ModalController.close_loader()
 		ModalController.open_image_modal(true)
 		ModalController.close_image_by_key()
@@ -217,9 +213,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 			}
 
 			const res = await response.json();
-
-			console.log(res);
-			
 			socket.emit("send_messages", {
 					data: res["data"],
 					adminUuid: res["data"][0]["adminUuid"],

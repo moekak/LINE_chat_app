@@ -18,11 +18,7 @@ class GenerateMessageData{
             $this->user_id = $user_id;
             $this->admin_id = $admin_id;
             $this->userLineID = ChatUser::where("id", $user_id)->value("user_id");
-            Log::debug($this->admin_id);
-            Log::debug($user_id);
-            log::debug($this->userLineID);
             $this->chatIdentityId = ChatIdentity::where("original_admin_id", $this->admin_id)->where("chat_user_id", $this->userLineID)->value("id");
-            Log::debug("chstIdentityId:$this->chatIdentityId");
 
       }
 

@@ -1279,3 +1279,11 @@ body {
 .fa-solid{
      color: rgba(128, 128, 128, 0.678);
 }
+
+.operation-icon-btn{
+     background-color: transparent;
+     border: none;
+}
+.operation-icon{
+     font-size: 16px;
+}

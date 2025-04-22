@@ -23,8 +23,14 @@ class CheckReferrer
         
         // 許可するリファラーを配列で定義
         $allowedReferers = [
+
+            // 開発
             'https://manager.line-chat-system-dev.tokyo',
             'https://chat.line-chat-system-dev.tokyo/',
+
+            // 本番
+            'https://chat-manager.info/',
+            'https://chat-system.info/'
             // 必要に応じて他のドメインを追加
         ];
         
