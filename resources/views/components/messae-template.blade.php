@@ -6,7 +6,7 @@
         <div class="filter-title">カテゴリーでフィルター</div>
         <div class="filter-buttons">
             @foreach ($template_categories as $category)
-                <button class="filter-button" data-tag="{{$category["category_name"]}}">{{mb_strlen($category["category_name"]) > 20 ? mb_substr($category["category_name"], 0, 20) . '...' : $category["category_name"]}}</button> 
+                <button class="filter-button" type="button" data-id="{{$category["id"]}}" data-tag="{{$category["category_name"]}}">{{mb_strlen($category["category_name"]) > 20 ? mb_substr($category["category_name"], 0, 20) . '...' : $category["category_name"]}}</button> 
             @endforeach
         </div>
         <div class="filter-actions">
@@ -23,7 +23,7 @@
     <div class="templates-grid">
         <!-- テンプレート1 -->
         @foreach ($templates_data as $template)
-            <div class="template-card" data-template-id="{{$template["template_id"]}}" data-tags="{{$template["category_name"]}}">
+            <div class="template-card" data-template-id="{{$template["template_id"]}}" data-tags="{{$template["category_name"]}}" data-order="{{$template["display_order"]}}">
                 <div class="selection-indicator">✓</div>
                 <div class="template-header">
                     <div class="template-title">{{strlen($template["template_name"]) > 30 ? substr($template["template_name"], 0, 30) . '...' : $template["template_name"]}}</div>

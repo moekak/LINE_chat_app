@@ -5,5 +5,5 @@ export const API_ENDPOINTS = {
     FETCH_MESSAGES: "/api/messages/fetch",
     GENERATE_TOKEN: "/api/token/generate",
     ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
-    TEMPLATE_SELECT: "/api/template/select"
+    TEMPLATE_SELECT: "/api/template/select",
 };

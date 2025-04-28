@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 	// クライアントからソケットサーバーへメッセージを送信する
-	document.getElementById("js_chat_form").addEventListener("submit", (e)=>{
+	document.querySelector(".chat__form-submit").addEventListener("click", (e)=>{
 		e.preventDefault();
 		const { msg, formattedMsg, receiver_id, sender_type } = prepareMessageData();
 		// メッセージをサーバーに送信する
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	{
 		new MessageTemplate()
-		const updateTemplateView = new UpdateTemplateView()
+		const updateTemplateView = UpdateTemplateView.getInstance();
 
 		const form = document.getElementById("template_form")
 
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 				body: formData,
 			});
 			if (!response.ok) {
-					throw new Error("サーバーからエラー応答が返されました。");
+				throw new Error("サーバーからエラー応答が返されました。");
 			}
 
 			const res = await response.json();

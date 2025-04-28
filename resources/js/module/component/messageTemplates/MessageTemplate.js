@@ -1,3 +1,7 @@
+import { API_ENDPOINTS } from "../../../config/apiEndPoints";
+import Fetch from "../../util/api/Fetch";
+import { createTemplateCardHTML } from "../templates/elementTemplate";
+import UpdateTemplateView from "./UpdateTemplateView";
 
 export default class MessageTemplate{
       constructor(){
@@ -57,44 +61,62 @@ export default class MessageTemplate{
       // フィルターボタンのイベントリスナー
       #handleFilter(event){
             const tag = event.target.getAttribute('data-tag');
+            this.filterButtons.forEach((btn)=> btn.classList.remove("active"))
 
             // ボタンのアクティブ状態を切り替え
-            event.target.classList.toggle('active');
-            
+            event.target.classList.add('active');
+            this.activeFilters = []
             // アクティブなフィルターリストを更新
             if (event.target.classList.contains('active')) {
                   this.activeFilters.push(tag);
-            } else {
-                  this.activeFilters = this.activeFilters.filter(filter => filter !== tag);
-            }
+            } 
             
             // フィルターを適用
             this.#applyFilters();
       }
 
+
       // フィルターを適用する関数
-      #applyFilters(){
+      async #applyFilters(){
+
+            let activeFilters = []
             let visibleCount = 0;
-            
+            const templateWrapper = document.querySelector(".templates-grid")
             this.templateCards.forEach(card => {
                   const cardTags = card.getAttribute('data-tags').split(',');
                   // アクティブなフィルターがない場合はすべて表示
                   if (this.activeFilters.length === 0) {
+                        activeFilters.push(card)
                         card.classList.remove('hidden');
                         visibleCount++;
-                        return;
-                  }
-                  
-                  // カードがアクティブなフィルターのいずれかに一致するか確認
-                  const isVisible = this.activeFilters.some(filter => cardTags.includes(filter));
-                  
-                  if (isVisible) {
-                        card.classList.remove('hidden');
-                        visibleCount++;
-                  } else {
-                        card.classList.add('hidden');
+                  }else{
+                      // カードがアクティブなフィルターのいずれかに一致するか確認
+                        const isVisible = this.activeFilters.some(filter => cardTags.includes(filter));
+                        
+                        if (isVisible) {
+                              activeFilters.push(card)
+                              card.classList.remove('hidden');
+                              visibleCount++;
+                        } else {
+                              card.classList.add('hidden');
+                        }
                   }
             });
+            
+
+
+            activeFilters.sort((a, b) => {
+                  return parseInt(a.dataset.order) - parseInt(b.dataset.order);
+            });
+
+
+            activeFilters.forEach((card)=>{
+                  templateWrapper.appendChild(card)
+            })
+            
+            UpdateTemplateView.getInstance();
+
+
             
             // 表示されているカードがなければ「結果なし」メッセージを表示
             if (visibleCount === 0) {

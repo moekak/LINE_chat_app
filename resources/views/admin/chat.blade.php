@@ -150,7 +150,7 @@
 </div>
 
 <div class="chat__form">
-      <form class="chat__form-flex" id="js_chat_form">
+      <div class="chat__form-flex" id="js_chat_form">
             <div class="attachment_container relative">
                   <div class="message_icon_box">
                         <label for="fileInput" style="display: flex; order: 1;">
@@ -165,8 +165,8 @@
             </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1" maxlength="1000"></textarea>
             @yield('send_data')
-            <button class="chat__form-submit disabled_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
-      </form>
+            <button class="chat__form-submit disabled_btn" type="button"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
+      </div>
 </div>
 
 
