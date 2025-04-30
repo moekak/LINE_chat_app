@@ -11365,9 +11365,11 @@ var FileUploader = /*#__PURE__*/function () {
         if (this.fileInput) {
           this.fileInput.value = "";
         }
-        // cropperページから画像を切り替えた場合の処理
-        if (document.querySelector(".change_img").id == "fileInputEdit") {
-          _component_ui_FormController__WEBPACK_IMPORTED_MODULE_5__["default"].showCropperSetting();
+        if (this.sender_type == "admin") {
+          // cropperページから画像を切り替えた場合の処理
+          if (document.querySelector(".change_img").id == "fileInputEdit") {
+            _component_ui_FormController__WEBPACK_IMPORTED_MODULE_5__["default"].showCropperSetting();
+          }
         }
         return _assertClassBrand(_FileUploader_brand, this, _validationError).call(this, "許可されているファイル形式は JPG, PNGのみです。", hasModal);
       }
@@ -11375,10 +11377,11 @@ var FileUploader = /*#__PURE__*/function () {
         if (this.fileInput) {
           this.fileInput.value = "";
         }
-
-        // cropperページから画像を切り替えた場合の処理
-        if (document.querySelector(".change_img").id == "fileInputEdit") {
-          _component_ui_FormController__WEBPACK_IMPORTED_MODULE_5__["default"].showCropperSetting();
+        if (this.sender_type === "admin") {
+          // cropperページから画像を切り替えた場合の処理
+          if (document.querySelector(".change_img").id == "fileInputEdit") {
+            _component_ui_FormController__WEBPACK_IMPORTED_MODULE_5__["default"].showCropperSetting();
+          }
         }
         return _assertClassBrand(_FileUploader_brand, this, _validationError).call(this, "ファイルサイズは5MB以下にしてください。", hasModal);
       }

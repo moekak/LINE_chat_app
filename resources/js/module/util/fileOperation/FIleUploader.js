@@ -71,9 +71,11 @@ class FileUploader{
                   if (this.fileInput) {
                         this.fileInput.value = "";
                   }
-                  // cropperページから画像を切り替えた場合の処理
-                  if(document.querySelector(".change_img").id == "fileInputEdit"){
-                        FromController.showCropperSetting()
+                  if(this.sender_type == "admin"){
+                       // cropperページから画像を切り替えた場合の処理
+                        if(document.querySelector(".change_img").id == "fileInputEdit"){
+                              FromController.showCropperSetting()
+                        }
                   }
                   
                   return this.#validationError("許可されているファイル形式は JPG, PNGのみです。", hasModal)
@@ -83,10 +85,13 @@ class FileUploader{
                         this.fileInput.value = "";
                   }
 
-                  // cropperページから画像を切り替えた場合の処理
-                  if(document.querySelector(".change_img").id == "fileInputEdit"){
-                        FromController.showCropperSetting()
+                  if(this.sender_type === "admin"){
+                       // cropperページから画像を切り替えた場合の処理
+                        if(document.querySelector(".change_img").id == "fileInputEdit"){
+                              FromController.showCropperSetting()
+                        } 
                   }
+                  
 
                   return this.#validationError("ファイルサイズは5MB以下にしてください。", hasModal)
             }
