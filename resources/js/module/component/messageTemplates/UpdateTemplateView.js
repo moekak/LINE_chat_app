@@ -1,3 +1,5 @@
+import FormatText from "../../util/FormatText";
+
 export default class UpdateTemplateView{
       /**
        * UpdateTemplateViewのコンストラクタ
@@ -75,6 +77,7 @@ export default class UpdateTemplateView{
       }
 
 
+
       /**
        * 選択されたテンプレート要素を生成する
        * 
@@ -95,7 +98,7 @@ export default class UpdateTemplateView{
                   if(content.content_type === "text"){
                         messageContents += `
                         <input type="hidden" class="template_type" name="contents[${this.index}][type]" value="text"/>
-                        <textarea maxlength="1000"class="template_textarea" name="contents[${this.index}][content]" readonly>${content.content}</textarea>
+                        <textarea maxlength="1000"class="template_textarea" name="contents[${this.index}][content]" readonly>${FormatText.escapeHtml(content.content)}</textarea>
                         `
                   }else if(content.content_type === "image"){
                         messageContents += `
@@ -111,7 +114,7 @@ export default class UpdateTemplateView{
 
             messageEl.innerHTML = `
                   <div class="chat-message-header">
-                        <span class="template-title">${this.selectedTemplates.title} / <i class="fa-solid fa-pen-to-square js_edit_btn"></i></span>
+                        <span class="template-title">${FormatText.escapeHtml(this.selectedTemplates.title)} / <i class="fa-solid fa-pen-to-square js_edit_btn"></i></span>
                         <button class="remove-template-btn" data-template-id="${this.selectedTemplates.template_id}">✕</button>
                   </div>
                   <div class="chat-message-body">

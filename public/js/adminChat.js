@@ -9337,6 +9337,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UpdateTemplateView)
 /* harmony export */ });
+/* harmony import */ var _util_FormatText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/FormatText */ "./resources/js/module/util/FormatText.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -9352,6 +9353,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
 function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+
 var _UpdateTemplateView_brand = /*#__PURE__*/new WeakSet();
 var UpdateTemplateView = /*#__PURE__*/function () {
   function UpdateTemplateView() {
@@ -9597,13 +9599,13 @@ function _generateSelectedTemplateElement() {
   var messageContents = "";
   contents.forEach(function (content) {
     if (content.content_type === "text") {
-      messageContents += "\n                        <input type=\"hidden\" class=\"template_type\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea maxlength=\"1000\"class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
+      messageContents += "\n                        <input type=\"hidden\" class=\"template_type\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea maxlength=\"1000\"class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(_util_FormatText__WEBPACK_IMPORTED_MODULE_0__["default"].escapeHtml(content.content), "</textarea>\n                        ");
     } else if (content.content_type === "image") {
       messageContents += "\n                        <div style=\"display: flex;\">\n                              <input type=\"hidden\" class=\"template_type\"  name=\"contents[".concat(_this3.index, "][type]\" value=\"image\"/>\n                              <input type=\"hidden\" class=\"template_images\" name=\"contents[").concat(_this3.index, "][image_path]\" value=\"").concat(content.content, "\"/>\n                              <input type=\"hidden\" class\"template_croparea name=\"contents[").concat(_this3.index, "][cropArea]\" value='").concat(content.cropArea, "'/>\n                              <img src='").concat(content.content, "'/>\n                        </div>");
     }
     _this3.index++;
   });
-  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(this.selectedTemplates.title, " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">\n                        <input type=\"hidden\" name=\"admin_uuid\" class=\"template_admin_uuid\" value=\"").concat(document.getElementById("js_sender_id").value, "\"/>\n                        <input type=\"hidden\" name=\"user_uuid\" class=\"template_user_uuid\" value=\"").concat(document.getElementById("js_receiver_id").value, "\"/>\n                        ").concat(messageContents, "\n                  </div>\n            ");
+  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(_util_FormatText__WEBPACK_IMPORTED_MODULE_0__["default"].escapeHtml(this.selectedTemplates.title), " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">\n                        <input type=\"hidden\" name=\"admin_uuid\" class=\"template_admin_uuid\" value=\"").concat(document.getElementById("js_sender_id").value, "\"/>\n                        <input type=\"hidden\" name=\"user_uuid\" class=\"template_user_uuid\" value=\"").concat(document.getElementById("js_receiver_id").value, "\"/>\n                        ").concat(messageContents, "\n                  </div>\n            ");
   return messageEl;
 }
 /**
@@ -9668,6 +9670,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/messaging/messageService.js */ "./resources/js/module/util/messaging/messageService.js");
 /* harmony import */ var _config_config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../config/config.js */ "./resources/js/config/config.js");
+/* harmony import */ var _util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../util/FormatText.js */ "./resources/js/module/util/FormatText.js");
+
 
 
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea) {
@@ -9683,7 +9687,7 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
 
   // テキストに含まれてるURLをaタグに変換する
   var linkedMessage = (0,_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.linkifyContent)(content);
-  return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\">".concat(linkedMessage.replace(/\n/g, "<br>"), "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
+  return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\">".concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(linkedMessage).replace(/\n/g, "<br>"), "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
 };
 var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content, cropArea) {
   var src = document.getElementById("js_user_icon_img").value;
@@ -9697,7 +9701,7 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
   } else {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                  <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\"/>\n            </div>\n            ");
   }
-  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\">".concat(linkedMessage.replace(/\n/g, "<br>"), "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
+  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\">".concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(linkedMessage).replace(/\n/g, "<br>"), "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
 };
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
@@ -10164,6 +10168,44 @@ var BrowserAndDeviceDetector = /*#__PURE__*/function () {
   }]);
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BrowserAndDeviceDetector); // ESモジュール形式でエクスポート
+
+/***/ }),
+
+/***/ "./resources/js/module/util/FormatText.js":
+/*!************************************************!*\
+  !*** ./resources/js/module/util/FormatText.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ FormatText)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var FormatText = /*#__PURE__*/function () {
+  function FormatText() {
+    _classCallCheck(this, FormatText);
+  }
+  return _createClass(FormatText, null, [{
+    key: "escapeHtml",
+    value:
+    /**
+     * エスケープ処理
+     * @param {string} - エスケープする前の文字列
+     * @return {string} - エスケープされた文字列
+     */
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  }]);
+}();
+
 
 /***/ }),
 
@@ -11820,14 +11862,18 @@ var handleImageProcessingFlow = /*#__PURE__*/function () {
           _context2.next = 7;
           return fileUploader.validateAndProcessFile();
         case 7:
+          if (!(sender_type === "admin")) {
+            _context2.next = 13;
+            break;
+          }
           if (!isTemplate) {
-            _context2.next = 11;
+            _context2.next = 12;
             break;
           }
           return _context2.abrupt("return", fileUploader.setupMessagesTemplateSubmitButton());
-        case 11:
-          fileUploader.setupMessageSubmitButton();
         case 12:
+          fileUploader.setupMessageSubmitButton();
+        case 13:
         case "end":
           return _context2.stop();
       }
@@ -13074,7 +13120,6 @@ document.addEventListener("DOMContentLoaded", function () {
               textareas = document.querySelectorAll(".template_textarea");
               hasValue = true;
               textareas.forEach(function (textarea) {
-                console.log(textarea.value);
                 if (textarea.value.trim().length <= 0) {
                   hasValue = false;
                 }

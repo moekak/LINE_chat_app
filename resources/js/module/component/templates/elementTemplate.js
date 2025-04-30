@@ -1,5 +1,6 @@
 import { linkifyContent } from '../../util/messaging/messageService.js';
 import config from '../../../config/config.js';
+import FormatText from '../../util/FormatText.js';
 
 
 export const createRightMessageContainer = (message_type, time, content, cropArea) =>{
@@ -28,13 +29,12 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
 
       // テキストに含まれてるURLをaタグに変換する
       const linkedMessage = linkifyContent(content)
-
       return `
             <div class="chat__message-container-right">
                   <div class="chat__mesgae-main-right">
                         <div class="chat__message-time-txt">${time}</div>
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
-                        `<div class="chat__message-box-right chat-margin5 js_chat_message">${linkedMessage.replace(/\n/g, "<br>")}</div>` 
+                        `<div class="chat__message-box-right chat-margin5 js_chat_message">${FormatText.escapeHtml(linkedMessage).replace(/\n/g, "<br>")}</div>` 
                         : 
                         `${rawHtml}`
                         }
@@ -71,7 +71,7 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
                   <div class="chat__mesgae-main-left">
                         <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user-icon.png';" id="icon_msg"> 
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
-                        `<div class="chat__message-box-left chat-margin5 js_chat_message">${linkedMessage.replace(/\n/g, "<br>")}</div>` 
+                        `<div class="chat__message-box-left chat-margin5 js_chat_message">${FormatText.escapeHtml(linkedMessage).replace(/\n/g, "<br>")}</div>` 
                         : 
                         `${rawHtml}`
                         }

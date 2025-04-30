@@ -122,7 +122,7 @@
             </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1" maxlength="1000"></textarea>
             @yield('send_data')
-            <button class="chat__form-submit disabled_btn" type="button"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
+            <button class="chat__form-submit disabled_btn" type="submit"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
 
       </form>
 </div>

@@ -56,10 +56,14 @@ export const handleImageProcessingFlow =  async (socket, sender_id, url, sender_
     
     await fileUploader.validateAndProcessFile ()
 
-    if(isTemplate){
-        return fileUploader.setupMessagesTemplateSubmitButton();
-    }else{
-        fileUploader.setupMessageSubmitButton();
+    if(sender_type === "admin"){
+            if(isTemplate){
+            return fileUploader.setupMessagesTemplateSubmitButton();
+        }else{
+            fileUploader.setupMessageSubmitButton();
+        
+        }
     }
+
     
 }
