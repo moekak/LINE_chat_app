@@ -60,7 +60,7 @@ export default class MessageTemplate{
       }
       // フィルターボタンのイベントリスナー
       #handleFilter(event){
-            const tag = event.target.getAttribute('data-tag');
+            const tag = event.target.getAttribute('data-id');
             this.filterButtons.forEach((btn)=> btn.classList.remove("active"))
 
             // ボタンのアクティブ状態を切り替え
@@ -83,7 +83,7 @@ export default class MessageTemplate{
             let visibleCount = 0;
             const templateWrapper = document.querySelector(".templates-grid")
             this.templateCards.forEach(card => {
-                  const cardTags = card.getAttribute('data-tags').split(',');
+                  const cardTags = card.getAttribute('data-category-id').split(',');
                   // アクティブなフィルターがない場合はすべて表示
                   if (this.activeFilters.length === 0) {
                         activeFilters.push(card)

@@ -9249,7 +9249,7 @@ function _handleClearFilter() {
 }
 // フィルターボタンのイベントリスナー
 function _handleFilter(event) {
-  var tag = event.target.getAttribute('data-tag');
+  var tag = event.target.getAttribute('data-id');
   this.filterButtons.forEach(function (btn) {
     return btn.classList.remove("active");
   });
@@ -9280,7 +9280,7 @@ function _applyFilters2() {
           visibleCount = 0;
           templateWrapper = document.querySelector(".templates-grid");
           this.templateCards.forEach(function (card) {
-            var cardTags = card.getAttribute('data-tags').split(',');
+            var cardTags = card.getAttribute('data-category-id').split(',');
             // アクティブなフィルターがない場合はすべて表示
             if (_this2.activeFilters.length === 0) {
               activeFilters.push(card);

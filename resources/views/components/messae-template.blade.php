@@ -37,7 +37,7 @@
             }
         @endphp
 
-            <div class="template-card" data-template-id="{{$template["template_id"]}}" data-tags="{{$template["category_name"]}}" data-order="{{$template["display_order"]}}">
+            <div class="template-card" data-category-id="{{$template["category_id"]}}" data-template-id="{{$template["template_id"]}}" data-tags="{{$template["category_name"]}}" data-order="{{$template["display_order"]}}">
                 <div class="selection-indicator">✓</div>
                 <div class="template-header">
                     <div class="template-title">{!! $title !!}</div>
