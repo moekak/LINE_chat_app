@@ -9597,13 +9597,13 @@ function _generateSelectedTemplateElement() {
   var messageContents = "";
   contents.forEach(function (content) {
     if (content.content_type === "text") {
-      messageContents += "\n                        <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea maxlength=\"1000\"class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
+      messageContents += "\n                        <input type=\"hidden\" class=\"template_type\" name=\"contents[".concat(_this3.index, "][type]\" value=\"text\"/>\n                        <textarea maxlength=\"1000\"class=\"template_textarea\" name=\"contents[").concat(_this3.index, "][content]\" readonly>").concat(content.content, "</textarea>\n                        ");
     } else if (content.content_type === "image") {
-      messageContents += "\n                        <div style=\"display: flex;\">\n                              <input type=\"hidden\" name=\"contents[".concat(_this3.index, "][type]\" value=\"image\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][image_path]\" value=\"").concat(content.content, "\"/>\n                              <input type=\"hidden\" name=\"contents[").concat(_this3.index, "][cropArea]\" value='").concat(content.cropArea, "'/>\n                              <img src='").concat(content.content, "'/>\n                        </div>");
+      messageContents += "\n                        <div style=\"display: flex;\">\n                              <input type=\"hidden\" class=\"template_type\"  name=\"contents[".concat(_this3.index, "][type]\" value=\"image\"/>\n                              <input type=\"hidden\" class=\"template_images\" name=\"contents[").concat(_this3.index, "][image_path]\" value=\"").concat(content.content, "\"/>\n                              <input type=\"hidden\" class\"template_croparea name=\"contents[").concat(_this3.index, "][cropArea]\" value='").concat(content.cropArea, "'/>\n                              <img src='").concat(content.content, "'/>\n                        </div>");
     }
     _this3.index++;
   });
-  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(this.selectedTemplates.title, " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">\n                        <input type=\"hidden\" name=\"admin_uuid\" value=\"").concat(document.getElementById("js_sender_id").value, "\"/>\n                        <input type=\"hidden\" name=\"user_uuid\" value=\"").concat(document.getElementById("js_receiver_id").value, "\"/>\n                        ").concat(messageContents, "\n                  </div>\n            ");
+  messageEl.innerHTML = "\n                  <div class=\"chat-message-header\">\n                        <span class=\"template-title\">".concat(this.selectedTemplates.title, " / <i class=\"fa-solid fa-pen-to-square js_edit_btn\"></i></span>\n                        <button class=\"remove-template-btn\" data-template-id=\"").concat(this.selectedTemplates.template_id, "\">\u2715</button>\n                  </div>\n                  <div class=\"chat-message-body\">\n                        <input type=\"hidden\" name=\"admin_uuid\" class=\"template_admin_uuid\" value=\"").concat(document.getElementById("js_sender_id").value, "\"/>\n                        <input type=\"hidden\" name=\"user_uuid\" class=\"template_user_uuid\" value=\"").concat(document.getElementById("js_receiver_id").value, "\"/>\n                        ").concat(messageContents, "\n                  </div>\n            ");
   return messageEl;
 }
 /**
@@ -12860,8 +12860,6 @@ document.addEventListener("DOMContentLoaded", function () {
       receiver_id = _prepareMessageData.receiver_id,
       sender_type = _prepareMessageData.sender_type;
     // メッセージをサーバーに送信する
-
-    console.log("oooooooooooooooooooooooooo");
     (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.sendMessage)(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/admin/messages");
   });
 
@@ -13058,7 +13056,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("template_form");
     form.addEventListener("submit", /*#__PURE__*/function () {
       var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
-        var formData, response, res;
+        var inputs, formData, textareas, hasValue, response, res;
         return _regeneratorRuntime().wrap(function _callee8$(_context8) {
           while (1) switch (_context8.prev = _context8.next) {
             case 0:
@@ -13066,30 +13064,53 @@ document.addEventListener("DOMContentLoaded", function () {
               document.querySelector(".loader").classList.remove("hidden");
               document.querySelector(".message-template-container").classList.add("hidden");
               updateTemplateView.resetIndex();
+
+              // 入力欄の前後の空白を削除
+              inputs = form.querySelectorAll("input, textarea");
+              inputs.forEach(function (el) {
+                if (el.value) el.value = el.value.trim();
+              });
               formData = new FormData(form);
-              _context8.next = 7;
+              textareas = document.querySelectorAll(".template_textarea");
+              hasValue = true;
+              textareas.forEach(function (textarea) {
+                console.log(textarea.value);
+                if (textarea.value.trim().length <= 0) {
+                  hasValue = false;
+                }
+              });
+              if (hasValue) {
+                _context8.next = 15;
+                break;
+              }
+              alert("テンプレートメッセージは空白にできません。");
+              document.querySelector(".loader").classList.add("hidden");
+              document.querySelector(".message-template-container").classList.remove("hidden");
+              return _context8.abrupt("return");
+            case 15:
+              _context8.next = 17;
               return fetch(_config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_14__.API_ENDPOINTS.TEMPLATE_SELECT, {
                 method: "POST",
                 body: formData
               });
-            case 7:
+            case 17:
               response = _context8.sent;
               if (response.ok) {
-                _context8.next = 10;
+                _context8.next = 20;
                 break;
               }
               throw new Error("サーバーからエラー応答が返されました。");
-            case 10:
-              _context8.next = 12;
+            case 20:
+              _context8.next = 22;
               return response.json();
-            case 12:
+            case 22:
               res = _context8.sent;
               socket.emit("send_messages", {
                 data: res["data"],
                 adminUuid: res["data"][0]["adminUuid"],
                 userUuid: res["data"][0]["userUuid"]
               });
-            case 14:
+            case 24:
             case "end":
               return _context8.stop();
           }

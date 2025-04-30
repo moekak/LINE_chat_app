@@ -196,14 +196,36 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		const updateTemplateView = UpdateTemplateView.getInstance();
 
 		const form = document.getElementById("template_form")
-
 		form.addEventListener("submit", async(e)=>{
 			e.preventDefault()
 			document.querySelector(".loader").classList.remove("hidden")
 			document.querySelector(".message-template-container").classList.add("hidden")
 			updateTemplateView.resetIndex()
 
+			// 入力欄の前後の空白を削除
+			const inputs = form.querySelectorAll("input, textarea");
+			inputs.forEach((el) => {
+				
+				if (el.value) el.value = el.value.trim();
+			});
+
 			const formData = new FormData(form)
+			const textareas = document.querySelectorAll(".template_textarea")
+			let hasValue = true
+
+			textareas.forEach((textarea)=>{
+				if(textarea.value.trim().length <= 0){
+					hasValue = false
+				}
+			})
+
+			if(!hasValue){
+				alert("テンプレートメッセージは空白にできません。")
+				document.querySelector(".loader").classList.add("hidden")
+				document.querySelector(".message-template-container").classList.remove("hidden")
+				return
+			}
+
 			const response = await fetch(API_ENDPOINTS.TEMPLATE_SELECT, {
 				method: "POST",
 				body: formData,
