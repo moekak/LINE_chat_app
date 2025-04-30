@@ -3,7 +3,13 @@ export default class UpdateTemplateView{
        * UpdateTemplateViewのコンストラクタ
        * 必要な要素の取得と初期設定を行う
        */
-      constructor(){
+      static #instance = null;
+      constructor() {
+            // すでにインスタンスが存在する場合はエラーを投げる
+            if (UpdateTemplateView.#instance) {
+                  throw new Error("UpdateTemplateViewのインスタンスは1つしか作成できません。getInstance()を使用してください。");
+            }
+
             this.selectedTemplates = []  //選択されたテンプレートを格納 
             this.singleTemplateDisplay = document.querySelector('.selected-template-display');
             this.messagesContainer = document.querySelector('.selected-templates-messages')
@@ -14,8 +20,17 @@ export default class UpdateTemplateView{
             this.addChatViewContainer()
             this.addClickEventToSelectButton()
             this.index = 0
+
+            // このインスタンスを静的プロパティに保存
+            UpdateTemplateView.#instance = this;
       }
 
+      static getInstance() {
+            if (!UpdateTemplateView.#instance) {
+                  UpdateTemplateView.#instance = new UpdateTemplateView();
+            }
+            return UpdateTemplateView.#instance;
+      }
 
       resetIndex(){
             this.index = 0
@@ -79,15 +94,15 @@ export default class UpdateTemplateView{
             contents.forEach((content)=>{
                   if(content.content_type === "text"){
                         messageContents += `
-                        <input type="hidden" name="contents[${this.index}][type]" value="text"/>
+                        <input type="hidden" class="template_type" name="contents[${this.index}][type]" value="text"/>
                         <textarea maxlength="1000"class="template_textarea" name="contents[${this.index}][content]" readonly>${content.content}</textarea>
                         `
                   }else if(content.content_type === "image"){
                         messageContents += `
                         <div style="display: flex;">
-                              <input type="hidden" name="contents[${this.index}][type]" value="image"/>
-                              <input type="hidden" name="contents[${this.index}][image_path]" value="${content.content}"/>
-                              <input type="hidden" name="contents[${this.index}][cropArea]" value='${content.cropArea}'/>
+                              <input type="hidden" class="template_type"  name="contents[${this.index}][type]" value="image"/>
+                              <input type="hidden" class="template_images" name="contents[${this.index}][image_path]" value="${content.content}"/>
+                              <input type="hidden" class"template_croparea name="contents[${this.index}][cropArea]" value='${content.cropArea}'/>
                               <img src='${content.content}'/>
                         </div>`
                   }
@@ -100,8 +115,8 @@ export default class UpdateTemplateView{
                         <button class="remove-template-btn" data-template-id="${this.selectedTemplates.template_id}">✕</button>
                   </div>
                   <div class="chat-message-body">
-                        <input type="hidden" name="admin_uuid" value="${document.getElementById("js_sender_id").value}"/>
-                        <input type="hidden" name="user_uuid" value="${document.getElementById("js_receiver_id").value}"/>
+                        <input type="hidden" name="admin_uuid" class="template_admin_uuid" value="${document.getElementById("js_sender_id").value}"/>
+                        <input type="hidden" name="user_uuid" class="template_user_uuid" value="${document.getElementById("js_receiver_id").value}"/>
                         ${messageContents}
                   </div>
             `;

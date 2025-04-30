@@ -33,7 +33,7 @@ class ChatController extends Controller
         $unread_message_data = UserMessageRead::where("admin_account_id", $adminId)->where("chat_user_id", $userId)->select("last_unread_message_id", "last_message_type", "unread_count")->first();
 
         $templates_data = MessageTemplateContent::getMessageTemplatesForAdmin($adminId);
-        $template_categories = MessageTemplatesCategory::select("category_name")->where("admin_id", $adminId)->get();
+        $template_categories = MessageTemplatesCategory::select("category_name", "id")->where("admin_id", $adminId)->get();
 
 
 
@@ -82,4 +82,5 @@ class ChatController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
 }

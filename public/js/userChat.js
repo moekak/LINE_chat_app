@@ -8509,18 +8509,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-// export default {
-//     SOCKET_URL: 'https://chat-socket.info:3000',
-//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat-system.info/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://chat-socket.info:3000',
+  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat-system.info/admin/chat"
+});
 
 // 開発用
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+// };
 
 /***/ }),
 
@@ -9138,7 +9138,6 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
-  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
