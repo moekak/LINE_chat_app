@@ -1,3 +1,4 @@
+import FormatText from "../../util/FormatText.js";
 import FromController from "../ui/FormController.js";
 
 
@@ -33,7 +34,6 @@ class ChatUIHelper{
      * @returns {String} -　フォーマットした文字列を返す
      */
     static adjustMesageLength(text){
-
         const formattedText = text.replace(/[\n\r]|<br>/g, '');
         if (formattedText.length >= MAX_LENGTH) {
             return formattedText.substring(0, MAX_LENGTH) + "...";

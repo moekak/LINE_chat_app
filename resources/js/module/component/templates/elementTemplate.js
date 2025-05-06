@@ -28,13 +28,18 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       
 
       // テキストに含まれてるURLをaタグに変換する
-      const linkedMessage = linkifyContent(content)
+      const escapedContent = FormatText.escapeHtml(content);
+      const linkedMessage = linkifyContent(escapedContent);
+      const displayMessage = linkedMessage
+      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+      
       return `
             <div class="chat__message-container-right">
                   <div class="chat__mesgae-main-right">
                         <div class="chat__message-time-txt">${time}</div>
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
-                        `<div class="chat__message-box-right chat-margin5 js_chat_message">${FormatText.escapeHtml(linkedMessage).replace(/\n/g, "<br>")}</div>` 
+                        `<div class="chat__message-box-right chat-margin5 js_chat_message">${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
                         }
@@ -46,8 +51,12 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       const src = document.getElementById("js_user_icon_img").value;
       const icon_src = src === "" ? "/img/user-icon.png" : src
 
-      // テキストに含まれてるURLをaタグに変換する
-      const linkedMessage = linkifyContent(content)
+      // テキストに含まれてるURLをaタグに変換する前にエスケープ
+      const escapedContent = FormatText.escapeHtml(content);
+      const linkedMessage = linkifyContent(escapedContent);
+      const displayMessage = linkedMessage
+      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
 
       let rawHtml = "";
 
@@ -71,7 +80,7 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
                   <div class="chat__mesgae-main-left">
                         <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user-icon.png';" id="icon_msg"> 
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
-                        `<div class="chat__message-box-left chat-margin5 js_chat_message">${FormatText.escapeHtml(linkedMessage).replace(/\n/g, "<br>")}</div>` 
+                        `<div class="chat__message-box-left chat-margin5 js_chat_message">${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
                         }
@@ -84,7 +93,7 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
 export const createChatUserContainer = (sender_id, res) =>{
       const countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || (res["unread_count"] == null || res["unread_count"] === 0) ? "none" : "flex";
       const countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || (res["unread_count"] == null || res["unread_count"] === 0) ? 0 : res["unread_count"];
-
+      
       return `
             <a href="${config.CHAT_URL}/${res["id"]}/${document.getElementById("js_admin_id").value}" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid="${sender_id}" data-id="${res["id"]}" data-admin-id="${document.getElementById("js_admin_id").value}">
                   <input type="hidden" name="admin_id" class="js_admin_el">
