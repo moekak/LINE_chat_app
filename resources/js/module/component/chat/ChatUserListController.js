@@ -1,5 +1,6 @@
 
 import Fetch from "../../util/api/Fetch";
+import FormatText from "../../util/FormatText";
 import userStateManager from "../../util/state/UserStateManager";
 import { createChatUserContainer } from "../templates/elementTemplate";
 import ChatUIHelper from "./ChatUIHelper";
@@ -154,8 +155,8 @@ class ChatUserListController{
             const id = element.getAttribute("data-id");
             const chatUserId = this.senderType == "user" ? this.senderId : this.receiverId
             const txt = this.messageType == "image" ? (this.senderType == "user" ? "画像が送信されました" : "画像を送信しました") : this.content
-
-            if (id == chatUserId) element.innerHTML = ChatUIHelper.adjustMesageLength(txt)
+            
+            if (id == chatUserId) element.textContent  = ChatUIHelper.adjustMesageLength(txt)
         });
     };
 

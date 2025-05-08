@@ -1,6 +1,7 @@
 import ChatUIHelper from "../../component/chat/ChatUIHelper"
 import { createChatUserContainer } from "../../component/templates/elementTemplate"
 import Fetch from "../api/Fetch"
+import FormatText from "../FormatText"
 import userStateManager from "../state/UserStateManager"
 const MESSAGES_PER_PAGE = 20
 

@@ -5,6 +5,7 @@ import ChatUIHelper from '../../component/chat/ChatUIHelper.js';
 import ChatUserListController from '../../component/chat/ChatUserListController.js';
 import { createChatUserContainer } from '../../component/templates/elementTemplate.js';
 import Fetch from '../api/Fetch.js';
+import FormatText from '../FormatText.js';
 import InfiniteScrollForList from '../scrolling/InfiniteScrollForList.js';
 import { playNotificationSound } from './notificationSound.js';
 
@@ -18,7 +19,7 @@ export const prepareMessageData = () => {
 	document.querySelector(".chat__form-submit").classList.add("disabled_btn");
 	// サーバーに送信するデータをすべて取得する
 	const msg = document.getElementById("js_msg").value;
-	const formattedMsg = msg.replace(/\n/g, '<br>'); // 改行文字を <br> タグに置き換える
+	const formattedMsg = msg
 	const receiver_id = document.getElementById("js_receiver_id").value;
 	const sender_type = document.getElementById("js_sender_type").value;
 

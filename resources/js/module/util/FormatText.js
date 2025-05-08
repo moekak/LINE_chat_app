@@ -6,10 +6,9 @@ export default class FormatText{
        */
       static escapeHtml(str) {
             return str
-            .replace(/&/g, "&amp;")
+            .replace(/&/g, "&amp;")  // & は最初に変換
             .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/>/g, "&gt;");
+
       }
 }

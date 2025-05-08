@@ -16,6 +16,7 @@ import MessageTemplate from './module/component/messageTemplates/MessageTemplate
 import Fetch from './module/util/api/Fetch.js';
 import { API_ENDPOINTS } from './config/apiEndPoints.js';
 import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
+import FormatText from './module/util/FormatText.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -102,6 +103,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	// サーバーからのメッセージを受信
 	socket.on('chat message', async (msg, sender_type, actual_sender_id, time, actual_receiver_id)=> {
+
 		await handleReceivedMessage(isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text")
 		if(ChatUIHelper.isCurrentUser(actual_sender_id) || ChatUIHelper.isCurrentAmdin(actual_sender_id, actual_receiver_id)){
 			ChatUIHelper.scrollToBottom()

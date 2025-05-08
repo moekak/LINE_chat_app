@@ -106,7 +106,7 @@ export const createChatUserContainer = (sender_id, res) =>{
                               <small class="chat_time js_update_message_time" data-id="${sender_id}">${res["latest_message_date"]}</small>
                         </div>  
                         <div class="chat__users-list-msg">
-                              <small class="chat_message js_chatMessage_elment" data-id="${sender_id}">${res["latest_all_message"]}</small>
+                              <small class="chat_message js_chatMessage_elment" data-id="${sender_id}">${FormatText.escapeHtml(res["latest_all_message"])}</small>
                               <div class="message_count js_mesage_count" data-id="${sender_id}" style="display:${countDivStyle}">${countinnerHTML}</div>
                         </div>
                   </div>
