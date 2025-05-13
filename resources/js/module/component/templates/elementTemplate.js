@@ -48,8 +48,8 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       `
 }
 export const createLeftMessageContainer = (message_type, time, content, cropArea) =>{
-      const src = document.getElementById("js_user_icon_img").value;
-      const icon_src = src === "" ? "/img/user-icon.png" : src
+      const src = document.getElementById("js_user_icon_img")?.value;
+      const icon_src = src === "" ? "/img/user.png" : src
 
       // テキストに含まれてるURLをaタグに変換する前にエスケープ
       const escapedContent = FormatText.escapeHtml(content);
@@ -78,8 +78,8 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       return `
             <div class="chat__message-container-left">
                   <div class="chat__mesgae-main-left">
-                        <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user-icon.png';" id="icon_msg"> 
-                        ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
+                        <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user.png';" id="icon_msg"> 
+                        ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt"? 
                         `<div class="chat__message-box-left chat-margin5 js_chat_message">${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
@@ -99,7 +99,7 @@ export const createChatUserContainer = (sender_id, res) =>{
                   <input type="hidden" name="admin_id" class="js_admin_el">
                   <input type="hidden" name="user_id" class="js_user_el">
                   <input type="hidden" name="token" class="js_token">
-                  <img src=${res["user_picture"]} alt="" onerror="this.onerror=null; this.src='/img/user-icon.png';" class="chat_users-icon"> 
+                  <img src=${res["user_picture"]} alt="" onerror="this.onerror=null; this.src='/img/user.png';" class="chat_users-icon"> 
                   <div class="chat_users-list-flex">
                         <div class="chat_users-list-box" > 
                               <p class="chat_name_txt" data-simplebar>${res["line_name"]}</p>

@@ -23,8 +23,7 @@ class MessageService{
     //取得したメッセージを日付順にグループ化する(最新順)
     public function groupMessagesByDate($messages){
         $groupMessages = collect($messages)->groupBy(function($message){
-            $JapaneseDateFormatter = new JapaneseDateFormatter();
-            return $JapaneseDateFormatter->formatDate($message["created_at"]);
+            return JapaneseDateFormatter::formatDate($message["created_at"]);
         });// これを追加して日付の逆順にソート
 
         return $groupMessages;

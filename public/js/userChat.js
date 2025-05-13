@@ -8816,7 +8816,6 @@ var ChatUIHelper = /*#__PURE__*/function () {
      * @returns {String} -　フォーマットした文字列を返す
      */
     function adjustMesageLength(text) {
-      console.log(text);
       var formattedText = text.split('\n')[0];
       if (formattedText.length >= MAX_LENGTH) {
         return formattedText.substring(0, MAX_LENGTH) + "...";
@@ -9037,8 +9036,6 @@ var ChatUserListController = /*#__PURE__*/function () {
         var id = element.getAttribute("data-id");
         var chatUserId = _this2.senderType == "user" ? _this2.senderId : _this2.receiverId;
         var txt = _this2.messageType == "image" ? _this2.senderType == "user" ? "画像が送信されました" : "画像を送信しました" : _this2.content;
-        console.log(txt);
-        console.log("textです");
         if (id == chatUserId) element.textContent = _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].adjustMesageLength(txt);
       });
     }
