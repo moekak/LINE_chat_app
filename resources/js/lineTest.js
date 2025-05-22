@@ -46,13 +46,6 @@ const socket  = socketService.getSocket()
 
 // サーバーからのメッセージを受信
 socket.on('test message',async ( sendingDatatoBackEnd, created_at, userIdsArray) => {
-
-      console.log({
-            "sendingDatatoBackEnd": sendingDatatoBackEnd,
-            "created_at": created_at,
-            "userIdsArray" : userIdsArray
-      });
-
       sendingDatatoBackEnd.forEach((data)=>{
             let args = {
                   messageType: data["type"],

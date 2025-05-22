@@ -26,6 +26,7 @@
 @section('chat-message')
 
 <input type="hidden" value="{{Route::current()->parameter('userId')}}" id="js_user_id">
+<input type="hidden" value="{{$lineName}}" id="js_user_name">
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_user">
             @foreach ($testMessages as $date => $messages)
@@ -39,11 +40,14 @@
                                                 @php
                                                       // Step 1: エスケープ
                                                       $escapedMessage = e($message["resource"]);
+
+                                                      $actualName = $lineName; // 実際に表示したい名前
+                                                      $replacedMessage = str_replace('{名前}', $actualName, $escapedMessage);
                                                       
                                                       // Step 2: URLをリンクに変換
                                                       $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
                                                       $replacement = '<a href="$0" target="_blank" rel="noopener noreferrer">$0</a>';
-                                                      $linkedMessage = preg_replace($pattern, $replacement, $escapedMessage);
+                                                      $linkedMessage = preg_replace($pattern, $replacement, $replacedMessage);
                                                       
                                                       // Step 3: 改行をHTMLの<br>タグに変換
                                                       $formattedMessage = nl2br($linkedMessage);
