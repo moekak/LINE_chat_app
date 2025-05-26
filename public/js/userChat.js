@@ -8509,18 +8509,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://chat-socket.info:3000',
-  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat-system.info/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://chat-socket.info:3000',
+//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat-system.info/admin/chat"
+// };
 
 // 開発用
-// export default {
-//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+});
 
 /***/ }),
 
@@ -9143,7 +9143,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea, type) {
-  console.log(type);
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }

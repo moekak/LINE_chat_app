@@ -15,7 +15,7 @@ Route::get('/healthcheck', function () {
 });
 
 
-Route::get("/chat/{userId}", [TestSenderController::class, "index"])->name("admin.chat");
+Route::get("/chat/{userId}", [TestSenderController::class, "index"]);
 Route::get('/welcome', function () {
     return view("welcome");
 });

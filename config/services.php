@@ -15,10 +15,10 @@ return [
     */
 
     // 本番用
-    'chat_manager' => env('API_URL', 'https://chat-manager.info'),
+    // 'chat_manager' => env('API_URL', 'https://chat-manager.info'),
 
     // 開発用
-    // 'chat_manager' => env('API_URL', 'https://manager.line-chat-system-dev.tokyo'),
+    'chat_manager' => env('API_URL', 'https://manager.line-chat-system-dev.tokyo'),
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

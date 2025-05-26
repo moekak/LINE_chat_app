@@ -38,7 +38,7 @@
 
                               @foreach ($mergedData as $data)
                                     @if (isset($data["latest_message_date"]))
-                                          <a href={{ route('admin.chat', ['userId' => $data->id, 'adminId' => $admin_info->id]) }} class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
+                                          <a href="{{ route('admin.chat', ['userId' => $data->id, 'adminId' => $admin_info->id]) }}" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
                                                 <img src="{{ $data->user_picture }}" alt="" onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon">
                                                 <div class="chat_users-list-flex">
                                                       <div class="chat_users-list-box"> 

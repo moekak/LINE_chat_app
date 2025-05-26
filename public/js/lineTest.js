@@ -4715,18 +4715,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://chat-socket.info:3000',
-  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat-system.info/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://chat-socket.info:3000',
+//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat-system.info/admin/chat"
+// };
 
 // 開発用
-// export default {
-//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+});
 
 /***/ }),
 
@@ -5344,7 +5344,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea, type) {
-  console.log(type);
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
@@ -6695,12 +6694,6 @@ socket.on('test message', /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          console.log({
-            "sendingDatatoBackEnd": sendingDatatoBackEnd,
-            "created_at": created_at,
-            "userIdsArray": userIdsArray,
-            "type": type
-          });
           sendingDatatoBackEnd.forEach(function (data) {
             var args = {
               messageType: data["type"],
@@ -6726,7 +6719,7 @@ socket.on('test message', /*#__PURE__*/function () {
             chatMessageController.displayChatMessage();
             _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].scrollToBottom();
           });
-        case 2:
+        case 1:
         case "end":
           return _context.stop();
       }
