@@ -73,7 +73,8 @@ socket.on('test message',async ( sendingDatatoBackEnd, created_at, userIdsArray,
                               "y_percent": data["cropArea"]["y_percent"],
 
                         },
-                  url: data["cropArea"]["url"]
+                  url: data["cropArea"]["url"],
+                  type : type ?? null
             }
 
 

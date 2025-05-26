@@ -8581,6 +8581,7 @@ var ChatMessageController = /*#__PURE__*/function () {
       content = _ref.content,
       _fileName = _ref.fileName,
       senderId = _ref.senderId,
+      type = _ref.type,
       _ref$ids = _ref.ids,
       ids = _ref$ids === void 0 ? [] : _ref$ids;
     _classCallCheck(this, ChatMessageController);
@@ -8600,6 +8601,7 @@ var ChatMessageController = /*#__PURE__*/function () {
     this.parentElement = document.querySelector(".".concat(this.className));
     this.senderId = senderId;
     this.ids = ids;
+    this.type = type;
   }
   return _createClass(ChatMessageController, [{
     key: "displayChatMessage",
@@ -8623,7 +8625,7 @@ function _addChatMessage(isRight) {
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
-  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea);
+  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea);
   this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
   // this.cropAreaがある場合は処理を適用
@@ -9678,7 +9680,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea) {
+var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea, type) {
+  console.log(type);
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
@@ -9692,20 +9695,34 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   // テキストに含まれてるURLをaタグに変換する
   var escapedContent = _util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(content);
   var linkedMessage = (0,_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.linkifyContent)(escapedContent);
-  var displayMessage = linkedMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
+  var displayMessage = linkedMessage;
+  if (document.getElementById("js_user_name") && type) {
+    var _document$getElementB;
+    displayMessage = linkedMessage.replace(/{名前}/g, ((_document$getElementB = document.getElementById("js_user_name")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value) || '');
+  }
+
+  // 共通の改行処理
+  displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
   return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
 };
 var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content, cropArea) {
-  var _document$getElementB;
-  var src = (_document$getElementB = document.getElementById("js_user_icon_img")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value;
+  var _document$getElementB2;
+  var src = (_document$getElementB2 = document.getElementById("js_user_icon_img")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value;
   var icon_src = src === "" ? "/img/user.png" : src;
 
   // テキストに含まれてるURLをaタグに変換する前にエスケープ
   var escapedContent = _util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(content);
   var linkedMessage = (0,_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.linkifyContent)(escapedContent);
-  var displayMessage = linkedMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
+  var displayMessage = linkedMessage;
+  if (document.getElementById("js_user_name")) {
+    var _document$getElementB3;
+    displayMessage = linkedMessage.replace(/{名前}/g, ((_document$getElementB3 = document.getElementById("js_user_name")) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || '');
+  }
+
+  // 共通の改行処理
+  displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
   var rawHtml = "";

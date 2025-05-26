@@ -22,7 +22,7 @@ class ChatMessageController{
      * @param {string} senderId - 送信者の ID
     */
 
-    constructor({messageType, cropArea, position, time, className, senderType, content, fileName, senderId, ids = []}){
+    constructor({messageType, cropArea, position, time, className, senderType, content, fileName, senderId,type, ids = []}){
         this.messageType = messageType
         this.cropArea = cropArea
         this.position = position
@@ -34,6 +34,7 @@ class ChatMessageController{
         this.parentElement = document.querySelector(`.${this.className}`)
         this.senderId = senderId
         this.ids = ids
+        this.type = type
     }
 
     displayChatMessage(){
@@ -64,7 +65,7 @@ class ChatMessageController{
         const validPositions = ["afterbegin", "beforeend"];
         const validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
         // メッセージHTMLを生成して挿入
-        const messageHTML = isRight ? createRightMessageContainer(this.messageType, this.time, this.content, this.cropArea): createLeftMessageContainer(this.messageType, this.time, this.content, this.cropArea);
+        const messageHTML = isRight ? createRightMessageContainer(this.messageType, this.time, this.content, this.cropArea, this.type): createLeftMessageContainer(this.messageType, this.time, this.content, this.cropArea);
         this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
         // this.cropAreaがある場合は処理を適用

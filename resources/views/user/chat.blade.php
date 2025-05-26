@@ -117,7 +117,7 @@
 <div class="chat__form">
       <form class="chat__form-flex" id="js_chat_form">
             <div class="attachment_container relative">
-                  <label for="fileInput"><img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon js_attachment_icon"></label>
+                  <label for="fileInput" style="display: flex;"><img src="{{asset("img/icons8-attachment-30.png")}}" alt="" class="attachemnt-icon js_attachment_icon"></label>
                   <input type="file" name="image" class="hidden" accept="image/*" id="fileInput" style="display: none">
             </div>
             <textarea type="text" placeholder="Type a message" id="js_msg" rows="1" maxlength="1000"></textarea>

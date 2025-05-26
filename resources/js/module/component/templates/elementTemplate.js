@@ -3,7 +3,10 @@ import config from '../../../config/config.js';
 import FormatText from '../../util/FormatText.js';
 
 
-export const createRightMessageContainer = (message_type, time, content, cropArea) =>{
+export const createRightMessageContainer = (message_type, time, content, cropArea, type) =>{
+
+      console.log(type);
+      
 
       if(typeof(cropArea) === "string"){
             cropArea = JSON.parse(cropArea)
@@ -30,10 +33,16 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       // テキストに含まれてるURLをaタグに変換する
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
-      const displayMessage = linkedMessage
-      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
-      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
-      
+      let displayMessage = linkedMessage
+      if(document.getElementById("js_user_name") && type){
+            displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
+      }
+
+      // 共通の改行処理
+      displayMessage = displayMessage
+            .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+            .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+            
       return `
             <div class="chat__message-container-right">
                   <div class="chat__mesgae-main-right">
@@ -54,9 +63,16 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       // テキストに含まれてるURLをaタグに変換する前にエスケープ
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
-      const displayMessage = linkedMessage
-      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
-      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+      let displayMessage = linkedMessage
+      if(document.getElementById("js_user_name")){
+            displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
+      }
+
+      // 共通の改行処理
+      displayMessage = displayMessage
+            .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+            .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+
 
       let rawHtml = "";
 
