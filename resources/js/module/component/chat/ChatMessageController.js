@@ -65,7 +65,7 @@ class ChatMessageController{
         const validPositions = ["afterbegin", "beforeend"];
         const validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
         // メッセージHTMLを生成して挿入
-        const messageHTML = isRight ? createRightMessageContainer(this.messageType, this.time, this.content, this.cropArea, this.type): createLeftMessageContainer(this.messageType, this.time, this.content, this.cropArea);
+        const messageHTML = isRight ? createRightMessageContainer(this.messageType, this.time, this.content, this.cropArea, this.type): createLeftMessageContainer(this.messageType, this.time, this.content, this.cropArea, this.type);
         this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
         // this.cropAreaがある場合は処理を適用

@@ -4,10 +4,6 @@ import FormatText from '../../util/FormatText.js';
 
 
 export const createRightMessageContainer = (message_type, time, content, cropArea, type) =>{
-
-      console.log(type);
-      
-
       if(typeof(cropArea) === "string"){
             cropArea = JSON.parse(cropArea)
       }
@@ -34,7 +30,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
       let displayMessage = linkedMessage
-      if(document.getElementById("js_user_name") && type){
+      if(document.getElementById("js_user_name") && type == "greeting"){
             displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
       }
 
@@ -56,7 +52,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
             </div>
       `
 }
-export const createLeftMessageContainer = (message_type, time, content, cropArea) =>{
+export const createLeftMessageContainer = (message_type, time, content, cropArea, type) =>{
       const src = document.getElementById("js_user_icon_img")?.value;
       const icon_src = src === "" ? "/img/user.png" : src
 
@@ -64,7 +60,7 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
       let displayMessage = linkedMessage
-      if(document.getElementById("js_user_name")){
+      if(document.getElementById("js_user_name") && type === "greeting"){
             displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
       }
 

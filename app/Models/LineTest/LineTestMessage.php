@@ -4,7 +4,6 @@ namespace App\Models\LineTest;
 
 use App\Services\Util\JapaneseDateFormatter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 class LineTestMessage extends Model
 {
@@ -24,7 +23,7 @@ class LineTestMessage extends Model
     }
 
     public function scopeWithSelect($query){
-        return $query->select("id", "test_message_group_id", "resource", "resource_type", "message_order", "created_at");
+        return $query->select("id", "test_message_group_id", "resource", "type", "resource_type", "message_order", "created_at");
     }
 
 

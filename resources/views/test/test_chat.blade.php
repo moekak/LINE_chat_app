@@ -42,7 +42,11 @@
                                                       $escapedMessage = e($message["resource"]);
 
                                                       $actualName = $lineName; // 実際に表示したい名前
-                                                      $replacedMessage = str_replace('{名前}', $actualName, $escapedMessage);
+                                                      $replacedMessage = $escapedMessage;
+                                                      if($message["type"] == "greeting"){
+                                                            $replacedMessage = str_replace('{名前}', $actualName, $escapedMessage); 
+                                                      }
+                                                      
                                                       
                                                       // Step 2: URLをリンクに変換
                                                       $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
