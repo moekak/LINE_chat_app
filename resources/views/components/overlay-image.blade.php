@@ -1,5 +1,5 @@
 <div class="image-container" style="position: relative; display: inline-block; margin: 5px 0; "data-crop="{{ json_encode($cropData) }}">
-      <img src="{{ $src }}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;" data-id={{$message["id"]}} data-type={{$message["type"]}}>
+      <img src="{{ $src }}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;" data-id={{$message["id"]}} data-type={{$message["type"] ?? $message["resource_type"]}}>
       <a class="overlay" href="{{ $link }}" style="display: none;"></a>
 </div>
 

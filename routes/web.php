@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ChatController;
+use App\Http\Controllers\Test\TestSenderController;
 use App\Http\Controllers\User\ChatController as UserChatController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,7 @@ Route::get('/healthcheck', function () {
 });
 
 
-
+Route::get("/chat/{userId}", [TestSenderController::class, "index"]);
 Route::get('/welcome', function () {
     return view("welcome");
 });

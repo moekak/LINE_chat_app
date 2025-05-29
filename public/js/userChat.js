@@ -8509,18 +8509,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://chat-socket.info:3000',
-  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat-system.info/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://chat-socket.info:3000',
+//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat-system.info/admin/chat"
+// };
 
 // 開発用
-// export default {
-//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+});
 
 /***/ }),
 
@@ -8581,6 +8581,7 @@ var ChatMessageController = /*#__PURE__*/function () {
       content = _ref.content,
       _fileName = _ref.fileName,
       senderId = _ref.senderId,
+      type = _ref.type,
       _ref$ids = _ref.ids,
       ids = _ref$ids === void 0 ? [] : _ref$ids;
     _classCallCheck(this, ChatMessageController);
@@ -8600,6 +8601,7 @@ var ChatMessageController = /*#__PURE__*/function () {
     this.parentElement = document.querySelector(".".concat(this.className));
     this.senderId = senderId;
     this.ids = ids;
+    this.type = type;
   }
   return _createClass(ChatMessageController, [{
     key: "displayChatMessage",
@@ -8623,7 +8625,7 @@ function _addChatMessage(isRight) {
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
-  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea);
+  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type);
   this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
   // this.cropAreaがある場合は処理を適用
@@ -8816,7 +8818,6 @@ var ChatUIHelper = /*#__PURE__*/function () {
      * @returns {String} -　フォーマットした文字列を返す
      */
     function adjustMesageLength(text) {
-      console.log(text);
       var formattedText = text.split('\n')[0];
       if (formattedText.length >= MAX_LENGTH) {
         return formattedText.substring(0, MAX_LENGTH) + "...";
@@ -9037,8 +9038,6 @@ var ChatUserListController = /*#__PURE__*/function () {
         var id = element.getAttribute("data-id");
         var chatUserId = _this2.senderType == "user" ? _this2.senderId : _this2.receiverId;
         var txt = _this2.messageType == "image" ? _this2.senderType == "user" ? "画像が送信されました" : "画像を送信しました" : _this2.content;
-        console.log(txt);
-        console.log("textです");
         if (id == chatUserId) element.textContent = _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].adjustMesageLength(txt);
       });
     }
@@ -9143,7 +9142,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea) {
+var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea, type) {
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
@@ -9157,19 +9156,34 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   // テキストに含まれてるURLをaタグに変換する
   var escapedContent = _util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(content);
   var linkedMessage = (0,_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.linkifyContent)(escapedContent);
-  var displayMessage = linkedMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
+  var displayMessage = linkedMessage;
+  if (document.getElementById("js_user_name") && type == "greeting") {
+    var _document$getElementB;
+    displayMessage = linkedMessage.replace(/{名前}/g, ((_document$getElementB = document.getElementById("js_user_name")) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value) || '');
+  }
+
+  // 共通の改行処理
+  displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
   return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
 };
-var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content, cropArea) {
-  var src = document.getElementById("js_user_icon_img").value;
-  var icon_src = src === "" ? "/img/user-icon.png" : src;
+var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content, cropArea, type) {
+  var _document$getElementB2;
+  var src = (_document$getElementB2 = document.getElementById("js_user_icon_img")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value;
+  var icon_src = src === "" ? "/img/user.png" : src;
 
   // テキストに含まれてるURLをaタグに変換する前にエスケープ
   var escapedContent = _util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(content);
   var linkedMessage = (0,_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.linkifyContent)(escapedContent);
-  var displayMessage = linkedMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
+  var displayMessage = linkedMessage;
+  if (document.getElementById("js_user_name") && type === "greeting") {
+    var _document$getElementB3;
+    displayMessage = linkedMessage.replace(/{名前}/g, ((_document$getElementB3 = document.getElementById("js_user_name")) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || '');
+  }
+
+  // 共通の改行処理
+  displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
   var rawHtml = "";
@@ -9178,12 +9192,12 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
   } else {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                  <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\"/>\n            </div>\n            ");
   }
-  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
+  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
 };
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user-icon.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
+  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
 };
 
 /***/ }),

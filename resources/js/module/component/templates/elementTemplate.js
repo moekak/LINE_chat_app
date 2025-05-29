@@ -3,8 +3,7 @@ import config from '../../../config/config.js';
 import FormatText from '../../util/FormatText.js';
 
 
-export const createRightMessageContainer = (message_type, time, content, cropArea) =>{
-
+export const createRightMessageContainer = (message_type, time, content, cropArea, type) =>{
       if(typeof(cropArea) === "string"){
             cropArea = JSON.parse(cropArea)
       }
@@ -30,10 +29,16 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       // テキストに含まれてるURLをaタグに変換する
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
-      const displayMessage = linkedMessage
-      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
-      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
-      
+      let displayMessage = linkedMessage
+      if(document.getElementById("js_user_name") && type == "greeting"){
+            displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
+      }
+
+      // 共通の改行処理
+      displayMessage = displayMessage
+            .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+            .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+            
       return `
             <div class="chat__message-container-right">
                   <div class="chat__mesgae-main-right">
@@ -47,16 +52,23 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
             </div>
       `
 }
-export const createLeftMessageContainer = (message_type, time, content, cropArea) =>{
-      const src = document.getElementById("js_user_icon_img").value;
-      const icon_src = src === "" ? "/img/user-icon.png" : src
+export const createLeftMessageContainer = (message_type, time, content, cropArea, type) =>{
+      const src = document.getElementById("js_user_icon_img")?.value;
+      const icon_src = src === "" ? "/img/user.png" : src
 
       // テキストに含まれてるURLをaタグに変換する前にエスケープ
       const escapedContent = FormatText.escapeHtml(content);
       const linkedMessage = linkifyContent(escapedContent);
-      const displayMessage = linkedMessage
-      .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
-      .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+      let displayMessage = linkedMessage
+      if(document.getElementById("js_user_name") && type === "greeting"){
+            displayMessage = linkedMessage.replace(/{名前}/g, document.getElementById("js_user_name")?.value || '');
+      }
+
+      // 共通の改行処理
+      displayMessage = displayMessage
+            .replace(/&lt;br&gt;/g, '\n')  // エスケープされた<br>タグを改行に変換
+            .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
+
 
       let rawHtml = "";
 
@@ -78,8 +90,8 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       return `
             <div class="chat__message-container-left">
                   <div class="chat__mesgae-main-left">
-                        <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user-icon.png';" id="icon_msg"> 
-                        ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
+                        <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user.png';" id="icon_msg"> 
+                        ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt"? 
                         `<div class="chat__message-box-left chat-margin5 js_chat_message">${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
@@ -99,7 +111,7 @@ export const createChatUserContainer = (sender_id, res) =>{
                   <input type="hidden" name="admin_id" class="js_admin_el">
                   <input type="hidden" name="user_id" class="js_user_el">
                   <input type="hidden" name="token" class="js_token">
-                  <img src=${res["user_picture"]} alt="" onerror="this.onerror=null; this.src='/img/user-icon.png';" class="chat_users-icon"> 
+                  <img src=${res["user_picture"]} alt="" onerror="this.onerror=null; this.src='/img/user.png';" class="chat_users-icon"> 
                   <div class="chat_users-list-flex">
                         <div class="chat_users-list-box" > 
                               <p class="chat_name_txt" data-simplebar>${res["line_name"]}</p>

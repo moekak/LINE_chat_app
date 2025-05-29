@@ -5,7 +5,7 @@ namespace App\Services\Util;
 use Illuminate\Support\Carbon;
 
 class JapaneseDateFormatter{
-    public function formatDate($createdAt){
+    public static function formatDate($createdAt){
         // Carbonインスタンスを作成
         $date = Carbon::parse($createdAt);
         $date->locale('ja'); // 日本語のロケールを設定
