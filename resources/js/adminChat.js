@@ -95,10 +95,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// クライアントからソケットサーバーへメッセージを送信する
 	document.querySelector(".chat__form-submit").addEventListener("click", (e)=>{
 		e.preventDefault();
+		sendMessageToServer()
+
+	})
+
+	// クライアントからソケットサーバーへメッセージを送信する(Enter + shift)
+	document.getElementById("js_msg").addEventListener('keydown', function(e) {
+		if (e.key === 'Enter' && e.shiftKey) {
+			e.preventDefault(); // 改行を防止
+			sendMessageToServer();
+		}
+	});
+
+	const sendMessageToServer = () =>{
 		const { msg, formattedMsg, receiver_id, sender_type } = prepareMessageData();
 		// メッセージをサーバーに送信する
 		sendMessage(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/admin/messages")
-	})
+	}
 
 
 	// サーバーからのメッセージを受信

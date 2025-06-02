@@ -163,7 +163,7 @@
                   
                   <input type="file" name="image" class="hidden" accept="image/*" id="fileInput" style="display: none">
             </div>
-            <textarea type="text" placeholder="Type a message" id="js_msg" rows="1" maxlength="1000"></textarea>
+            <textarea type="text" placeholder="メッセージを入力（Enterで改行、Shift+Enterで送信）" id="js_msg" rows="1" maxlength="1000"></textarea>
             @yield('send_data')
             <button class="chat__form-submit disabled_btn" type="button"><img src="{{asset("img/icons8-send-48.png")}}" alt="" class="submit-icon"></button>
       </div>

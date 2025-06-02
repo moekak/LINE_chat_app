@@ -12939,6 +12939,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // クライアントからソケットサーバーへメッセージを送信する
   document.querySelector(".chat__form-submit").addEventListener("click", function (e) {
     e.preventDefault();
+    sendMessageToServer();
+  });
+
+  // クライアントからソケットサーバーへメッセージを送信する(Enter + shift)
+  document.getElementById("js_msg").addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault(); // 改行を防止
+      sendMessageToServer();
+    }
+  });
+  var sendMessageToServer = function sendMessageToServer() {
     var _prepareMessageData = (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.prepareMessageData)(),
       msg = _prepareMessageData.msg,
       formattedMsg = _prepareMessageData.formattedMsg,
@@ -12946,7 +12957,7 @@ document.addEventListener("DOMContentLoaded", function () {
       sender_type = _prepareMessageData.sender_type;
     // メッセージをサーバーに送信する
     (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.sendMessage)(socket, formattedMsg, sender_id, receiver_id, sender_type, msg, "/api/admin/messages");
-  });
+  };
 
   // サーバーからのメッセージを受信
   socket.on('chat message', /*#__PURE__*/function () {
