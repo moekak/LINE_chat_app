@@ -151,6 +151,17 @@
 <script src="{{mix("js/userChat.js")}}"></script>
       <script>
             document.addEventListener("DOMContentLoaded", () => {
+                  // 背景色設定
+                  const backgroundColor = @json($background_color);
+                  if(backgroundColor){
+                        document.querySelector(".contents").style.backgroundColor = backgroundColor["hex"]
+                        document.querySelector(".chat__form").style.backgroundColor = backgroundColor["hex"]
+                  }else{
+                        document.querySelector(".contents").style.backgroundColor = "#f5f6fa"
+                        document.querySelector(".chat__form").style.backgroundColor = "#f5f6fa"
+                  }
+
+
                   const lastMessageId = @json($unread_message_id);  // セミコロンを追加
                   const lastMessageType= @json($last_message_type);  // セミコロンを追加
                   const unreadCount= @json($unread_count);  // セミコロンを追加

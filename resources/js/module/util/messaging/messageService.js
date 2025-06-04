@@ -71,6 +71,9 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
 
   // メッセージ受信時の処理
 export const handleReceivedMessage = async (isON, is_searching, sender_type, sender_id, time, receiver_id, content, message_type, cropArea = []) =>{
+
+	console.log(`isON: ${isON}`);
+	
 	if (isON["isSoundOn"]) playNotificationSound();
 	let current_chat_id = document.getElementById("js_chatuser_id").value
 

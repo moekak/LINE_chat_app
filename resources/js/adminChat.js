@@ -16,8 +16,8 @@ import MessageTemplate from './module/component/messageTemplates/MessageTemplate
 import Fetch from './module/util/api/Fetch.js';
 import { API_ENDPOINTS } from './config/apiEndPoints.js';
 import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
-import FormatText from './module/util/FormatText.js';
-import { isON } from './dataManager.js';
+
+window.window.isON  = {isSoundOn : false}
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -48,21 +48,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// 30秒ごとにハートビートを送信
 	setInterval(socketService.sendHeartbeat(), 10000);
 	const socket  = socketService.getSocket()
-
-
-	// 着信音処理
-	// document.querySelector(".js_bell").addEventListener("click", function(){
-
-	// 	if(this.classList.contains("on")){
-	// 		isON["isSoundOn"] = confirm("着信音をオフにしますか？") ? false : true
-	// 	}else{
-	// 		isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
-	// 	}
-	// 	this.classList.toggle("on")
-
-		
-		
-	// })
 
 
 	// メッセージテンプレート機能のモーダルを表示
@@ -117,7 +102,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// サーバーからのメッセージを受信
 	socket.on('chat message', async (msg, sender_type, actual_sender_id, time, actual_receiver_id)=> {
 
-		await handleReceivedMessage(isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text")
+		console.log(window.isON);
+		
+
+		await handleReceivedMessage(window.isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text")
 		if(ChatUIHelper.isCurrentUser(actual_sender_id) || ChatUIHelper.isCurrentAmdin(actual_sender_id, actual_receiver_id)){
 			ChatUIHelper.scrollToBottom()
 		}
@@ -131,7 +119,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		ModalController.close_loader()
 		ModalController.open_image_modal(true)
 		ModalController.close_image_by_key()
-		await handleReceivedMessage(isON, is_searching, sender_type, sender_id, time, receiver_id,  resizedImage, "image", cropArea);
+		await handleReceivedMessage(window.isON, is_searching, sender_type, sender_id, time, receiver_id,  resizedImage, "image", cropArea);
 		if(ChatUIHelper.isCurrentUser(sender_id) || ChatUIHelper.isCurrentAmdin(sender_id, receiver_id)){
 			ChatUIHelper.scrollToBottom()
 		}
@@ -147,9 +135,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 		res["data"].forEach(async (data)=>{
 			if(data["type"] === "text"){
-				await handleReceivedMessage(isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text")
+				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text")
 			}else if(data["type"] === "image"){
-				await handleReceivedMessage(isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"],  data["resource"], "image", data["cropArea"]);
+				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"],  data["resource"], "image", data["cropArea"]);
 			}
 			
 		})

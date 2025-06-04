@@ -1,5 +1,4 @@
 import { API_ENDPOINTS } from "./config/apiEndPoints";
-import { isON } from "./dataManager.js";
 import Fetch from "./module/util/api/Fetch";
 
 // 統合設定管理システム
@@ -19,8 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         },
                         hex: document.getElementById("hex_display").value ?? "#f5f6fa"
                   },
-                  isCorrectRGB : true,
-                  isCorrectHEX : true
+                  isCorrectData : true,
             },
             
             // DOM要素
@@ -103,10 +101,19 @@ document.addEventListener("DOMContentLoaded", () => {
                               const hex = e.target.value
                               this.settings.theme.hex = hex
                               const rgb = this.hexToRgb(hex)
+
+                              // console.log("validatorForHex" + this.validatorForHex(hex));
+                              // console.log("validatorForRgb" + this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"]));
+                              
+
+                              this.settings.isCorrectData = this.validatorForHex(hex) && this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"])
+                              // console.log(`正確なデータか: ${this.settings.isCorrectData}`);
+
                               this.settings.theme.customColor.r = rgb["r"]
                               this.settings.theme.customColor.g = rgb["g"]
                               this.settings.theme.customColor.b = rgb["b"]
-                              this.setCustomColor(rgb["r"], rgb["g"], rgb["b"]);
+                              this.setCustomColor(rgb["r"], rgb["g"], rgb["b"], true);
+
                         })
                   }
                   if(this.elements.rgbDisplay){
@@ -124,10 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
                                     this.settings.theme.customColor.g = g
                                     this.settings.theme.customColor.b = b
                                     this.setCustomColor(r, g, b);
-                                    this.settings.isCorrectRGB = true
+
+                                    this.settings.isCorrectData = this.validatorForHex(hex) && this.validatorForRgb(r, g, b)
+                                    
                               }else{
-                                    this.settings.isCorrectRGB = false
-                                    throw new Error("fail")
+                                    this.settings.isCorrectData = false
                               }
 
                         })
@@ -151,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   // 音声設定の変更
                   if (this.elements.voiceCheckbox) {
                         this.elements.voiceCheckbox.addEventListener('change', (e) => {
-                              isON["isSoundOn"] = e.target.checked;
+                              window.isON["isSoundOn"] = e.target.checked;
                               this.showVoiceToggleFeedback();
                         });
                   }
@@ -169,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (slider) {
                               slider.addEventListener('input', () => {
                                     this.updateCustomColor();
+                                    this.settings.isCorrectData = true
                               });
                         }
                   });
@@ -178,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         preset.addEventListener('click', () => {
                               const rgb = preset.dataset.rgb.split(',').map(Number);
                               this.setCustomColor(rgb[0], rgb[1], rgb[2]);
+                              this.settings.isCorrectData = true
                         });
                   });
                   
@@ -224,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateModalUI() {
                   // 音声設定の反映
                   if (this.elements.voiceCheckbox) {
-                        this.elements.voiceCheckbox.checked = isON["isSoundOn"];
+                        this.elements.voiceCheckbox.checked = window.isON["isSoundOn"];
                   }
                   
                   // テーマ選択の反映
@@ -243,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             
             // カスタムカラーの設定
-            setCustomColor(r, g, b) {
+            setCustomColor(r, g, b, isHex = false) {
                   this.settings.theme.customColor = { r, g, b };
                   
                   // スライダーの値を更新
@@ -251,11 +261,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   this.elements.rgbSliders.green.value = g;
                   this.elements.rgbSliders.blue.value = b;
                   
-                  this.updateCustomColorUI();
+                  this.updateCustomColorUI(isHex);
             },
             
             // カスタムカラーUIの更新
-            updateCustomColorUI() {
+            updateCustomColorUI(isHex = false) {
                   const { r, g, b } = this.settings.theme.customColor;
                   
                   // 値の表示を更新
@@ -275,12 +285,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         customPreview.style.background = rgbColor;
                   }
                   
-                  // RGB/HEX表示を更新
+                  // // RGB/HEX表示を更新
                   if (this.elements.rgbDisplay) {
                         this.elements.rgbDisplay.value = rgbColor;
                   }
                   
-                  if (this.elements.hexDisplay) {
+                  if (!isHex && this.elements.hexDisplay) {
                         const hex = this.rgbToHex(r, g, b);
                         this.settings.theme.hex = hex
 
@@ -313,6 +323,15 @@ document.addEventListener("DOMContentLoaded", () => {
                   this.elements.rgbSliders.blue.style.background = `linear-gradient(to right, rgb(${r},${g},0) 0%, rgb(${r},${g},255) 100%)`;
                   }
             },
+
+            validatorForHex(hex) {
+                  return /^#[0-9A-Fa-f]{6}$/.test(hex);
+            },
+            validatorForRgb(r, g, b) {
+                  const isValidValue = (n) => !isNaN(n) && n >= 0 && n <= 255;
+                  return isValidValue(r) && isValidValue(g) && isValidValue(b);
+            },
+
             
             // RGBからHEXへの変換
             rgbToHex(r, g, b) {
@@ -320,12 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         const hex = c.toString(16);
                         return hex.length == 1 ? "0" + hex : hex;
                   };
-
-                  // if ((r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) || (isNaN(r) || isNaN(g) || isNaN(b))) {
-                  //       this.settings.isCorrectRGB = false
-                  // }else{
-                  //       this.settings.isCorrectRGB = true
-                  // }
                         
                   return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`.toUpperCase();
             },
@@ -333,13 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hexToRgb(hex) {
                   // #を除去し、大文字に変換
                   hex = hex.replace('#', '').toUpperCase();
-                  
-                  // 無効なHEX形式のチェック
-                  if (hex.length !== 6 || !/^[0-9A-F]{6}$/.test(hex)) {
-                        this.settings.isCorrectHEX = false
-                  }else{
-                        this.settings.isCorrectHEX = true
-                  }
+                  if (!/^[0-9A-F]{6}$/.test(hex)) return { r: NaN, g: NaN, b: NaN };
                   
                   // 16進数を10進数に変換
                   const r = parseInt(hex.substring(0, 2), 16);
@@ -363,29 +370,39 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // 音声切り替えフィードバック
             showVoiceToggleFeedback() {
-                  const message = isON["isSoundOn"] ? 
+                  const message = window.isON["isSoundOn"] ? 
                   '🔊 音声通知がオンになりました' : 
                   '🔇 音声通知がオフになりました';
-                  this.showToast(message, isON["isSoundOn"] ? '#27ae60' : '#e74c3c');
+                  this.showToast(message, window.isON["isSoundOn"] ? '#27ae60' : '#e74c3c');
             },
             
             // 設定の保存
             async saveSettings() {
-                  if(!this.settings.isCorrectHEX ||  !this.settings.isCorrectRGB){
+                  if(!this.settings.isCorrectData){
                         document.getElementById("js_error").classList.remove("hidden")
-                        
                         return
+                  }else{
+                        document.getElementById("js_error").classList.add("hidden")
                   }
+
+                  document.querySelector(".js_saving_txt").classList.add("hidden")
+                  document.querySelector(".js_spinning_btn").classList.remove("hidden")
                   const data = {
                         "hex" : this.settings.theme.hex,
                         "rgb" : this.settings.theme.customColor,
                         "line_account_id" : document.getElementById("js_admin_id").value
                   }
+
+
                   const response = await Fetch.fetchPostOperation(data, API_ENDPOINTS.UPDATE_BACKGROUND_COLOLR)
                   console.log(response);
                   if(response["status"] === 200){
+                        document.querySelector(".js_spinning_btn").classList.add("hidden")
+                        document.querySelector(".js_saving_txt").classList.remove("hidden")
                         document.querySelector(".contents").style.backgroundColor = response["hex"]
                   }else{
+                        document.querySelector(".js_spinning_btn").classList.add("hidden")
+                        document.querySelector(".js_saving_txt").classList.remove("hidden")
                         alert("背景色の設定に失敗しました。お手数ですがもう一度お試しください。")
                   }
                   
@@ -477,13 +494,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // 保存成功のフィードバック
             showSaveSuccess() {
                   const button = this.elements.saveButton;
-                  const originalText = button.textContent;
+                  const originalText = button.querySelector(".js_saving_txt").textContent;
                   
-                  button.textContent = '✓ 保存しました';
+                  button.querySelector(".js_saving_txt").textContent = '✓ 保存しました';
                   button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
                   
                   setTimeout(() => {
-                        button.textContent = originalText;
+                        button.querySelector(".js_saving_txt").textContent = originalText;
                         button.style.background = 'linear-gradient(135deg, #1a7aea 0%, #2196f3 100%)';
                   }, 2000);
                   
@@ -492,7 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const { r, g, b } = this.settings.theme.customColor;
                         themeName += ` (RGB: ${r}, ${g}, ${b})`;
                   }
-                  this.showToast(`⚙️ 設定を保存しました（テーマ: ${themeName}）`, '#27ae60');
+                  this.showToast(`設定を保存しました`, '#27ae60');
             },
             
             // テーマ表示名の取得

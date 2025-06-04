@@ -292,7 +292,10 @@
             </div>
             
             <div class="settings_modal-footer">
-                  <button class="settings_save_btn js_save_settings">保存</button>
+                  <button class="settings_save_btn js_save_settings">
+                        <span class="js_saving_txt">保存</span>
+                        <i class="fas fa-sync fa-spin hidden js_spinning_btn"></i>
+                  </button>
             </div>
       </div>
 </section>

@@ -11008,6 +11008,7 @@ var handleReceivedMessage = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           cropArea = _args.length > 8 && _args[8] !== undefined ? _args[8] : [];
+          console.log("isON: ".concat(isON));
           if (isON["isSoundOn"]) (0,_notificationSound_js__WEBPACK_IMPORTED_MODULE_8__.playNotificationSound)();
           current_chat_id = document.getElementById("js_chatuser_id").value;
           if (current_chat_id == receiver_id || current_chat_id == sender_id) {
@@ -11039,9 +11040,9 @@ var handleReceivedMessage = /*#__PURE__*/function () {
           chatUserListController.updateMessageTime();
           chatUserListController.displayMessage();
           chatUserListController.increaseMessageCount();
-          _context.next = 11;
+          _context.next = 12;
           return chatUserListController.updateChatUserList();
-        case 11:
+        case 12:
           // メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
           data = {
             "admin_id": receiver_id,
@@ -11050,7 +11051,7 @@ var handleReceivedMessage = /*#__PURE__*/function () {
           if (sender_id == document.getElementById("js_chatuser_id").value) {
             _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__["default"].fetchPostOperation(data, "/api/user/messages/read");
           }
-        case 13:
+        case 14:
         case "end":
           return _context.stop();
       }
