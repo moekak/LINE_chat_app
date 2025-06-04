@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
     GENERATE_TOKEN: "/api/token/generate",
     ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
     TEMPLATE_SELECT: "/api/template/select",
+    UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
 };

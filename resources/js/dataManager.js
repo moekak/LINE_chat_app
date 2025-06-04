@@ -1,0 +1,1 @@
+export let isON  = {isSoundOn : false}

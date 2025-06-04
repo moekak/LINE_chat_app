@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BackgroundColor;
 use App\Models\ChatUser;
 use App\Models\LineAccount;
 use App\Models\MessageTemplateContent;
@@ -53,7 +54,9 @@ class ChatController extends Controller
         $mergedData = $messageService->getMergedData($adminId, 0);
         $group_message  = $messageService->groupMessagesByDate($messages);
 
+        $backgroundColor = BackgroundColor::where("line_account_id",  $adminId)->first();
         return view("admin.chat", [
+            "background_color" => $backgroundColor,
             "admin_info"=> $admin_info, 
             "mergedData" => $mergedData, 
             "user_id" => $userId, 

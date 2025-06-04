@@ -20,13 +20,22 @@
                         @else
                               <img src="{{ asset("img/user-icon.png") }}" alt="" class="chat_users-icon">
                         @endif
-
                   </a> 
                   <div class="chat__users-list-top-detail">
                         <p class="user_name_txt">{{$admin_info->account_name}}</p>
                         <small class="user_id_txt">{{$admin_info->account_id}}</small>
                   </div> 
-                  <img src="{{asset("img/icons8-bell-30.png")}}" alt="" class="notification_bell js_bell">
+                  
+                  <!-- コントロールボタンエリア -->
+                  <div class="control-buttons-container">
+                        <!-- 通知ベルボタン（既存） -->
+                        {{-- <img src="{{asset("img/icons8-bell-30.png")}}" alt="" class="notification_bell js_bell">
+                         --}}
+                        <!-- 統合設定ボタン -->
+                        <button class="control-btn js_settings_toggle" title="設定">
+                              <i class="fas fa-cog control-icon"></i>
+                        </button>
+                  </div>
             </div>
       {{-- チャットユーザーアカウントのリアルタイム表示 --}}
             <div class="chat__users-list-area">
@@ -171,6 +180,123 @@
 
 
 
+
+<!-- 統合設定モーダル -->
+<section class="settings_modal js_modal hidden">
+      <div class="settings_modal-container">
+            <div class="settings_modal-header">
+                  <h3>設定</h3>
+                  <button class="settings_modal-close js_close_settings_modal">
+                        <i class="fas fa-times"></i>
+                  </button>
+            </div>
+            
+            <div class="settings_content">
+                  <!-- 音声設定セクション -->
+                  <div class="setting_section">
+                        <div class="setting_section-header">
+                              <div class="setting_icon-wrapper">
+                                    <i class="fas fa-volume-up setting_section-icon"></i>
+                              </div>
+                              <div class="setting_info">
+                                    <h4>音声通知</h4>
+                                    <p>メッセージ受信時の音声通知を設定</p>
+                              </div>
+                              <div class="setting_toggle">
+                                    <input type="checkbox" id="voice_toggle" class="toggle_checkbox js_voice_checkbox">
+                                    <label for="voice_toggle" class="toggle_label">
+                                          <span class="toggle_slider"></span>
+                                    </label>
+                              </div>
+                        </div>
+                  </div>
+                  
+                  <!-- 背景テーマ設定セクション -->
+                  <div class="setting_section">
+                        <div class="setting_section-header">
+                              <div class="setting_icon-wrapper">
+                                    <i class="fas fa-palette setting_section-icon"></i>
+                              </div>
+                              <div class="setting_info">
+                                    <h4>背景テーマ</h4>
+                                    <p>チャット画面の背景テーマを選択</p>
+                              </div>
+                        </div>
+                        
+                        <!-- カスタムカラー設定パネル -->
+                        <div class="custom_color_panel" id="custom_color_panel">
+                              <div class="color_picker_header">
+                                    <h5>🎨 カスタムカラー設定</h5>
+                                    <p>スライダーを動かして好みの色を作成してください</p>
+                              </div>
+                              
+                              <div class="color_controls">
+                                    <div class="color_preview_large" id="color_preview_large"></div>
+                                    
+                                    <div class="rgb_controls">
+                                          <div class="rgb_slider_group">
+                                                <label class="rgb_label">
+                                                      <span class="rgb_name" style="color: #e74c3c;">🔴 Red</span>
+                                                      <span class="rgb_value" id="red_value">245</span>
+                                                </label>
+                                                <input type="range" class="rgb_slider red_slider" id="red_slider" min="0" max="255" value="245">
+                                          </div>
+                                          
+                                          <div class="rgb_slider_group">
+                                                <label class="rgb_label">
+                                                      <span class="rgb_name" style="color: #27ae60;">🟢 Green</span>
+                                                      <span class="rgb_value" id="green_value">246</span>
+                                                </label>
+                                                <input type="range" class="rgb_slider green_slider" id="green_slider" min="0" max="255" value="246">
+                                          </div>
+                                          
+                                          <div class="rgb_slider_group">
+                                                <label class="rgb_label">
+                                                      <span class="rgb_name" style="color: #3498db;">🔵 Blue</span>
+                                                      <span class="rgb_value" id="blue_value">250</span>
+                                                </label>
+                                                <input type="range" class="rgb_slider blue_slider" id="blue_slider" min="0" max="255" value="250">
+                                          </div>
+                                    </div>
+                              </div>
+                              
+                              <div class="color_info">
+                                    <div class="color_code_display">
+                                          <div class="color_code_item">
+                                                <strong>RGB:</strong>
+                                                <input id="rgb_display" type="text" value="rgb(245, 246, 250)">
+                                          </div>
+                                          <div class="color_code_item">
+                                                <strong>HEX:</strong>
+                                                <input id="hex_display" type="text" value="#f5f6fa">
+                                          </div>
+                                    </div>
+                                    <small id="js_error" class="hidden" style="color: red; font-size: 12px;">正しい形式を入力してください</small>
+                              </div>
+                              
+                              <div class="preset_colors">
+                                    <p class="preset_title">プリセットカラー</p>
+                                    <div class="preset_grid">
+                                          <div class="preset_color" data-rgb="255,182,193" style="background-color: rgb(255,182,193);" title="ピンク"></div>
+                                          <div class="preset_color" data-rgb="255,218,185" style="background-color: rgb(255,218,185);" title="ピーチ"></div>
+                                          <div class="preset_color" data-rgb="221,160,221" style="background-color: rgb(221,160,221);" title="プラム"></div>
+                                          <div class="preset_color" data-rgb="173,216,230" style="background-color: rgb(173,216,230);" title="ライトブルー"></div>
+                                          <div class="preset_color" data-rgb="144,238,144" style="background-color: rgb(144,238,144);" title="ライトグリーン"></div>
+                                          <div class="preset_color" data-rgb="255,255,224" style="background-color: rgb(255,255,224);" title="ライトイエロー"></div>
+                                          <div class="preset_color" data-rgb="230,230,250" style="background-color: rgb(230,230,250);" title="ラベンダー"></div>
+                                          <div class="preset_color" data-rgb="245,245,220" style="background-color: rgb(245,245,220);" title="ベージュ"></div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            
+            <div class="settings_modal-footer">
+                  <button class="settings_save_btn js_save_settings">保存</button>
+            </div>
+      </div>
+</section>
+
 {{-- 画像のURL編集モーダル --}}
 <section class="image_edit_modal js_modal hidden">
       <div class="preview_box">
@@ -292,11 +418,35 @@
 
 
 @section('script')
+<script src="{{mix('js/adminChat.js')}}"></script>
+<script src="{{mix('js/setting.js')}}"></script>
 <script>
       document.addEventListener("DOMContentLoaded", () => {
-            const lastMessageId = @json($unread_message_id);  // セミコロンを追加
-            const lastMessageType= @json($last_message_type);  // セミコロンを追加
-            const unreadCount= @json($unread_count);  // セミコロンを追加
+            // 背景色設定
+            const backgroundColor = @json($background_color);
+            
+            if(backgroundColor){
+                  document.querySelector(".contents").style.backgroundColor = backgroundColor["hex"]
+                  document.getElementById("red_slider").value = backgroundColor["r"]
+                  document.getElementById("green_slider").value = backgroundColor["g"]
+                  document.getElementById("blue_slider").value = backgroundColor["b"]
+
+                  document.getElementById("red_value").innerHTML = backgroundColor["r"]
+                  document.getElementById("green_value").innerHTML = backgroundColor["g"]
+                  document.getElementById("blue_value").innerHTML = backgroundColor["b"]
+
+                  document.getElementById("rgb_display").value = `rgb(${backgroundColor["r"]}, ${backgroundColor["g"]}, ${backgroundColor["b"]})`
+                  document.getElementById("hex_display").value = backgroundColor["hex"]
+                  document.getElementById("color_preview_large").style.backgroundColor = backgroundColor["hex"]
+            }else{
+                  document.querySelector(".contents").style.backgroundColor = "#f5f6fa"
+                  document.getElementById("color_preview_large").style.backgroundColor = "#f5f6fa"
+            }
+            
+
+            const lastMessageId = @json($unread_message_id);  
+            const lastMessageType= @json($last_message_type); 
+            const unreadCount= @json($unread_count); 
             const messagesElements = document.querySelectorAll(".js_chat_message")
             let hasUnreadMessage = false
 
@@ -346,5 +496,4 @@
       });
 </script>
 
-<script src="{{mix('js/adminChat.js')}}"></script>
 @endsection

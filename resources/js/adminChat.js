@@ -17,6 +17,7 @@ import Fetch from './module/util/api/Fetch.js';
 import { API_ENDPOINTS } from './config/apiEndPoints.js';
 import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
 import FormatText from './module/util/FormatText.js';
+import { isON } from './dataManager.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -40,7 +41,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 	// グローバル変数
 	let is_searching  = {flag: false}
-	let isON          = {isSoundOn : false}
 	const sender_id   = document.getElementById("js_sender_id").value
 
 	const socketService = new SocketService(config.SOCKET_URL, sender_id)
@@ -51,18 +51,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 	// 着信音処理
-	document.querySelector(".js_bell").addEventListener("click", function(){
+	// document.querySelector(".js_bell").addEventListener("click", function(){
 
-		if(this.classList.contains("on")){
-			isON["isSoundOn"] = confirm("着信音をオフにしますか？") ? false : true
-		}else{
-			isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
-		}
-		this.classList.toggle("on")
+	// 	if(this.classList.contains("on")){
+	// 		isON["isSoundOn"] = confirm("着信音をオフにしますか？") ? false : true
+	// 	}else{
+	// 		isON["isSoundOn"] = confirm("着信音をオンにしますか？") ? true : false
+	// 	}
+	// 	this.classList.toggle("on")
 
 		
 		
-	})
+	// })
 
 
 	// メッセージテンプレート機能のモーダルを表示

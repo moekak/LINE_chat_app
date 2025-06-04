@@ -1,16 +1,14 @@
 <?php
 
 
-use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\AdminMessageController;
+use App\Http\Controllers\Admin\BackgroundColorController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\AdminMessageReadController;
-use App\Http\Controllers\RedirectTokenController;
 use App\Http\Controllers\User\ChatController as UserChatController;
 use App\Http\Controllers\User\ChatUserController;
 use App\Http\Controllers\User\UserMessageController;
 use App\Http\Controllers\UserMessageReadController;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 // ルート定義の例
@@ -40,3 +38,6 @@ Route::get("/users/messages/fetch/{start}/{userUuid}/{adminUuid}", [UserChatCont
 
 
 Route::post("/template/select", [AdminMessageController::class, "insertTemplateData"]);
+
+
+Route::post("/update/bgColor", [BackgroundColorController::class, "store"]);

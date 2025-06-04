@@ -4,6 +4,7 @@ mix.js('resources/js/app.js', 'public/js')
     .js("resources/js/userChat.js", 'public/js')
     .js("resources/js/adminChat.js", 'public/js')
     .js("resources/js/lineTest.js", 'public/js')
+    .js("resources/js/setting.js", 'public/js')
     .setPublicPath('public')
 
 // ソースマップを有効化
