@@ -395,7 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                   const response = await Fetch.fetchPostOperation(data, API_ENDPOINTS.UPDATE_BACKGROUND_COLOLR)
-                  console.log(response);
+      
                   if(response["status"] === 200){
                         document.querySelector(".js_spinning_btn").classList.add("hidden")
                         document.querySelector(".js_saving_txt").classList.remove("hidden")
@@ -580,12 +580,12 @@ document.addEventListener("DOMContentLoaded", () => {
                               const audio = new Audio('/path/to/notification.mp3');
                               audio.volume = 0.5;
                               audio.play().catch(e => {
-                                    console.log('音声再生に失敗:', e);
+
                                     // 代替として簡単なビープ音
                                     this.playBeepSound();
                               });
                         } catch (e) {
-                              console.log('音声機能が利用できません:', e);
+                     
                               this.playBeepSound();
                         }
                   }

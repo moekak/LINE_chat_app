@@ -4828,6 +4828,8 @@ function _isRightAlignedMessage() {
  * @param {boolean} isRight - メッセージを右側に追加する場合は true、それ以外は false
  */
 function _addChatMessage(isRight) {
+  console.log(this.cropArea);
+  console.log("222");
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
@@ -5348,6 +5350,7 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
+  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
@@ -5388,6 +5391,9 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
   displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
+  if (typeof cropArea === "string") {
+    cropArea = JSON.parse(cropArea);
+  }
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");

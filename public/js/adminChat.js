@@ -8623,6 +8623,8 @@ function _isRightAlignedMessage() {
  * @param {boolean} isRight - メッセージを右側に追加する場合は true、それ以外は false
  */
 function _addChatMessage(isRight) {
+  console.log(this.cropArea);
+  console.log("222");
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
@@ -9685,6 +9687,7 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
+  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
@@ -9725,6 +9728,9 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
   displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
+  if (typeof cropArea === "string") {
+    cropArea = JSON.parse(cropArea);
+  }
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
@@ -11035,13 +11041,13 @@ var CropperImage = /*#__PURE__*/function () {
           },
           cropend: function cropend() {
             _this2.changeBtn.classList.remove("disabled_btn");
-            // const cropBoxData = this.cropperInstance.getCropBoxData(); // 最終的な選択範囲
-            // const containerData = this.cropperInstance.getContainerData(); // コンテナのデータ
-            // const imageData = this.cropperInstance.getImageData(); // 画像全体の情報
+            var cropBoxData = _this2.cropperInstance.getCropBoxData(); // 最終的な選択範囲
+            var containerData = _this2.cropperInstance.getContainerData(); // コンテナのデータ
+            var imageData = _this2.cropperInstance.getImageData(); // 画像全体の情報
 
-            // // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
-            // this.cropperState = new CropperState(cropBoxData, imageData, containerData);
-            // this.cropperState.updatePercentage()
+            // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
+            _this2.cropperState = new _CropperState__WEBPACK_IMPORTED_MODULE_4__["default"](cropBoxData, imageData, containerData);
+            _this2.cropperState.updatePercentage();
           }
         });
       } catch (error) {

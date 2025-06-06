@@ -102,9 +102,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// サーバーからのメッセージを受信
 	socket.on('chat message', async (msg, sender_type, actual_sender_id, time, actual_receiver_id)=> {
 
-		console.log(window.isON);
-		
-
 		await handleReceivedMessage(window.isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text")
 		if(ChatUIHelper.isCurrentUser(actual_sender_id) || ChatUIHelper.isCurrentAmdin(actual_sender_id, actual_receiver_id)){
 			ChatUIHelper.scrollToBottom()

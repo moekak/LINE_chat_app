@@ -70,6 +70,9 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
             .replace(/\n/g, '<br>');       // 改行を<br>タグに戻す
 
 
+      if(typeof(cropArea) === "string"){
+            cropArea = JSON.parse(cropArea)
+      }
       let rawHtml = "";
 
       if (Object.entries(cropArea).length > 0) {
