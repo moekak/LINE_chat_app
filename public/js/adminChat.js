@@ -9932,7 +9932,7 @@ var FromController = /*#__PURE__*/function () {
       urlInput.value = "";
       selectBtn.innerHTML = "選択範囲確定";
       selectBtn.style.backgroundColor = "#fff";
-      selectBtn.classList.add("disabled_btn");
+      // selectBtn.classList.add("disabled_btn")
       previewBtn.classList.remove("disabled_btn");
     }
   }, {
@@ -11012,11 +11012,11 @@ var CropperImage = /*#__PURE__*/function () {
       // Cropper.js インスタンスを作成
       try {
         this.cropperInstance = new (cropperjs__WEBPACK_IMPORTED_MODULE_0___default())(this.image, {
-          viewMode: 0.5,
+          viewMode: 1,
           // 画像の範囲内にクロップボックスと画像を制限
           dragMode: "crop",
           // クロップ操作を有効にする
-          autoCropArea: 0.5,
+          autoCropArea: 1.0,
           // 初期のクロップエリアを最大化
           responsive: true,
           // 画面サイズに応じてリサイズ対応
@@ -11028,19 +11028,43 @@ var CropperImage = /*#__PURE__*/function () {
           // クロップボックスのハイライトを有効
           cropBoxResizable: true,
           // クロップボックスのリサイズを許可
+          ready: function ready() {
+            // Cropper の初期化が完了したら crop 領域の取得
+            var cropperArea = _this2.getCropperArea();
+            console.log("✅ cropperArea:", cropperArea);
+          },
           cropend: function cropend() {
             _this2.changeBtn.classList.remove("disabled_btn");
-            var cropBoxData = _this2.cropperInstance.getCropBoxData(); // 最終的な選択範囲
-            var containerData = _this2.cropperInstance.getContainerData(); // コンテナのデータ
-            var imageData = _this2.cropperInstance.getImageData(); // 画像全体の情報
+            // const cropBoxData = this.cropperInstance.getCropBoxData(); // 最終的な選択範囲
+            // const containerData = this.cropperInstance.getContainerData(); // コンテナのデータ
+            // const imageData = this.cropperInstance.getImageData(); // 画像全体の情報
 
-            // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
-            _this2.cropperState = new _CropperState__WEBPACK_IMPORTED_MODULE_4__["default"](cropBoxData, imageData, containerData);
-            _this2.cropperState.updatePercentage();
+            // // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
+            // this.cropperState = new CropperState(cropBoxData, imageData, containerData);
+            // this.cropperState.updatePercentage()
           }
         });
       } catch (error) {
         alert("画像切り取り処理でエラーが発生しました。お手数ですがもう一度お試しください。");
+      }
+    }
+  }, {
+    key: "getCropperArea",
+    value: function getCropperArea() {
+      try {
+        if (this.cropperInstance) {
+          var cropBoxData = this.cropperInstance.getCropBoxData(); // 最終的な選択範囲
+          var containerData = this.cropperInstance.getContainerData(); // コンテナのデータ
+          var imageData = this.cropperInstance.getImageData(); // 画像全体の情報
+
+          // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
+          this.cropperState = new _CropperState__WEBPACK_IMPORTED_MODULE_4__["default"](cropBoxData, imageData, containerData);
+          this.cropperState.updatePercentage();
+          return this.cropperState.getState();
+        }
+      } catch (error) {
+        console.log(error);
+        alert("画像リンク指定でエラーが発生しました。再度実行してください。");
       }
     }
 

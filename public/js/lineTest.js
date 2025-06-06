@@ -5547,7 +5547,7 @@ var FromController = /*#__PURE__*/function () {
       urlInput.value = "";
       selectBtn.innerHTML = "選択範囲確定";
       selectBtn.style.backgroundColor = "#fff";
-      selectBtn.classList.add("disabled_btn");
+      // selectBtn.classList.add("disabled_btn")
       previewBtn.classList.remove("disabled_btn");
     }
   }, {

@@ -60,14 +60,19 @@ class CropperImage {
         // Cropper.js インスタンスを作成
         try{
             this.cropperInstance = new Cropper(this.image, {
-                viewMode: 0.5, // 画像の範囲内にクロップボックスと画像を制限
+                viewMode: 1, // 画像の範囲内にクロップボックスと画像を制限
                 dragMode: "crop", // クロップ操作を有効にする
-                autoCropArea: 0.5, // 初期のクロップエリアを最大化
+                autoCropArea: 1.0, // 初期のクロップエリアを最大化
                 responsive: true, // 画面サイズに応じてリサイズ対応
                 restore: true, // 元の状態を保持
                 guides: true, // ガイド線を非表示
                 highlight: true, // クロップボックスのハイライトを有効
                 cropBoxResizable: true, // クロップボックスのリサイズを許可
+                ready: () => {
+                        // Cropper の初期化が完了したら crop 領域の取得
+                        const cropperArea = this.getCropperArea();
+                        console.log("✅ cropperArea:", cropperArea);
+                },
                 cropend: () => {
                     this.changeBtn.classList.remove("disabled_btn")
                     const cropBoxData = this.cropperInstance.getCropBoxData(); // 最終的な選択範囲
@@ -83,6 +88,26 @@ class CropperImage {
             alert("画像切り取り処理でエラーが発生しました。お手数ですがもう一度お試しください。")
         }
         
+    }
+
+    getCropperArea(){
+        try{
+                if(this.cropperInstance){
+                    const cropBoxData = this.cropperInstance.getCropBoxData(); // 最終的な選択範囲
+                    const containerData = this.cropperInstance.getContainerData(); // コンテナのデータ
+                    const imageData = this.cropperInstance.getImageData(); // 画像全体の情報
+        
+                    // 選択範囲の位置とサイズを画像全体に対する割合（%）で計算し保存
+                    this.cropperState = new CropperState(cropBoxData, imageData, containerData);
+                    this.cropperState.updatePercentage()
+                    return this.cropperState.getState()
+                }
+
+        }catch(error){
+                console.log(error);
+                
+                alert("画像リンク指定でエラーが発生しました。再度実行してください。")
+        }
     }
 
 
