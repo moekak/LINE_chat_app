@@ -51,8 +51,6 @@ class InfiniteScroll {
                   const url = `/api/users/messages/fetch/${this.dataCount}/${this.userUuid}/${this.adminUuid}`;
                   try {
                         const response = await Fetch.fetchGetOperation(url);
-
-
                         if (response.length === 0) {
                               this.hasNoValue = true;
                               return;
@@ -147,7 +145,7 @@ class InfiniteScroll {
             if (this.isFetchFlag) return;
             clearTimeout(this.scrollEndTid);
             this.scrollEndTid = setTimeout(() => {
-                  this.handleScroll();
+                  // this.handleScroll();
             }, 200); // デバウンス時間を調整
       }
 }

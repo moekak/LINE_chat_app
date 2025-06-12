@@ -28,9 +28,6 @@
                   
                   <!-- コントロールボタンエリア -->
                   <div class="control-buttons-container">
-                        <!-- 通知ベルボタン（既存） -->
-                        {{-- <img src="{{asset("img/icons8-bell-30.png")}}" alt="" class="notification_bell js_bell">
-                         --}}
                         <!-- 統合設定ボタン -->
                         <button class="control-btn js_settings_toggle" title="設定">
                               <i class="fas fa-cog control-icon"></i>
@@ -47,7 +44,7 @@
 
                               @foreach ($mergedData as $data)
                                     @if (isset($data["latest_message_date"]))
-                                          <a href="{{ route('admin.chat', ['userId' => $data->id, 'adminId' => $admin_info->id]) }}" class="chat__users-list-wraper js_chat_wrapper" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
+                                          <div class="chat__users-list-wraper js_chat_wrapper js_user_btn" style="margin-top: 0" data-uuid={{$data["entity_uuid"]}} data-id={{$data->id}} data-admin-id={{$admin_info->id}}>
                                                 <img src="{{ $data->user_picture }}" alt="" onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon">
                                                 <div class="chat_users-list-flex">
                                                       <div class="chat_users-list-box"> 
@@ -62,7 +59,7 @@
                                                             <div class="message_count js_mesage_count" data-id={{$data["entity_uuid"]}} style="display:{{$count_style}}">{{$data["unread_count"]}}</div>
                                                       </div>
                                                 </div>
-                                          </a>
+                                          </div>
                                     @endif   
                               @endforeach
                         </div>  
@@ -91,7 +88,7 @@
 <div class="chat__message-top">
       <input type="hidden" value={{$uuid_user}} id="js_chatuser_id">
       <input type="hidden" value={{$chat_user->user_picture}} id="js_user_icon_img">
-      <img src={{$chat_user->user_picture}} alt=""  onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon"> 
+      <img src={{$chat_user->user_picture}} alt=""  onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon js_user_icon"> 
       <p class="chat_message_name">{{$chat_user->line_name}}</p>
 </div>
 <div class="chat__message-main">

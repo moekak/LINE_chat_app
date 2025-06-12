@@ -16,20 +16,19 @@ import MessageTemplate from './module/component/messageTemplates/MessageTemplate
 import Fetch from './module/util/api/Fetch.js';
 import { API_ENDPOINTS } from './config/apiEndPoints.js';
 import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
+import ChatMessageController from './module/component/chat/ChatMessageController.js';
 
 window.window.isON  = {isSoundOn : false}
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-
-	
 	// チャット表示の無限スクロール
 
 	const element = document.querySelector(".chat__message-main")
 	const adminUuid = document.getElementById("js_sender_id").value 
 	const userUuid = document.getElementById("js_receiver_id").value
-	const infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
+	let infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
 
 	FromController.changeTextareaHeight()
 	FromController.disableSubmitBtn()
@@ -241,6 +240,104 @@ document.addEventListener("DOMContentLoaded", ()=>{
 					userUuid: res["data"][0]["userUuid"],
 			});
 			
+		})
+	}
+
+
+
+	// チャットユーザー切り替え
+	{
+		const btns = document.querySelectorAll(".js_user_btn")
+
+		btns.forEach((btn)=>{
+			btn.addEventListener("click", async (e)=>{
+				const userId = e.currentTarget.dataset.id
+				const adminId = e.currentTarget.dataset.adminId
+				const userUuid = e.currentTarget.dataset.uuid
+
+				const src = e.currentTarget.querySelector(".chat_users-icon").src
+				const name = e.currentTarget.querySelector(".simplebar-content").innerHTML
+
+
+				const response = await Fetch.fetchGetOperation(`${API_ENDPOINTS.GET_USER_CHATS}/${userId}/${adminId}`)
+				const dates_elements = document.querySelectorAll(".js_chat_message_date");
+				const default_message = document.querySelector(".chat_default-area") ?? null
+				const parentElement =  document.querySelector(".js_append_admin");
+				parentElement.dataset.id = userUuid
+
+				document.getElementById("js_receiver_id").value = userUuid
+				document.querySelector(".js_append_admin").dataset.id = userUuid
+				document.getElementById("js_chatuser_id").value = userUuid
+
+				console.log(userUuid);
+				console.log(document.getElementById("js_chatuser_id"));
+				
+				document.querySelector(".js_user_icon").src = src
+				document.querySelectorAll(".chat_users-icon-message").forEach((icon)=> icon.src = src)
+				document.querySelector(".chat_message_name").innerHTML = name
+
+
+				// infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
+				parentElement.innerHTML = ""
+                        Object.entries(response).forEach(([index, dateGroup]) => {
+                              Object.entries(dateGroup).reverse().forEach(([date, messages]) => {
+                                    
+                                    const new_date_el = dates_elements[0].cloneNode(true);
+                                    new_date_el.innerHTML = date;
+                                    new_date_el.setAttribute("data-date-name", date);
+
+                                    if (default_message) {
+                                          parentElement.removeChild(default_message);
+                                    }
+
+
+                                    messages.slice().reverse().forEach((message) => {
+
+                                          const date = new Date(message.created_at);
+                                          const time = date.toLocaleTimeString("ja-JP", {
+                                                timeZone: "Asia/Tokyo",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                          });
+
+
+                                          const parsedData = JSON.parse(message.crop_data);
+                                          // 共通の args を作成
+                                          let args = {
+                                                messageType: message.type,
+                                                cropArea :parsedData ? {
+                                                      x_percent: parsedData.x_percent,
+                                                      y_percent: parsedData.y_percent,
+                                                      width_percent: parsedData.width_percent,
+                                                      height_percent: parsedData.height_percent,
+                                                      url: message.url
+                                                } : [],
+                                                position: "afterbegin",
+                                                time: time,
+                                                className: "js_append_admin",
+                                                senderType: message.sender_type,
+                                                content: message.content,
+                                                fileName: "admin",
+                                                senderId: ""
+                                          };
+
+                                          // `ChatMessageController` のインスタンスを作成
+                                          const chatMessageController = new ChatMessageController(args);
+                                          
+                                          // チャットメッセージを表示
+                                          chatMessageController.displayChatMessage();
+                                    });
+
+						parentElement.insertAdjacentElement("afterbegin",new_date_el);
+                                    if (default_message) {
+                                          parentElement.insertAdjacentElement("afterbegin", default_message);
+                                    }
+                  
+                              });
+                        });
+				
+				
+			})
 		})
 	}
 })

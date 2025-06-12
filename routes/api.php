@@ -41,3 +41,4 @@ Route::post("/template/select", [AdminMessageController::class, "insertTemplateD
 
 
 Route::post("/update/bgColor", [BackgroundColorController::class, "store"]);
+Route::get("/get/messages/{userId}/{adminId}", [UserChatController::class, "fetchChatMessages"]);

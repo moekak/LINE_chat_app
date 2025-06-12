@@ -7,4 +7,5 @@ export const API_ENDPOINTS = {
     ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
     TEMPLATE_SELECT: "/api/template/select",
     UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+    GET_USER_CHATS : "/api/get/messages"
 };

@@ -88,4 +88,19 @@ class ChatController extends Controller
         }catch (\Exception $e){
         }
     }
+    public function fetchChatMessages($userId, $adminId){
+        try{
+
+            // // インスタンスの作成
+            $messageService = new MessageService();
+            $messageAggregationService = new MessageAggregationService();
+
+            // ユーザーアカウント情報を取得する
+            $messages = $messageAggregationService->getUnifiedSortedMessages($userId, $adminId, "user", 0);
+            $group_message  = $messageService->groupMessagesByDate($messages);
+              // 正しいJSON形式でレスポンスを返す
+            return response()->json([$group_message]);
+        }catch (\Exception $e){
+        }
+    }
 }

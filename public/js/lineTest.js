@@ -4699,7 +4699,8 @@ var API_ENDPOINTS = {
   GENERATE_TOKEN: "/api/token/generate",
   ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
   TEMPLATE_SELECT: "/api/template/select",
-  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor"
+  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+  GET_USER_CHATS: "/api/get/messages"
 };
 
 /***/ }),
@@ -4828,8 +4829,6 @@ function _isRightAlignedMessage() {
  * @param {boolean} isRight - メッセージを右側に追加する場合は true、それ以外は false
  */
 function _addChatMessage(isRight) {
-  console.log(this.cropArea);
-  console.log("222");
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
@@ -5350,7 +5349,6 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
-  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
     rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
@@ -5405,7 +5403,7 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
+  return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper js_user_btn\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
 };
 
 /***/ }),
@@ -6101,7 +6099,6 @@ var handleReceivedMessage = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           cropArea = _args.length > 8 && _args[8] !== undefined ? _args[8] : [];
-          console.log("isON: ".concat(isON));
           if (isON["isSoundOn"]) (0,_notificationSound_js__WEBPACK_IMPORTED_MODULE_8__.playNotificationSound)();
           current_chat_id = document.getElementById("js_chatuser_id").value;
           if (current_chat_id == receiver_id || current_chat_id == sender_id) {
@@ -6133,9 +6130,9 @@ var handleReceivedMessage = /*#__PURE__*/function () {
           chatUserListController.updateMessageTime();
           chatUserListController.displayMessage();
           chatUserListController.increaseMessageCount();
-          _context.next = 12;
+          _context.next = 11;
           return chatUserListController.updateChatUserList();
-        case 12:
+        case 11:
           // メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
           data = {
             "admin_id": receiver_id,
@@ -6144,7 +6141,7 @@ var handleReceivedMessage = /*#__PURE__*/function () {
           if (sender_id == document.getElementById("js_chatuser_id").value) {
             _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__["default"].fetchPostOperation(data, "/api/user/messages/read");
           }
-        case 14:
+        case 13:
         case "end":
           return _context.stop();
       }

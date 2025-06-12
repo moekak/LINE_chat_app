@@ -20,7 +20,8 @@ var API_ENDPOINTS = {
   GENERATE_TOKEN: "/api/token/generate",
   ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
   TEMPLATE_SELECT: "/api/template/select",
-  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor"
+  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+  GET_USER_CHATS: "/api/get/messages"
 };
 
 /***/ }),
@@ -616,7 +617,6 @@ document.addEventListener("DOMContentLoaded", function () {
               return _module_util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.UPDATE_BACKGROUND_COLOLR);
             case 11:
               response = _context.sent;
-              console.log(response);
               if (response["status"] === 200) {
                 document.querySelector(".js_spinning_btn").classList.add("hidden");
                 document.querySelector(".js_saving_txt").classList.remove("hidden");
@@ -640,7 +640,7 @@ document.addEventListener("DOMContentLoaded", function () {
               setTimeout(function () {
                 _this4.closeSettings();
               }, 1000);
-            case 16:
+            case 15:
             case "end":
               return _context.stop();
           }
@@ -783,12 +783,10 @@ document.addEventListener("DOMContentLoaded", function () {
           var audio = new Audio('/path/to/notification.mp3');
           audio.volume = 0.5;
           audio.play()["catch"](function (e) {
-            console.log('音声再生に失敗:', e);
             // 代替として簡単なビープ音
             _this5.playBeepSound();
           });
         } catch (e) {
-          console.log('音声機能が利用できません:', e);
           this.playBeepSound();
         }
       }
