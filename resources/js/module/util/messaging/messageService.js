@@ -1,4 +1,5 @@
 
+import { API_ENDPOINTS } from '../../../config/apiEndPoints.js';
 import ChatMessageController from '../../component/chat/ChatMessageController.js';
 import ChatSearchController from '../../component/chat/ChatSearchController.js';
 import ChatUIHelper from '../../component/chat/ChatUIHelper.js';
@@ -70,7 +71,7 @@ export const sendMessage = (socket, msg, sender_id, receiver_id, sender_type, ms
 // ###################################################################
 
   // メッセージ受信時の処理
-export const handleReceivedMessage = async (isON, is_searching, sender_type, sender_id, time, receiver_id, content, message_type, cropArea = []) =>{
+export const handleReceivedMessage = async (isON, is_searching, sender_type, sender_id, time, receiver_id, content, message_type,infiniteScrollInstance,  cropArea = []) =>{
 	
 	if (isON["isSoundOn"]) playNotificationSound();
 	let current_chat_id = document.getElementById("js_chatuser_id").value
@@ -90,12 +91,11 @@ export const handleReceivedMessage = async (isON, is_searching, sender_type, sen
 			senderId: sender_id
 		}
 
-		
 		// `ChatMessageController` のインスタンスを作成
 		const chatMessageController = new ChatMessageController(data)
-
 		// チャット画像を表示
 		chatMessageController.displayChatMessage()
+
 	}
 
 	const args = {
@@ -115,6 +115,8 @@ export const handleReceivedMessage = async (isON, is_searching, sender_type, sen
 	chatUserListController.displayMessage()
 	chatUserListController.increaseMessageCount()
 	await chatUserListController.updateChatUserList()
+	// チャットメッセージ切り替え
+	ChatMessageController.changeChatUser(infiniteScrollInstance)
 
 	// メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
 	const data = {
@@ -123,8 +125,14 @@ export const handleReceivedMessage = async (isON, is_searching, sender_type, sen
 	};
 
 	if (sender_id == document.getElementById("js_chatuser_id").value) {
-		Fetch.fetchPostOperation(data, "/api/user/messages/read");
+		Fetch.fetchPostOperation(data, API_ENDPOINTS.USER_MESSAGE_READ);
 	}
+
+
+	document.querySelectorAll(".chat_users-icon-message").forEach((icon)=>{
+		icon.src = document.querySelector(".js_user_icon").src
+	})
+
 }
 
 export const handleReceivedBroadcastingMessage = (sender_id, time, sendingDatatoBackEnd, ids) =>{
@@ -202,7 +210,7 @@ export const debounce = (func, delay) => {
 // ###################################################################
 
 // 検索バーの入力処理
-export const handleSearchInput = async (is_searching, value, sender_id) => {
+export const handleSearchInput = async (is_searching, value, sender_id, infiniteScrollInstance) => {
 	const data = {
 		admin_id: sender_id,
 		text: value
@@ -211,21 +219,26 @@ export const handleSearchInput = async (is_searching, value, sender_id) => {
 	// 検索欄に何かしら入力があった場合
 	if (value.length > 0) {
 		await ChatSearchController.createDivForSearch(data)
+
 	} else {
 		is_searching.flag = false;
-		await fetchAndDisplayAllMessages(sender_id);
+		await fetchAndDisplayAllMessages(sender_id, infiniteScrollInstance);
 	}
+
+	ChatMessageController.changeChatUser(infiniteScrollInstance)
 
 	// メッセージの長さ制限処理
 	const elements = document.querySelectorAll(".js_chatMessage_elment");
 	elements.forEach((element) => {
 		element.innerHTML = ChatUIHelper.adjustMesageLength(element.innerHTML)
 	});
+
+
 };
 
 
 // 全ユーザーのメッセージを取得し、表示する処理
-export const fetchAndDisplayAllMessages = async (admin_id) => {
+export const fetchAndDisplayAllMessages = async (admin_id, infiniteScrollInstance) => {
 	const response = await Fetch.fetchGetOperation(`/api/users/messages/lineAccounts/${admin_id}`)
 	
 	const parentElement = document.getElementById("js_chatUser_wrapper");
@@ -240,7 +253,8 @@ export const fetchAndDisplayAllMessages = async (admin_id) => {
 	// チャットユーザーリストの無限スクロール
 	const element = document.querySelector(".chat__users-list-area")
 	const adminId = document.getElementById("js_admin_id").value
-	new InfiniteScrollForList(element, adminId)
+
+	new InfiniteScrollForList(element, adminId, infiniteScrollInstance)
 
 };
 

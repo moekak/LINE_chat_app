@@ -26,6 +26,10 @@ class InfiniteScroll {
             this.element.addEventListener("touchmove", this.onScroll.bind(this)); // iOS Safari用
       }
 
+      updateElement(userUuid){
+            this.userUuid = userUuid
+            this.dataCount = document.querySelectorAll(".js_chat_message").length
+      }
 
       //メッセージカウントを更新
       async updateMessageCount() {
@@ -51,8 +55,6 @@ class InfiniteScroll {
                   const url = `/api/users/messages/fetch/${this.dataCount}/${this.userUuid}/${this.adminUuid}`;
                   try {
                         const response = await Fetch.fetchGetOperation(url);
-
-
                         if (response.length === 0) {
                               this.hasNoValue = true;
                               return;
@@ -117,9 +119,15 @@ class InfiniteScroll {
                                     if (this.default_message) {
                                           this.parentElement.insertAdjacentElement("afterbegin", this.default_message);
                                     }
+
+
                   
                               });
                         });
+
+                        document.querySelectorAll(".chat_users-icon-message").forEach((icon)=>{
+                              icon.src = document.querySelector(".js_user_icon").src
+                        })
                         // // 画像を拡大する
                         ModalController.open_image_modal(this.isAdmin)
                         if(this.isAdmin){

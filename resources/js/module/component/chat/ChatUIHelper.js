@@ -1,6 +1,3 @@
-import FormatText from "../../util/FormatText.js";
-import FromController from "../ui/FormController.js";
-
 
 const DELAY_TIME = 500
 const MAX_LENGTH = 30
@@ -56,6 +53,16 @@ class ChatUIHelper{
         const admin_uuid = document.getElementById("js_uuid")?.value || null;
         const user_uuid = document.getElementById("js_chatuser_id")?.value || null
         return (admin_uuid === sender_uuid && user_uuid === receiver_uuid);
+    }
+
+    static updateUserInfo(userUuid, src, name){
+
+        document.getElementById("js_receiver_id").value = userUuid
+        document.querySelector(".js_append_admin").dataset.id = userUuid
+        document.getElementById("js_chatuser_id").value = userUuid
+        document.querySelector(".js_user_icon").src = src
+        document.querySelectorAll(".chat_users-icon-message").forEach((icon)=> icon.src = src)
+        document.querySelector(".chat_message_name").innerHTML = name
     }
 }
 

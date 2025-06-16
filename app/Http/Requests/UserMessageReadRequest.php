@@ -21,6 +21,8 @@ class UserMessageReadRequest extends FormRequest
      */
     public function rules(): array
     {
+
+
         return [
             "chat_user_id" => ["required", "exists:user_entities,entity_uuid"],
             "admin_id" => ["required", "exists:user_entities,entity_uuid"],

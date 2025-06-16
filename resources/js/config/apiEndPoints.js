@@ -7,4 +7,9 @@ export const API_ENDPOINTS = {
     ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
     TEMPLATE_SELECT: "/api/template/select",
     UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+    GET_USER_CHATS : "/api/get/messages",
+    ADMIN_MESSAGE_READ : "/api/admin/messages/read",
+    ADMIN_MESSAGE_READ : "/api/admin/messages/read",
+    USER_MESSAGE_READ : "/api/user/messages/read",
+    FETCH_LATEST_MESSAGE : "/api/user/latest/messages",
 };

@@ -13,23 +13,20 @@ import MessageEditor from './module/util/bulk-messaging/util/MessageEditor.js';
 import MessageFormController from './module/util/bulk-messaging/component/forms/MessageFormController.js';
 import UpdateTemplateView from './module/component/messageTemplates/UpdateTemplateView.js';
 import MessageTemplate from './module/component/messageTemplates/MessageTemplate.js';
-import Fetch from './module/util/api/Fetch.js';
 import { API_ENDPOINTS } from './config/apiEndPoints.js';
 import InitializeTemplate from './module/component/messageTemplates/InitializeTemplate.js';
+import ChatMessageController from './module/component/chat/ChatMessageController.js';
 
 window.window.isON  = {isSoundOn : false}
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-
-	
 	// チャット表示の無限スクロール
-
 	const element = document.querySelector(".chat__message-main")
 	const adminUuid = document.getElementById("js_sender_id").value 
 	const userUuid = document.getElementById("js_receiver_id").value
-	const infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
+	let infiniteScrollInstance = new InfiniteScroll(element, adminUuid, userUuid, "admin", true)
 
 	FromController.changeTextareaHeight()
 	FromController.disableSubmitBtn()
@@ -102,7 +99,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	// サーバーからのメッセージを受信
 	socket.on('chat message', async (msg, sender_type, actual_sender_id, time, actual_receiver_id)=> {
 
-		await handleReceivedMessage(window.isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text")
+		await handleReceivedMessage(window.isON,is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text", infiniteScrollInstance)
 		if(ChatUIHelper.isCurrentUser(actual_sender_id) || ChatUIHelper.isCurrentAmdin(actual_sender_id, actual_receiver_id)){
 			ChatUIHelper.scrollToBottom()
 		}
@@ -116,7 +113,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		ModalController.close_loader()
 		ModalController.open_image_modal(true)
 		ModalController.close_image_by_key()
-		await handleReceivedMessage(window.isON, is_searching, sender_type, sender_id, time, receiver_id,  resizedImage, "image", cropArea);
+		await handleReceivedMessage(window.isON, is_searching, sender_type, sender_id, time, receiver_id,  resizedImage, "image",infiniteScrollInstance, cropArea);
 		if(ChatUIHelper.isCurrentUser(sender_id) || ChatUIHelper.isCurrentAmdin(sender_id, receiver_id)){
 			ChatUIHelper.scrollToBottom()
 		}
@@ -132,9 +129,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 		res["data"].forEach(async (data)=>{
 			if(data["type"] === "text"){
-				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text")
+				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text", infiniteScrollInstance)
 			}else if(data["type"] === "image"){
-				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"],  data["resource"], "image", data["cropArea"]);
+				await handleReceivedMessage(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"],  data["resource"], "image",infiniteScrollInstance, data["cropArea"]);
 			}
 			
 		})
@@ -152,7 +149,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	socket.on("broadcast message", async (sendingDatatoBackEnd, created_at, userUuids, adminUuid,ids)=>{
 		handleReceivedBroadcastingMessage(adminUuid, created_at, sendingDatatoBackEnd, ids)
 		ChatUIHelper.scrollToBottom()
-
 		// InfiniteScrollのインスタンスのthis.dataCOuntを更新(リアルタイムで表示されているデータ数を常に更新する)
 		await infiniteScrollInstance.updateMessageCount();
 	})
@@ -180,15 +176,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		let value = e.target.value;
 		is_searching["flag"] = true;
 
-		await handleSearchInput(is_searching, value, sender_id);
+		await handleSearchInput(is_searching, value, sender_id, infiniteScrollInstance);
 	  }, 500)); // 500ミリ秒の間隔を指定
 
 
-		// チャットユーザーリストの無限スクロール
+	// チャットユーザーリストの無限スクロール
 	{
 		const element = document.querySelector(".chat__users-list-area")
 		const adminId = document.getElementById("js_admin_id").value
-		new InfiniteScrollForList(element, adminId)
+		new InfiniteScrollForList(element, adminId, infiniteScrollInstance)
 	}
 
 	{
@@ -242,6 +238,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
 			});
 			
 		})
+	}
+
+
+
+	// チャットユーザー切り替え
+	{
+		ChatMessageController.changeChatUser(infiniteScrollInstance)
 	}
 })
 

@@ -12,7 +12,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   API_ENDPOINTS: () => (/* binding */ API_ENDPOINTS)
 /* harmony export */ });
-var API_ENDPOINTS = {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
   SEARCH_USERS: "/api/search/users",
   LOGIN: "/api/auth/login",
   REGISTER: "/api/auth/register",
@@ -20,8 +24,10 @@ var API_ENDPOINTS = {
   GENERATE_TOKEN: "/api/token/generate",
   ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
   TEMPLATE_SELECT: "/api/template/select",
-  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor"
-};
+  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+  GET_USER_CHATS: "/api/get/messages",
+  ADMIN_MESSAGE_READ: "/api/admin/messages/read"
+}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages");
 
 /***/ }),
 
@@ -59,28 +65,35 @@ var Fetch = /*#__PURE__*/function () {
         body: JSON.stringify(data)
       }).then(/*#__PURE__*/function () {
         var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(response) {
-          var errorMessage;
+          var _response$headers$get;
+          var text;
           return _regeneratorRuntime().wrap(function _callee$(_context) {
             while (1) switch (_context.prev = _context.next) {
               case 0:
+                _context.next = 2;
+                return response.text();
+              case 2:
+                text = _context.sent;
                 if (!(response.status === 204)) {
-                  _context.next = 2;
+                  _context.next = 5;
                   break;
                 }
                 return _context.abrupt("return");
-              case 2:
+              case 5:
                 if (response.ok) {
                   _context.next = 7;
                   break;
                 }
-                _context.next = 5;
-                return response.text();
-              case 5:
-                errorMessage = _context.sent;
-                throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(errorMessage));
+                throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(text));
               case 7:
-                return _context.abrupt("return", response.json());
-              case 8:
+                if ((_response$headers$get = response.headers.get("content-type")) !== null && _response$headers$get !== void 0 && _response$headers$get.includes("application/json")) {
+                  _context.next = 9;
+                  break;
+                }
+                throw new Error("JSON以外のレスポンスを受信しました");
+              case 9:
+                return _context.abrupt("return", JSON.parse(text));
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -90,7 +103,7 @@ var Fetch = /*#__PURE__*/function () {
           return _ref.apply(this, arguments);
         };
       }())["catch"](function (error) {
-        console.error(error);
+        console.error("fetchPostOperation error:", error.message);
       });
     }
   }, {
@@ -318,13 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
           var hex = e.target.value;
           _this.settings.theme.hex = hex;
           var rgb = _this.hexToRgb(hex);
-
-          // console.log("validatorForHex" + this.validatorForHex(hex));
-          // console.log("validatorForRgb" + this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"]));
-
           _this.settings.isCorrectData = _this.validatorForHex(hex) && _this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"]);
-          // console.log(`正確なデータか: ${this.settings.isCorrectData}`);
-
           _this.settings.theme.customColor.r = rgb["r"];
           _this.settings.theme.customColor.g = rgb["g"];
           _this.settings.theme.customColor.b = rgb["b"];
@@ -616,7 +623,6 @@ document.addEventListener("DOMContentLoaded", function () {
               return _module_util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.UPDATE_BACKGROUND_COLOLR);
             case 11:
               response = _context.sent;
-              console.log(response);
               if (response["status"] === 200) {
                 document.querySelector(".js_spinning_btn").classList.add("hidden");
                 document.querySelector(".js_saving_txt").classList.remove("hidden");
@@ -640,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function () {
               setTimeout(function () {
                 _this4.closeSettings();
               }, 1000);
-            case 16:
+            case 15:
             case "end":
               return _context.stop();
           }
@@ -783,12 +789,10 @@ document.addEventListener("DOMContentLoaded", function () {
           var audio = new Audio('/path/to/notification.mp3');
           audio.volume = 0.5;
           audio.play()["catch"](function (e) {
-            console.log('音声再生に失敗:', e);
             // 代替として簡単なビープ音
             _this5.playBeepSound();
           });
         } catch (e) {
-          console.log('音声機能が利用できません:', e);
           this.playBeepSound();
         }
       }

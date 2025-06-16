@@ -11,6 +11,7 @@ import { handleImageProcessingFlow } from './module/util/fileOperation/imageFile
 import ChatUIHelper from './module/component/chat/ChatUIHelper.js';
 import FromController from './module/component/ui/FormController.js';
 import Fetch from './module/util/api/Fetch.js';
+import { API_ENDPOINTS } from './config/apiEndPoints.js';
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		};
 
 		if (actual_receiver_id == document.getElementById("js_uuid").value && document.visibilityState == "visible") {
-			Fetch.fetchPostOperation(sendingData, "/api/admin/messages/read");
+			Fetch.fetchPostOperation(sendingData, API_ENDPOINTS.ADMIN_MESSAGE_READ);
 		}
 
 		// ボタンを無効化
@@ -120,7 +121,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		};
 
 		if (receiver_id == document.getElementById("js_uuid").value && document.visibilityState == "visible") {
-			Fetch.fetchPostOperation(sendingData, "/api/admin/messages/read");
+			Fetch.fetchPostOperation(sendingData, API_ENDPOINTS.ADMIN_MESSAGE_READ);
 		}
 		ModalController.open_image_modal()
 
@@ -165,7 +166,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 				};
 
 				if (data["userUuid"] == document.getElementById("js_uuid").value && document.visibilityState == "visible") {
-					Fetch.fetchPostOperation(sendingData, "/api/admin/messages/read");
+					Fetch.fetchPostOperation(sendingData, API_ENDPOINTS.ADMIN_MESSAGE_READ);
 				}
 
 				// ボタンを無効化
@@ -202,7 +203,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 				};
 
 				if (data["userUuid"] == document.getElementById("js_uuid").value && document.visibilityState == "visible") {
-					Fetch.fetchPostOperation(sendingData, "/api/admin/messages/read");
+					Fetch.fetchPostOperation(sendingData, API_ENDPOINTS.ADMIN_MESSAGE_READ);
 				}
 				ModalController.open_image_modal()
 
@@ -275,7 +276,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 		};
 
 		if(userUUid && document.visibilityState == "visible"){
-			Fetch.fetchPostOperation(sendingData, "/api/admin/messages/read");
+			Fetch.fetchPostOperation(sendingData, API_ENDPOINTS.ADMIN_MESSAGE_READ);
 		}
 
 

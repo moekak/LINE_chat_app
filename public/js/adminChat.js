@@ -8484,7 +8484,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   API_ENDPOINTS: () => (/* binding */ API_ENDPOINTS)
 /* harmony export */ });
-var API_ENDPOINTS = {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
   SEARCH_USERS: "/api/search/users",
   LOGIN: "/api/auth/login",
   REGISTER: "/api/auth/register",
@@ -8492,8 +8496,10 @@ var API_ENDPOINTS = {
   GENERATE_TOKEN: "/api/token/generate",
   ADMIN_MESSAGES_STORE: "/api/admin/messages/store",
   TEMPLATE_SELECT: "/api/template/select",
-  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor"
-};
+  UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
+  GET_USER_CHATS: "/api/get/messages",
+  ADMIN_MESSAGE_READ: "/api/admin/messages/read"
+}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages");
 
 /***/ }),
 
@@ -8536,9 +8542,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../templates/elementTemplate */ "./resources/js/module/component/templates/elementTemplate.js");
-/* harmony import */ var _ui_ModalController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/ModalController */ "./resources/js/module/component/ui/ModalController.js");
+/* harmony import */ var _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../config/apiEndPoints */ "./resources/js/config/apiEndPoints.js");
+/* harmony import */ var _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/api/Fetch */ "./resources/js/module/util/api/Fetch.js");
+/* harmony import */ var _templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../templates/elementTemplate */ "./resources/js/module/component/templates/elementTemplate.js");
+/* harmony import */ var _ui_ModalController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/ModalController */ "./resources/js/module/component/ui/ModalController.js");
+/* harmony import */ var _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatUIHelper */ "./resources/js/module/component/chat/ChatUIHelper.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -8547,6 +8565,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
 function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+
+
+
 
 
 
@@ -8570,7 +8591,7 @@ var ChatMessageController = /*#__PURE__*/function () {
    * @param {string} content - メッセージ内容
    * @param {string} fileName - ファイルの名前
    * @param {string} senderId - 送信者の ID
-  */
+   */
 
   function ChatMessageController(_ref) {
     var messageType = _ref.messageType,
@@ -8607,9 +8628,172 @@ var ChatMessageController = /*#__PURE__*/function () {
   return _createClass(ChatMessageController, [{
     key: "displayChatMessage",
     value: function displayChatMessage() {
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       if (this.ids.includes(this.parentElement.getAttribute("data-id"))) return;
       var shouldAddRightMessage = _assertClassBrand(_ChatMessageController_brand, this, _isRightAlignedMessage).call(this);
-      _assertClassBrand(_ChatMessageController_brand, this, _addChatMessage).call(this, shouldAddRightMessage);
+      _assertClassBrand(_ChatMessageController_brand, this, _addChatMessage).call(this, shouldAddRightMessage, id !== null && id !== void 0 ? id : null);
+    }
+  }], [{
+    key: "updateChatDisplay",
+    value: function updateChatDisplay(response, userUuid) {
+      var _document$querySelect;
+      var default_message = (_document$querySelect = document.querySelector(".chat_default-area")) !== null && _document$querySelect !== void 0 ? _document$querySelect : null;
+      var parentElement = document.querySelector(".js_append_admin");
+      parentElement.dataset.id = userUuid;
+      parentElement.innerHTML = "";
+      Object.entries(response).forEach(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+          index = _ref3[0],
+          dateGroup = _ref3[1];
+        Object.entries(dateGroup).reverse().forEach(function (_ref4) {
+          var _ref5 = _slicedToArray(_ref4, 2),
+            date = _ref5[0],
+            messages = _ref5[1];
+          var new_date_el = document.createElement("small");
+          new_date_el.classList.add("chat__message-main-time", "js_chat_message_date");
+          new_date_el.dataset.dateName = date;
+          new_date_el.innerHTML = date;
+          if (default_message) {
+            parentElement.removeChild(default_message);
+          }
+          messages.slice().reverse().forEach(function (message) {
+            var date = new Date(message.created_at);
+            var time = date.toLocaleTimeString("ja-JP", {
+              timeZone: "Asia/Tokyo",
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            var parsedData = JSON.parse(message.crop_data);
+            // 共通の args を作成
+            var args = {
+              messageType: message.type,
+              cropArea: parsedData ? {
+                x_percent: parsedData.x_percent,
+                y_percent: parsedData.y_percent,
+                width_percent: parsedData.width_percent,
+                height_percent: parsedData.height_percent,
+                url: message.url
+              } : [],
+              position: "afterbegin",
+              time: time,
+              className: "js_append_admin",
+              senderType: message.sender_type,
+              content: message.content,
+              fileName: "admin",
+              senderId: ""
+            };
+
+            // `ChatMessageController` のインスタンスを作成
+            var chatMessageController = new ChatMessageController(args);
+            chatMessageController.displayChatMessage(message.id, message.type);
+          });
+          parentElement.insertAdjacentElement("afterbegin", new_date_el);
+          if (default_message) {
+            parentElement.insertAdjacentElement("afterbegin", default_message);
+          }
+        });
+      });
+    }
+  }, {
+    key: "changeChatUser",
+    value: function changeChatUser(infiniteScrollInstance) {
+      var btns = document.querySelectorAll(".js_user_btn");
+      btns.forEach(function (btn) {
+        var newBtn = btn.cloneNode(true);
+        btn.replaceWith(newBtn);
+        newBtn.addEventListener("click", /*#__PURE__*/function () {
+          var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
+            var userId, adminId, userUuid, adminUuid, src, name, response, chatLatesetData, data, target;
+            return _regeneratorRuntime().wrap(function _callee$(_context) {
+              while (1) switch (_context.prev = _context.next) {
+                case 0:
+                  userId = e.currentTarget.dataset.id;
+                  adminId = e.currentTarget.dataset.adminId;
+                  userUuid = e.currentTarget.dataset.uuid;
+                  adminUuid = document.getElementById("js_uuid").value;
+                  src = e.currentTarget.querySelector(".chat_users-icon").src;
+                  name = e.currentTarget.querySelector(".simplebar-content").innerHTML;
+                  _context.prev = 6;
+                  _context.next = 9;
+                  return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.GET_USER_CHATS, "/").concat(userId, "/").concat(adminId));
+                case 9:
+                  response = _context.sent;
+                  _context.next = 12;
+                  return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.FETCH_LATEST_MESSAGE, "/").concat(userId, "/").concat(adminId));
+                case 12:
+                  chatLatesetData = _context.sent;
+                  ChatMessageController.updateChatDisplay(response, userUuid);
+                  _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserInfo(userUuid, src, name);
+                  ChatMessageController.displayUnreadMessage(chatLatesetData["last_unread_message_id"], chatLatesetData["last_message_type"], chatLatesetData["unread_count"]);
+                  infiniteScrollInstance.updateElement(userUuid);
+                  data = {
+                    "admin_id": adminUuid,
+                    "chat_user_id": userUuid
+                  };
+                  if (userUuid == document.getElementById("js_chatuser_id").value) {
+                    target = newBtn.querySelector(".message_count");
+                    if (target) {
+                      target.style.display = "none";
+                    }
+                    _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
+                  }
+                  _context.next = 24;
+                  break;
+                case 21:
+                  _context.prev = 21;
+                  _context.t0 = _context["catch"](6);
+                  console.error(_context.t0);
+                case 24:
+                case "end":
+                  return _context.stop();
+              }
+            }, _callee, null, [[6, 21]]);
+          }));
+          return function (_x) {
+            return _ref6.apply(this, arguments);
+          };
+        }());
+      });
+    }
+  }, {
+    key: "displayUnreadMessage",
+    value: function displayUnreadMessage(lastMessageId, lastMessageType, unreadCount) {
+      var messagesElements = document.querySelectorAll(".js_chat_message");
+      var hasUnreadMessage = false;
+      messagesElements.forEach(function (el) {
+        if (el.getAttribute("data-id") == lastMessageId && el.getAttribute("data-type") == lastMessageType && unreadCount > 0) {
+          var parentElement = el.parentElement.parentElement;
+          var newElement = document.createElement("p");
+          newElement.classList.add("unread_message-description");
+          newElement.innerHTML = "ここから未読メッセージ";
+          parentElement.insertAdjacentElement('beforebegin', newElement);
+          hasUnreadMessage = true;
+          setTimeout(function () {
+            var container = document.querySelector('.chat__message-main'); // スクロール対象のコンテナ
+            if (container) {
+              var containerRect = container.getBoundingClientRect();
+              var elemRect = newElement.getBoundingClientRect();
+              var offsetTop = elemRect.top - containerRect.top;
+              container.scrollTo({
+                top: offsetTop - 100,
+                behavior: 'instant'
+              });
+            }
+          }, 100);
+        }
+      });
+      if (!hasUnreadMessage) {
+        setTimeout(function () {
+          var scroll_el = document.querySelector(".chat__message-main");
+          if (scroll_el) {
+            // 一番下までスクロール
+            scroll_el.scrollTo({
+              top: scroll_el.scrollHeight - scroll_el.clientHeight,
+              behavior: 'instant' // または 'auto'
+            });
+          }
+        }, 100);
+      }
     }
   }]);
 }();
@@ -8623,12 +8807,11 @@ function _isRightAlignedMessage() {
  * @param {boolean} isRight - メッセージを右側に追加する場合は true、それ以外は false
  */
 function _addChatMessage(isRight) {
-  console.log(this.cropArea);
-  console.log("222");
+  var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var validPositions = ["afterbegin", "beforeend"];
   var validPosition = validPositions.includes(this.position) ? this.position : "beforeend";
   // メッセージHTMLを生成して挿入
-  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_0__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type);
+  var messageHTML = isRight ? (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__.createRightMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type, id) : (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__.createLeftMessageContainer)(this.messageType, this.time, this.content, this.cropArea, this.type, id);
   this.parentElement.insertAdjacentHTML(validPosition, messageHTML);
 
   // this.cropAreaがある場合は処理を適用
@@ -8638,8 +8821,8 @@ function _addChatMessage(isRight) {
   }
 }
 /**
- * 画像の切り取り領域をオーバーレイ表示
- */
+* 画像の切り取り領域をオーバーレイ表示
+*/
 function _applyCropArea() {
   var _this = this;
   var containers = document.querySelectorAll(".image-container[data-crop]");
@@ -8653,10 +8836,10 @@ function _applyCropArea() {
   });
 }
 /**
- * 切り取り領域に基づいてオーバーレイのスタイルを更新
- * @param {HTMLElement} container - 対象画像のコンテナ
- * @param {HTMLElement} overlay - オーバーレイ要素
- */
+* 切り取り領域に基づいてオーバーレイのスタイルを更新
+* @param {HTMLElement} container - 対象画像のコンテナ
+* @param {HTMLElement} overlay - オーバーレイ要素
+*/
 function _updateOverlayStyles(container, overlay) {
   var imageRect = container.querySelector(".overlay-target").getBoundingClientRect();
   var cropData = JSON.parse(container.dataset.crop);
@@ -8773,16 +8956,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _util_FormatText_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/FormatText.js */ "./resources/js/module/util/FormatText.js");
-/* harmony import */ var _ui_FormController_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ui/FormController.js */ "./resources/js/module/component/ui/FormController.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-
-
 var DELAY_TIME = 500;
 var MAX_LENGTH = 30;
 
@@ -8848,6 +9027,18 @@ var ChatUIHelper = /*#__PURE__*/function () {
       var admin_uuid = ((_document$getElementB2 = document.getElementById("js_uuid")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value) || null;
       var user_uuid = ((_document$getElementB3 = document.getElementById("js_chatuser_id")) === null || _document$getElementB3 === void 0 ? void 0 : _document$getElementB3.value) || null;
       return admin_uuid === sender_uuid && user_uuid === receiver_uuid;
+    }
+  }, {
+    key: "updateUserInfo",
+    value: function updateUserInfo(userUuid, src, name) {
+      document.getElementById("js_receiver_id").value = userUuid;
+      document.querySelector(".js_append_admin").dataset.id = userUuid;
+      document.getElementById("js_chatuser_id").value = userUuid;
+      document.querySelector(".js_user_icon").src = src;
+      document.querySelectorAll(".chat_users-icon-message").forEach(function (icon) {
+        return icon.src = src;
+      });
+      document.querySelector(".chat_message_name").innerHTML = name;
     }
   }]);
 }();
@@ -8939,8 +9130,10 @@ var ChatUserListController = /*#__PURE__*/function () {
       var _this = this;
       var count_elements = document.querySelectorAll(".js_mesage_count");
       var chat_user_id = document.getElementById("js_chatuser_id").value;
+      console.log(chat_user_id);
       count_elements.forEach(function (count) {
         var id = count.getAttribute("data-id");
+        console.log(id);
 
         // 未読カウントを増加させる条件:
         // - メッセージ送信者と一致する
@@ -9684,15 +9877,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var createRightMessageContainer = function createRightMessageContainer(message_type, time, content, cropArea, type) {
+  var id = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
   if (typeof cropArea === "string") {
     cropArea = JSON.parse(cropArea);
   }
-  console.log(cropArea);
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
-    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
+    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\" data-id=").concat(id, " data-type=").concat(message_type, "/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
   } else {
-    rawHtml = "\n                  <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                        <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\"/>\n                  </div>\n            ");
+    rawHtml = "\n                  <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                        <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\" data-id=").concat(id, " data-type=").concat(message_type, "/>\n                  </div>\n            ");
   }
 
   // テキストに含まれてるURLをaタグに変換する
@@ -9708,10 +9901,11 @@ var createRightMessageContainer = function createRightMessageContainer(message_t
   displayMessage = displayMessage.replace(/&lt;br&gt;/g, '\n') // エスケープされた<br>タグを改行に変換
   .replace(/\n/g, '<br>'); // 改行を<br>タグに戻す
 
-  return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
+  return "\n            <div class=\"chat__message-container-right\">\n                  <div class=\"chat__mesgae-main-right\">\n                        <div class=\"chat__message-time-txt\">".concat(time, "</div>\n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? "<div class=\"chat__message-box-right chat-margin5 js_chat_message\" data-id=".concat(id, " data-type=").concat(message_type, ">").concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                  </div>\n            </div>\n      ");
 };
 var createLeftMessageContainer = function createLeftMessageContainer(message_type, time, content, cropArea, type) {
   var _document$getElementB2;
+  var id = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
   var src = (_document$getElementB2 = document.getElementById("js_user_icon_img")) === null || _document$getElementB2 === void 0 ? void 0 : _document$getElementB2.value;
   var icon_src = src === "" ? "/img/user.png" : src;
 
@@ -9733,16 +9927,16 @@ var createLeftMessageContainer = function createLeftMessageContainer(message_typ
   }
   var rawHtml = "";
   if (Object.entries(cropArea).length > 0) {
-    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\"/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
+    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" data-crop='".concat(JSON.stringify(cropArea), "'>\n                  <img src=\"").concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image overlay-target js_chat_message\" style=\"margin: 0;\" data-id=").concat(id, " data-type=").concat(message_type, "/>\n                  <a class=\"overlay\" href=\"").concat(cropArea.url, "\" style=\"display: none;\"></a>\n            </div>\n            ");
   } else {
-    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                  <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\"/>\n            </div>\n            ");
+    rawHtml = "\n            <div class=\"image-container\" style=\"position: relative; display: inline-block; margin: 5px 0;\" >\n                  <img src=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].S3_URL, "/").concat(content, "\" alt=\"Image\" class=\"chat-margin5 chat_image js_chat_message\" style=\"margin: 0;\" data-id=").concat(id, " data-type=").concat(message_type, "/>\n            </div>\n            ");
   }
-  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\">".concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
+  return "\n            <div class=\"chat__message-container-left\">\n                  <div class=\"chat__mesgae-main-left\">\n                        <img src=".concat(icon_src, " alt=\"\" class=\"chat_users-icon-message\" onerror=\"this.onerror=null; this.src='/img/user.png';\" id=\"icon_msg\"> \n                        ").concat(message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt" ? "<div class=\"chat__message-box-left chat-margin5 js_chat_message\" data-id=".concat(id, " data-type=").concat(message_type, ">").concat(displayMessage, "</div>") : "".concat(rawHtml), "\n                        <div class=\"chat__message-time-txt\">").concat(time, "</div>\n                  </div> \n            </div>\n      ");
 };
 var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
-  return "\n            <a href=\"".concat(_config_config_js__WEBPACK_IMPORTED_MODULE_1__["default"].CHAT_URL, "/").concat(res["id"], "/").concat(document.getElementById("js_admin_id").value, "\" class=\"chat__users-list-wraper js_chat_wrapper\" style=\"margin-top: 0\" data-uuid=\"").concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(res["line_name"], "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </a>\n      ");
+  return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper js_user_btn\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["line_name"]), "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
 };
 
 /***/ }),
@@ -10281,28 +10475,35 @@ var Fetch = /*#__PURE__*/function () {
         body: JSON.stringify(data)
       }).then(/*#__PURE__*/function () {
         var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(response) {
-          var errorMessage;
+          var _response$headers$get;
+          var text;
           return _regeneratorRuntime().wrap(function _callee$(_context) {
             while (1) switch (_context.prev = _context.next) {
               case 0:
+                _context.next = 2;
+                return response.text();
+              case 2:
+                text = _context.sent;
                 if (!(response.status === 204)) {
-                  _context.next = 2;
+                  _context.next = 5;
                   break;
                 }
                 return _context.abrupt("return");
-              case 2:
+              case 5:
                 if (response.ok) {
                   _context.next = 7;
                   break;
                 }
-                _context.next = 5;
-                return response.text();
-              case 5:
-                errorMessage = _context.sent;
-                throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(errorMessage));
+                throw new Error("\u30B5\u30FC\u30D0\u30FC\u30A8\u30E9\u30FC: ".concat(response.status, " - ").concat(text));
               case 7:
-                return _context.abrupt("return", response.json());
-              case 8:
+                if ((_response$headers$get = response.headers.get("content-type")) !== null && _response$headers$get !== void 0 && _response$headers$get.includes("application/json")) {
+                  _context.next = 9;
+                  break;
+                }
+                throw new Error("JSON以外のレスポンスを受信しました");
+              case 9:
+                return _context.abrupt("return", JSON.parse(text));
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -10312,7 +10513,7 @@ var Fetch = /*#__PURE__*/function () {
           return _ref.apply(this, arguments);
         };
       }())["catch"](function (error) {
-        console.error(error);
+        console.error("fetchPostOperation error:", error.message);
       });
     }
   }, {
@@ -11037,7 +11238,6 @@ var CropperImage = /*#__PURE__*/function () {
           ready: function ready() {
             // Cropper の初期化が完了したら crop 領域の取得
             var cropperArea = _this2.getCropperArea();
-            console.log("✅ cropperArea:", cropperArea);
           },
           cropend: function cropend() {
             _this2.changeBtn.classList.remove("disabled_btn");
@@ -11968,15 +12168,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   prepareMessageData: () => (/* binding */ prepareMessageData),
 /* harmony export */   sendMessage: () => (/* binding */ sendMessage)
 /* harmony export */ });
-/* harmony import */ var _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../component/chat/ChatMessageController.js */ "./resources/js/module/component/chat/ChatMessageController.js");
-/* harmony import */ var _component_chat_ChatSearchController_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../component/chat/ChatSearchController.js */ "./resources/js/module/component/chat/ChatSearchController.js");
-/* harmony import */ var _component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../component/chat/ChatUIHelper.js */ "./resources/js/module/component/chat/ChatUIHelper.js");
-/* harmony import */ var _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../component/chat/ChatUserListController.js */ "./resources/js/module/component/chat/ChatUserListController.js");
-/* harmony import */ var _component_templates_elementTemplate_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../component/templates/elementTemplate.js */ "./resources/js/module/component/templates/elementTemplate.js");
-/* harmony import */ var _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/Fetch.js */ "./resources/js/module/util/api/Fetch.js");
-/* harmony import */ var _FormatText_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../FormatText.js */ "./resources/js/module/util/FormatText.js");
-/* harmony import */ var _scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../scrolling/InfiniteScrollForList.js */ "./resources/js/module/util/scrolling/InfiniteScrollForList.js");
-/* harmony import */ var _notificationSound_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./notificationSound.js */ "./resources/js/module/util/messaging/notificationSound.js");
+/* harmony import */ var _config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../config/apiEndPoints.js */ "./resources/js/config/apiEndPoints.js");
+/* harmony import */ var _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../component/chat/ChatMessageController.js */ "./resources/js/module/component/chat/ChatMessageController.js");
+/* harmony import */ var _component_chat_ChatSearchController_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../component/chat/ChatSearchController.js */ "./resources/js/module/component/chat/ChatSearchController.js");
+/* harmony import */ var _component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../component/chat/ChatUIHelper.js */ "./resources/js/module/component/chat/ChatUIHelper.js");
+/* harmony import */ var _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../component/chat/ChatUserListController.js */ "./resources/js/module/component/chat/ChatUserListController.js");
+/* harmony import */ var _component_templates_elementTemplate_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../component/templates/elementTemplate.js */ "./resources/js/module/component/templates/elementTemplate.js");
+/* harmony import */ var _api_Fetch_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/Fetch.js */ "./resources/js/module/util/api/Fetch.js");
+/* harmony import */ var _FormatText_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../FormatText.js */ "./resources/js/module/util/FormatText.js");
+/* harmony import */ var _scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../scrolling/InfiniteScrollForList.js */ "./resources/js/module/util/scrolling/InfiniteScrollForList.js");
+/* harmony import */ var _notificationSound_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./notificationSound.js */ "./resources/js/module/util/messaging/notificationSound.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -11986,6 +12187,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
 
 
 
@@ -12040,7 +12242,7 @@ var sendMessage = function sendMessage(socket, msg, sender_id, receiver_id, send
       user_id: actual_sender_id
     };
   }
-  _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__["default"].fetchPostOperation(data, url).then(function (res) {
+  _api_Fetch_js__WEBPACK_IMPORTED_MODULE_6__["default"].fetchPostOperation(data, url).then(function (res) {
     var time = res["created_at"];
     var admin_login_id = res["admin_login_id"];
     socket.emit('chat message', {
@@ -12061,7 +12263,7 @@ var sendMessage = function sendMessage(socket, msg, sender_id, receiver_id, send
 
 // メッセージ受信時の処理
 var handleReceivedMessage = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(isON, is_searching, sender_type, sender_id, time, receiver_id, content, message_type) {
+  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(isON, is_searching, sender_type, sender_id, time, receiver_id, content, message_type, infiniteScrollInstance) {
     var cropArea,
       current_chat_id,
       _data,
@@ -12073,9 +12275,8 @@ var handleReceivedMessage = /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          cropArea = _args.length > 8 && _args[8] !== undefined ? _args[8] : [];
-          console.log("isON: ".concat(isON));
-          if (isON["isSoundOn"]) (0,_notificationSound_js__WEBPACK_IMPORTED_MODULE_8__.playNotificationSound)();
+          cropArea = _args.length > 9 && _args[9] !== undefined ? _args[9] : [];
+          if (isON["isSoundOn"]) (0,_notificationSound_js__WEBPACK_IMPORTED_MODULE_9__.playNotificationSound)();
           current_chat_id = document.getElementById("js_chatuser_id").value;
           if (current_chat_id == receiver_id || current_chat_id == sender_id) {
             // 必要なデータをオブジェクトで準備
@@ -12090,7 +12291,7 @@ var handleReceivedMessage = /*#__PURE__*/function () {
               fileName: "admin",
               senderId: sender_id
             }; // `ChatMessageController` のインスタンスを作成
-            chatMessageController = new _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_0__["default"](_data); // チャット画像を表示
+            chatMessageController = new _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__["default"](_data); // チャット画像を表示
             chatMessageController.displayChatMessage();
           }
           args = {
@@ -12102,9 +12303,11 @@ var handleReceivedMessage = /*#__PURE__*/function () {
             messageType: message_type,
             time: time
           };
-          chatUserListController = new _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_3__["default"](args); // チャットリストのリアルタイムでデータを表示する処理
+          chatUserListController = new _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_4__["default"](args); // チャットリストのリアルタイムでデータを表示する処理
           chatUserListController.updateMessageTime();
           chatUserListController.displayMessage();
+          // チャットメッセージ切り替え
+          _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__["default"].changeChatUser(infiniteScrollInstance);
           chatUserListController.increaseMessageCount();
           _context.next = 12;
           return chatUserListController.updateChatUserList();
@@ -12115,15 +12318,18 @@ var handleReceivedMessage = /*#__PURE__*/function () {
             "chat_user_id": sender_id
           };
           if (sender_id == document.getElementById("js_chatuser_id").value) {
-            _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__["default"].fetchPostOperation(data, "/api/user/messages/read");
+            _api_Fetch_js__WEBPACK_IMPORTED_MODULE_6__["default"].fetchPostOperation(data, _config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
           }
-        case 14:
+          document.querySelectorAll(".chat_users-icon-message").forEach(function (icon) {
+            icon.src = document.querySelector(".js_user_icon").src;
+          });
+        case 15:
         case "end":
           return _context.stop();
       }
     }, _callee);
   }));
-  return function handleReceivedMessage(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8) {
+  return function handleReceivedMessage(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -12156,7 +12362,7 @@ var handleReceivedBroadcastingMessage = function handleReceivedBroadcastingMessa
     });
 
     // `ChatMessageController` のインスタンスを作成
-    var chatMessageController = new _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_0__["default"](messageArgs);
+    var chatMessageController = new _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__["default"](messageArgs);
 
     // チャットメッセージを表示
     chatMessageController.displayChatMessage();
@@ -12170,7 +12376,7 @@ var handleReceivedBroadcastingMessage = function handleReceivedBroadcastingMessa
     messageType: "",
     time: time
   };
-  var chatUserListController = new _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_3__["default"](argsForUserList);
+  var chatUserListController = new _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_4__["default"](argsForUserList);
 
   // チャットリストのリアルタイムでデータを表示する処理
   chatUserListController.updateMessageTime();
@@ -12220,7 +12426,7 @@ var debounce = function debounce(func, delay) {
 
 // 検索バーの入力処理
 var handleSearchInput = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(is_searching, value, sender_id) {
+  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(is_searching, value, sender_id, infiniteScrollInstance) {
     var data, elements;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
@@ -12234,61 +12440,63 @@ var handleSearchInput = /*#__PURE__*/function () {
             break;
           }
           _context3.next = 4;
-          return _component_chat_ChatSearchController_js__WEBPACK_IMPORTED_MODULE_1__["default"].createDivForSearch(data);
+          return _component_chat_ChatSearchController_js__WEBPACK_IMPORTED_MODULE_2__["default"].createDivForSearch(data);
         case 4:
           _context3.next = 9;
           break;
         case 6:
           is_searching.flag = false;
           _context3.next = 9;
-          return fetchAndDisplayAllMessages(sender_id);
+          return fetchAndDisplayAllMessages(sender_id, infiniteScrollInstance);
         case 9:
+          _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__["default"].changeChatUser(infiniteScrollInstance);
+
           // メッセージの長さ制限処理
           elements = document.querySelectorAll(".js_chatMessage_elment");
           elements.forEach(function (element) {
-            element.innerHTML = _component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].adjustMesageLength(element.innerHTML);
+            element.innerHTML = _component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"].adjustMesageLength(element.innerHTML);
           });
-        case 11:
+        case 12:
         case "end":
           return _context3.stop();
       }
     }, _callee3);
   }));
-  return function handleSearchInput(_x9, _x10, _x11) {
+  return function handleSearchInput(_x10, _x11, _x12, _x13) {
     return _ref3.apply(this, arguments);
   };
 }();
 
 // 全ユーザーのメッセージを取得し、表示する処理
 var fetchAndDisplayAllMessages = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(admin_id) {
+  var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(admin_id, infiniteScrollInstance) {
     var response, parentElement, element, adminId;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return _api_Fetch_js__WEBPACK_IMPORTED_MODULE_5__["default"].fetchGetOperation("/api/users/messages/lineAccounts/".concat(admin_id));
+          return _api_Fetch_js__WEBPACK_IMPORTED_MODULE_6__["default"].fetchGetOperation("/api/users/messages/lineAccounts/".concat(admin_id));
         case 2:
           response = _context4.sent;
           parentElement = document.getElementById("js_chatUser_wrapper");
           parentElement.innerHTML = "";
           response.forEach(function (res) {
             if (res["latest_all_message"] !== null) {
-              parentElement.innerHTML += (0,_component_templates_elementTemplate_js__WEBPACK_IMPORTED_MODULE_4__.createChatUserContainer)(res["entity_uuid"], res);
+              parentElement.innerHTML += (0,_component_templates_elementTemplate_js__WEBPACK_IMPORTED_MODULE_5__.createChatUserContainer)(res["entity_uuid"], res);
             }
           });
 
           // チャットユーザーリストの無限スクロール
           element = document.querySelector(".chat__users-list-area");
           adminId = document.getElementById("js_admin_id").value;
-          new _scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_7__["default"](element, adminId);
+          new _scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_8__["default"](element, adminId, infiniteScrollInstance);
         case 9:
         case "end":
           return _context4.stop();
       }
     }, _callee4);
   }));
-  return function fetchAndDisplayAllMessages(_x12) {
+  return function fetchAndDisplayAllMessages(_x14, _x15) {
     return _ref4.apply(this, arguments);
   };
 }();
@@ -12378,9 +12586,15 @@ var InfiniteScroll = /*#__PURE__*/function () {
     this.element.addEventListener("scroll", this.onScroll.bind(this));
     this.element.addEventListener("touchmove", this.onScroll.bind(this)); // iOS Safari用
   }
-
-  //メッセージカウントを更新
   return _createClass(InfiniteScroll, [{
+    key: "updateElement",
+    value: function updateElement(userUuid) {
+      this.userUuid = userUuid;
+      this.dataCount = document.querySelectorAll(".js_chat_message").length;
+    }
+
+    //メッセージカウントを更新
+  }, {
     key: "updateMessageCount",
     value: function () {
       var _updateMessageCount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -12418,7 +12632,7 @@ var InfiniteScroll = /*#__PURE__*/function () {
               scrollThreshold = 20; // スクロール位置の閾値
               beforeUpdatingScrollTop = this.element.scrollTop; // スクロール位置が先頭に近い場合データをロード
               if (!(beforeUpdatingScrollTop <= scrollThreshold)) {
-                _context2.next = 29;
+                _context2.next = 30;
                 break;
               }
               this.isFetchFlag = true;
@@ -12499,6 +12713,9 @@ var InfiniteScroll = /*#__PURE__*/function () {
                   }
                 });
               });
+              document.querySelectorAll(".chat_users-icon-message").forEach(function (icon) {
+                icon.src = document.querySelector(".js_user_icon").src;
+              });
               // // 画像を拡大する
               _component_ui_ModalController__WEBPACK_IMPORTED_MODULE_1__["default"].open_image_modal(this.isAdmin);
               if (this.isAdmin) {
@@ -12510,22 +12727,22 @@ var InfiniteScroll = /*#__PURE__*/function () {
                 var newScrollHeight = _this.element.scrollHeight;
                 _this.element.scrollTop = newScrollHeight - oldScrollHeight;
               });
-              _context2.next = 25;
+              _context2.next = 26;
               break;
-            case 22:
-              _context2.prev = 22;
+            case 23:
+              _context2.prev = 23;
               _context2.t0 = _context2["catch"](8);
               console.error("Failed to fetch data:", _context2.t0);
-            case 25:
-              _context2.prev = 25;
+            case 26:
+              _context2.prev = 26;
               this.isFetchFlag = false;
               this.dataCount += MESSAGES_PER_PAGE;
-              return _context2.finish(25);
-            case 29:
+              return _context2.finish(26);
+            case 30:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[8, 22, 25, 29]]);
+        }, _callee2, this, [[8, 23, 26, 30]]);
       }));
       function handleScroll() {
         return _handleScroll.apply(this, arguments);
@@ -12559,11 +12776,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../component/chat/ChatUIHelper */ "./resources/js/module/component/chat/ChatUIHelper.js");
-/* harmony import */ var _component_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../component/templates/elementTemplate */ "./resources/js/module/component/templates/elementTemplate.js");
-/* harmony import */ var _api_Fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/Fetch */ "./resources/js/module/util/api/Fetch.js");
-/* harmony import */ var _FormatText__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FormatText */ "./resources/js/module/util/FormatText.js");
-/* harmony import */ var _state_UserStateManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../state/UserStateManager */ "./resources/js/module/util/state/UserStateManager.js");
+/* harmony import */ var _component_chat_ChatMessageController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../component/chat/ChatMessageController */ "./resources/js/module/component/chat/ChatMessageController.js");
+/* harmony import */ var _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../component/chat/ChatUIHelper */ "./resources/js/module/component/chat/ChatUIHelper.js");
+/* harmony import */ var _component_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../component/templates/elementTemplate */ "./resources/js/module/component/templates/elementTemplate.js");
+/* harmony import */ var _api_Fetch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/Fetch */ "./resources/js/module/util/api/Fetch.js");
+/* harmony import */ var _FormatText__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FormatText */ "./resources/js/module/util/FormatText.js");
+/* harmony import */ var _state_UserStateManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../state/UserStateManager */ "./resources/js/module/util/state/UserStateManager.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -12578,9 +12796,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+
 var MESSAGES_PER_PAGE = 20;
 var InfiniteScrollForList = /*#__PURE__*/function () {
-  function InfiniteScrollForList(element, adminId) {
+  function InfiniteScrollForList(element, adminId, infiniteScrollInstance) {
     _classCallCheck(this, InfiniteScrollForList);
     this.element = element;
     this.hasNoValue = false;
@@ -12591,7 +12810,8 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
     this.hasDate = false;
     this.adminId = adminId;
     this.loader = document.querySelector(".js_loader");
-    this.userList = _state_UserStateManager__WEBPACK_IMPORTED_MODULE_4__["default"].getState();
+    this.userList = _state_UserStateManager__WEBPACK_IMPORTED_MODULE_5__["default"].getState();
+    this.infiniteScrollInstance = infiniteScrollInstance;
     // コンストラクタで定義された this を使用するメソッドをイベントリスナーやコールバックとして使用する場合、bind(this) が必要
     this.element.addEventListener("scroll", this.handleScroll.bind(this));
   }
@@ -12604,12 +12824,12 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               if (!(!this.hasNoValue && !this.isFetchFlag)) {
-                _context.next = 25;
+                _context.next = 26;
                 break;
               }
               _this$element = this.element, scrollTop = _this$element.scrollTop, scrollHeight = _this$element.scrollHeight, clientHeight = _this$element.clientHeight; // 一番下までスクロールしたかを判定
               if (!(scrollTop + clientHeight + 50 >= scrollHeight)) {
-                _context.next = 25;
+                _context.next = 26;
                 break;
               }
               this.loader.classList.remove("hidden");
@@ -12622,7 +12842,7 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
               };
               _context.prev = 7;
               _context.next = 10;
-              return _api_Fetch__WEBPACK_IMPORTED_MODULE_2__["default"].fetchPostOperation(data, url);
+              return _api_Fetch__WEBPACK_IMPORTED_MODULE_3__["default"].fetchPostOperation(data, url);
             case 10:
               response = _context.sent;
               if (response.length === 0) {
@@ -12632,29 +12852,32 @@ var InfiniteScrollForList = /*#__PURE__*/function () {
               response.forEach(function (res) {
                 var parentEl = document.querySelector(".chat__users-list-container");
                 if (res["latest_all_message"] !== null) {
-                  parentEl.insertAdjacentHTML("beforeend", (0,_component_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_1__.createChatUserContainer)(res["entity_uuid"], res));
+                  parentEl.insertAdjacentHTML("beforeend", (0,_component_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_2__.createChatUserContainer)(res["entity_uuid"], res));
                 }
               });
               elements = document.querySelectorAll(".js_chatMessage_elment");
               elements.forEach(function (element) {
-                element.innerHTML = _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_0__["default"].adjustMesageLength(element.innerHTML);
+                element.innerHTML = _component_chat_ChatUIHelper__WEBPACK_IMPORTED_MODULE_1__["default"].adjustMesageLength(element.innerHTML);
               });
-              _context.next = 21;
+
+              // チャットメッセージ切り替え
+              _component_chat_ChatMessageController__WEBPACK_IMPORTED_MODULE_0__["default"].changeChatUser(this.infiniteScrollInstance);
+              _context.next = 22;
               break;
-            case 18:
-              _context.prev = 18;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](7);
               console.error("Failed to fetch data:", _context.t0);
-            case 21:
-              _context.prev = 21;
+            case 22:
+              _context.prev = 22;
               this.isFetchFlag = false;
               this.dataCount = this.dataCount + MESSAGES_PER_PAGE;
-              return _context.finish(21);
-            case 25:
+              return _context.finish(22);
+            case 26:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[7, 18, 21, 25]]);
+        }, _callee, this, [[7, 19, 22, 26]]);
       }));
       function handleScroll() {
         return _handleScroll.apply(this, arguments);
@@ -12881,9 +13104,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _module_util_bulk_messaging_component_forms_MessageFormController_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./module/util/bulk-messaging/component/forms/MessageFormController.js */ "./resources/js/module/util/bulk-messaging/component/forms/MessageFormController.js");
 /* harmony import */ var _module_component_messageTemplates_UpdateTemplateView_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./module/component/messageTemplates/UpdateTemplateView.js */ "./resources/js/module/component/messageTemplates/UpdateTemplateView.js");
 /* harmony import */ var _module_component_messageTemplates_MessageTemplate_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./module/component/messageTemplates/MessageTemplate.js */ "./resources/js/module/component/messageTemplates/MessageTemplate.js");
-/* harmony import */ var _module_util_api_Fetch_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./module/util/api/Fetch.js */ "./resources/js/module/util/api/Fetch.js");
-/* harmony import */ var _config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./config/apiEndPoints.js */ "./resources/js/config/apiEndPoints.js");
-/* harmony import */ var _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./module/component/messageTemplates/InitializeTemplate.js */ "./resources/js/module/component/messageTemplates/InitializeTemplate.js");
+/* harmony import */ var _config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./config/apiEndPoints.js */ "./resources/js/config/apiEndPoints.js");
+/* harmony import */ var _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./module/component/messageTemplates/InitializeTemplate.js */ "./resources/js/module/component/messageTemplates/InitializeTemplate.js");
+/* harmony import */ var _module_component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./module/component/chat/ChatMessageController.js */ "./resources/js/module/component/chat/ChatMessageController.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -12909,7 +13132,6 @@ window.window.isON = {
 };
 document.addEventListener("DOMContentLoaded", function () {
   // チャット表示の無限スクロール
-
   var element = document.querySelector(".chat__message-main");
   var adminUuid = document.getElementById("js_sender_id").value;
   var userUuid = document.getElementById("js_receiver_id").value;
@@ -12950,7 +13172,7 @@ document.addEventListener("DOMContentLoaded", function () {
   {
     var selectBtn = document.getElementById("js_select_btn");
     selectBtn.addEventListener("click", function () {
-      _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_15__["default"].initialize();
+      _module_component_messageTemplates_InitializeTemplate_js__WEBPACK_IMPORTED_MODULE_14__["default"].initialize();
       document.querySelector(".bg").classList.remove("hidden");
       document.querySelector(".message-template-container").classList.remove("hidden");
     });
@@ -12985,17 +13207,16 @@ document.addEventListener("DOMContentLoaded", function () {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            console.log(window.isON);
-            _context.next = 3;
-            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text");
-          case 3:
+            _context.next = 2;
+            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, sender_type, actual_sender_id, time, actual_receiver_id, msg, "text", infiniteScrollInstance);
+          case 2:
             if (_module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].isCurrentUser(actual_sender_id) || _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].isCurrentAmdin(actual_sender_id, actual_receiver_id)) {
               _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].scrollToBottom();
             }
             // InfiniteScrollのインスタンスのthis.dataCOuntを更新(リアルタイムで表示されているデータ数を常に更新する)
-            _context.next = 6;
+            _context.next = 5;
             return infiniteScrollInstance.updateMessageCount();
-          case 6:
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -13016,7 +13237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             _module_component_ui_ModalController_js__WEBPACK_IMPORTED_MODULE_7__["default"].open_image_modal(true);
             _module_component_ui_ModalController_js__WEBPACK_IMPORTED_MODULE_7__["default"].close_image_by_key();
             _context2.next = 5;
-            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, sender_type, sender_id, time, receiver_id, resizedImage, "image", cropArea);
+            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, sender_type, sender_id, time, receiver_id, resizedImage, "image", infiniteScrollInstance, cropArea);
           case 5:
             if (_module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].isCurrentUser(sender_id) || _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].isCurrentAmdin(sender_id, receiver_id)) {
               _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].scrollToBottom();
@@ -13053,7 +13274,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         break;
                       }
                       _context3.next = 3;
-                      return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text");
+                      return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "text", infiniteScrollInstance);
                     case 3:
                       _context3.next = 8;
                       break;
@@ -13063,7 +13284,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         break;
                       }
                       _context3.next = 8;
-                      return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "image", data["cropArea"]);
+                      return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedMessage)(window.isON, is_searching, "admin", data["adminUuid"], data["created_at"], data["userUuid"], data["resource"], "image", infiniteScrollInstance, data["cropArea"]);
                     case 8:
                     case "end":
                       return _context3.stop();
@@ -13099,7 +13320,6 @@ document.addEventListener("DOMContentLoaded", function () {
           case 0:
             (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleReceivedBroadcastingMessage)(adminUuid, created_at, sendingDatatoBackEnd, ids);
             _module_component_chat_ChatUIHelper_js__WEBPACK_IMPORTED_MODULE_5__["default"].scrollToBottom();
-
             // InfiniteScrollのインスタンスのthis.dataCOuntを更新(リアルタイムで表示されているデータ数を常に更新する)
             _context5.next = 4;
             return infiniteScrollInstance.updateMessageCount();
@@ -13149,7 +13369,7 @@ document.addEventListener("DOMContentLoaded", function () {
             value = e.target.value;
             is_searching["flag"] = true;
             _context7.next = 4;
-            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleSearchInput)(is_searching, value, sender_id);
+            return (0,_module_util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__.handleSearchInput)(is_searching, value, sender_id, infiniteScrollInstance);
           case 4:
           case "end":
             return _context7.stop();
@@ -13165,7 +13385,7 @@ document.addEventListener("DOMContentLoaded", function () {
   {
     var _element = document.querySelector(".chat__users-list-area");
     var adminId = document.getElementById("js_admin_id").value;
-    new _module_util_scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_4__["default"](_element, adminId);
+    new _module_util_scrolling_InfiniteScrollForList_js__WEBPACK_IMPORTED_MODULE_4__["default"](_element, adminId, infiniteScrollInstance);
   }
   {
     new _module_component_messageTemplates_MessageTemplate_js__WEBPACK_IMPORTED_MODULE_12__["default"]();
@@ -13205,7 +13425,7 @@ document.addEventListener("DOMContentLoaded", function () {
               return _context8.abrupt("return");
             case 15:
               _context8.next = 17;
-              return fetch(_config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_14__.API_ENDPOINTS.TEMPLATE_SELECT, {
+              return fetch(_config_apiEndPoints_js__WEBPACK_IMPORTED_MODULE_13__.API_ENDPOINTS.TEMPLATE_SELECT, {
                 method: "POST",
                 body: formData
               });
@@ -13236,6 +13456,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return _ref8.apply(this, arguments);
       };
     }());
+  }
+
+  // チャットユーザー切り替え
+  {
+    _module_component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_15__["default"].changeChatUser(infiniteScrollInstance);
   }
 });
 })();
