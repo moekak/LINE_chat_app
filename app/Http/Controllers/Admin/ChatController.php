@@ -22,6 +22,11 @@ class ChatController extends Controller
     public function index($userId, $adminId)
     {   
 
+        if (session()->has('userID')) {
+            $userId = session('userID');
+            $url = config('services.chat') . "/admin/chat/{$userId}/{$adminId}";
+            return redirect($url);
+        }
         // インスタンスの作成
         $messageService             = new MessageService();
         $messageAggregationService  = new MessageAggregationService();

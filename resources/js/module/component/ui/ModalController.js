@@ -127,7 +127,18 @@ class ModalController{
                 })
 
                 closeBtn.addEventListener("click", ()=>{
-                    window.location.reload()
+
+                    // 追記
+                    document.getElementById("js_message-list").innerHTML = ""
+                    document.querySelector(".preview_chat_area")
+                    confirm_modal.classList.add("hidden")
+                    templateModal.classList.add("hidden")
+                    bg.classList.add("hidden")
+                    templateModal.style.zIndex = "998"
+                    document.querySelector(".js_loader").classList.add("hidden")
+
+
+                    // window.location.reload()
                 })
                 
             }

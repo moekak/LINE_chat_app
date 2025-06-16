@@ -413,9 +413,7 @@
 
 {{-- メッセージテンプレート --}}
 @include('components.messae-template')
-
 @endsection
-
 
 @section('script')
 <script src="{{mix('js/adminChat.js')}}"></script>

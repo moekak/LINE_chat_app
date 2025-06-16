@@ -19,8 +19,8 @@ import ChatMessageController from './module/component/chat/ChatMessageController
 
 window.window.isON  = {isSoundOn : false}
 
-
 document.addEventListener("DOMContentLoaded", ()=>{
+	
 
 	// チャット表示の無限スクロール
 	const element = document.querySelector(".chat__message-main")

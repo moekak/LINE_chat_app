@@ -8516,18 +8516,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-// export default {
-//     SOCKET_URL: 'https://chat-socket.info:3000',
-//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat-system.info/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://chat-socket.info:3000',
+  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat-system.info/admin/chat"
+});
 
 // 開発用
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+// };
 
 /***/ }),
 
@@ -8734,6 +8734,7 @@ var ChatMessageController = /*#__PURE__*/function () {
                     target = newBtn.querySelector(".message_count");
                     if (target) {
                       target.style.display = "none";
+                      target.innerHTML = 0;
                     }
                     _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
                   }
@@ -9130,11 +9131,8 @@ var ChatUserListController = /*#__PURE__*/function () {
       var _this = this;
       var count_elements = document.querySelectorAll(".js_mesage_count");
       var chat_user_id = document.getElementById("js_chatuser_id").value;
-      console.log(chat_user_id);
       count_elements.forEach(function (count) {
         var id = count.getAttribute("data-id");
-        console.log(id);
-
         // 未読カウントを増加させる条件:
         // - メッセージ送信者と一致する
         // - 現在開いているチャットユーザーとは異なる
@@ -10308,7 +10306,16 @@ var ModalController = /*#__PURE__*/function () {
             templateModal.style.zIndex = "998";
           });
           closeBtn.addEventListener("click", function () {
-            window.location.reload();
+            // 追記
+            document.getElementById("js_message-list").innerHTML = "";
+            document.querySelector(".preview_chat_area");
+            confirm_modal.classList.add("hidden");
+            templateModal.classList.add("hidden");
+            bg.classList.add("hidden");
+            templateModal.style.zIndex = "998";
+            document.querySelector(".js_loader").classList.add("hidden");
+
+            // window.location.reload()
           });
         }
       });
@@ -12306,12 +12313,13 @@ var handleReceivedMessage = /*#__PURE__*/function () {
           chatUserListController = new _component_chat_ChatUserListController_js__WEBPACK_IMPORTED_MODULE_4__["default"](args); // チャットリストのリアルタイムでデータを表示する処理
           chatUserListController.updateMessageTime();
           chatUserListController.displayMessage();
+          chatUserListController.increaseMessageCount();
+          _context.next = 11;
+          return chatUserListController.updateChatUserList();
+        case 11:
           // チャットメッセージ切り替え
           _component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_1__["default"].changeChatUser(infiniteScrollInstance);
-          chatUserListController.increaseMessageCount();
-          _context.next = 12;
-          return chatUserListController.updateChatUserList();
-        case 12:
+
           // メッセージ送信者と開いてるチャットユーザーが同じだったら、メッセージを既読にするため、データベースに既読を格納する
           data = {
             "admin_id": receiver_id,
@@ -13130,6 +13138,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 window.window.isON = {
   isSoundOn: false
 };
+window.addEventListener("load", function () {
+  // window.location.href = 'https://example.com/next-page';
+});
 document.addEventListener("DOMContentLoaded", function () {
   // チャット表示の無限スクロール
   var element = document.querySelector(".chat__message-main");
