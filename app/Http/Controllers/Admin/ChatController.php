@@ -41,8 +41,6 @@ class ChatController extends Controller
         $templates_data = MessageTemplateContent::getMessageTemplatesForAdmin($adminId);
         $template_categories = MessageTemplatesCategory::select("category_name", "id")->where("admin_id", $adminId)->get();
 
-
-
         // 管理者とユーザーのuuidを取得
         $uuid_admin =  EntityUuidResolver::getAdminEntity($adminId);
         $uuid_user  = EntityUuidResolver::getUserEntity($userId);

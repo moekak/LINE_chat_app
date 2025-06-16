@@ -14,7 +14,7 @@
       <div class="chat__users-list-box">
             {{-- 管理者アカウントの情報を表示 --}}
             <div class="chat__users-list-top">
-                  <a href="{{config('services.chat_manager')}}/account/show/{{$admin_info->id}}">
+                  <a href="{{ url('/logout-and-redirect/' . $admin_info->id) }}">
                         @if ($admin_info->user_picture )
                               <img src="{{ $admin_info->user_picture }}" alt="" class="chat_users-icon">
                         @else
