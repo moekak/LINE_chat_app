@@ -100,12 +100,13 @@ class ChatController extends Controller
             // ユーザーアカウント情報を取得する
             $messages = $messageAggregationService->getUnifiedSortedMessages($userId, $adminId, "user", 0);
             $group_message  = $messageService->groupMessagesByDate($messages);
+            session()->flash('userID', $userId);
+
               // 正しいJSON形式でレスポンスを返す
             return response()->json([$group_message]);
         }catch (\Exception $e){
         }
     }
-
 
     public function fetchLatestMessage($userId, $adminId){
         try{

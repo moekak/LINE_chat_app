@@ -210,6 +210,7 @@ class ChatMessageController{
                                     }
                                     Fetch.fetchPostOperation(data, API_ENDPOINTS.USER_MESSAGE_READ);
                               }
+
                         }catch(e){
                               console.error(e);
                         }
