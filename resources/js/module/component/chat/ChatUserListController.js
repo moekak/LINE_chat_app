@@ -36,14 +36,13 @@ class ChatUserListController{
     increaseMessageCount(){
         const count_elements    = document.querySelectorAll(".js_mesage_count");
         const chat_user_id      = document.getElementById("js_chatuser_id").value;
-
         count_elements.forEach((count) => {
             let id = count.getAttribute("data-id");
-
             // 未読カウントを増加させる条件:
             // - メッセージ送信者と一致する
             // - 現在開いているチャットユーザーとは異なる
             if (id == this.senderId && id !== chat_user_id) {
+                
                 let currentCount = Number(count.innerHTML) || 0;
                 if (currentCount == 0) count.style.display = "flex"; // 初回表示
                 count.innerHTML = `${currentCount + 1}`;

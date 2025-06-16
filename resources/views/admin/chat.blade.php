@@ -462,8 +462,6 @@
                         parentElement.insertAdjacentElement('beforebegin', newElement);
 
                         hasUnreadMessage = true
-                        
-
                         setTimeout(() => {
                               const container = document.querySelector('.chat__message-main'); // スクロール対象のコンテナ
                               if (container) {

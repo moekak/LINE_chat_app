@@ -1,3 +1,4 @@
+import ChatMessageController from "../../component/chat/ChatMessageController"
 import ChatUIHelper from "../../component/chat/ChatUIHelper"
 import { createChatUserContainer } from "../../component/templates/elementTemplate"
 import Fetch from "../api/Fetch"
@@ -6,7 +7,7 @@ import userStateManager from "../state/UserStateManager"
 const MESSAGES_PER_PAGE = 20
 
 class InfiniteScrollForList{
-      constructor(element, adminId){
+      constructor(element, adminId, infiniteScrollInstance){
             this.element = element
             this.hasNoValue = false
             this.isFetchFlag = false
@@ -17,6 +18,7 @@ class InfiniteScrollForList{
             this.adminId = adminId
             this.loader = document.querySelector(".js_loader")
             this.userList = userStateManager.getState()
+            this.infiniteScrollInstance  = infiniteScrollInstance 
             // コンストラクタで定義された this を使用するメソッドをイベントリスナーやコールバックとして使用する場合、bind(this) が必要
             this.element.addEventListener("scroll", this.handleScroll.bind(this))
       }
@@ -60,6 +62,9 @@ class InfiniteScrollForList{
                               elements.forEach((element) => {
                                     element.innerHTML = ChatUIHelper.adjustMesageLength(element.innerHTML)
                               });
+
+                              	// チャットメッセージ切り替え
+                              ChatMessageController.changeChatUser(this.infiniteScrollInstance)
 
                         } catch (error) {
                               console.error("Failed to fetch data:", error);

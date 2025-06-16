@@ -14,7 +14,7 @@ class UserMessageReadController extends Controller
             
 
             $validated = $request->validated();
-
+            
             $admin_id = EntityUuidResolver::getAdminID($validated["admin_id"]);
             $chat_user_id = EntityUuidResolver::getUserID($validated["chat_user_id"]);
 
@@ -22,7 +22,7 @@ class UserMessageReadController extends Controller
              // 既読管理の処理
              // 0はチャットIDを入れる必要がないから、0に指定
             UserMessageReadManager::updateOrCreateUserReadStatus($chat_user_id, $admin_id, 0, "text", 0);
-            return response()->noContent();  // 204 No Content
+            return response()->json(["status" => 201]);  // 204 No Content
 
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()]);

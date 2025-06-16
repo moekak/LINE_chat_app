@@ -3,7 +3,7 @@ import config from '../../../config/config.js';
 import FormatText from '../../util/FormatText.js';
 
 
-export const createRightMessageContainer = (message_type, time, content, cropArea, type) =>{
+export const createRightMessageContainer = (message_type, time, content, cropArea, type, id = null) =>{
       if(typeof(cropArea) === "string"){
             cropArea = JSON.parse(cropArea)
       }
@@ -12,7 +12,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
       if (Object.entries(cropArea).length > 0) {
             rawHtml = `
             <div class="image-container" style="position: relative; display: inline-block; margin: 5px 0;" data-crop='${JSON.stringify(cropArea)}'>
-                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;"/>
+                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;" data-id=${id} data-type=${message_type}/>
                   <a class="overlay" href="${cropArea.url}" style="display: none;"></a>
             </div>
             `;
@@ -20,7 +20,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
             
             rawHtml = `
                   <div class="image-container" style="position: relative; display: inline-block; margin: 5px 0;" >
-                        <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image js_chat_message" style="margin: 0;"/>
+                        <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image js_chat_message" style="margin: 0;" data-id=${id} data-type=${message_type}/>
                   </div>
             `;
       }
@@ -44,7 +44,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
                   <div class="chat__mesgae-main-right">
                         <div class="chat__message-time-txt">${time}</div>
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" ? 
-                        `<div class="chat__message-box-right chat-margin5 js_chat_message">${displayMessage}</div>` 
+                        `<div class="chat__message-box-right chat-margin5 js_chat_message" data-id=${id} data-type=${message_type}>${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
                         }
@@ -52,7 +52,7 @@ export const createRightMessageContainer = (message_type, time, content, cropAre
             </div>
       `
 }
-export const createLeftMessageContainer = (message_type, time, content, cropArea, type) =>{
+export const createLeftMessageContainer = (message_type, time, content, cropArea, type, id = null) =>{
       const src = document.getElementById("js_user_icon_img")?.value;
       const icon_src = src === "" ? "/img/user.png" : src
 
@@ -78,14 +78,14 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
       if (Object.entries(cropArea).length > 0) {
             rawHtml = `
             <div class="image-container" style="position: relative; display: inline-block; margin: 5px 0;" data-crop='${JSON.stringify(cropArea)}'>
-                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;"/>
+                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image overlay-target js_chat_message" style="margin: 0;" data-id=${id} data-type=${message_type}/>
                   <a class="overlay" href="${cropArea.url}" style="display: none;"></a>
             </div>
             `;
       } else {
             rawHtml = `
             <div class="image-container" style="position: relative; display: inline-block; margin: 5px 0;" >
-                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image js_chat_message" style="margin: 0;"/>
+                  <img src="${config.S3_URL}/${content}" alt="Image" class="chat-margin5 chat_image js_chat_message" style="margin: 0;" data-id=${id} data-type=${message_type}/>
             </div>
             `;
       }
@@ -95,7 +95,7 @@ export const createLeftMessageContainer = (message_type, time, content, cropArea
                   <div class="chat__mesgae-main-left">
                         <img src=${icon_src} alt="" class="chat_users-icon-message" onerror="this.onerror=null; this.src='/img/user.png';" id="icon_msg"> 
                         ${message_type === "text" || message_type === "broadcast_text" || message_type === "greeting_text" || message_type === "test_txt"? 
-                        `<div class="chat__message-box-left chat-margin5 js_chat_message">${displayMessage}</div>` 
+                        `<div class="chat__message-box-left chat-margin5 js_chat_message" data-id=${id} data-type=${message_type}>${displayMessage}</div>` 
                         : 
                         `${rawHtml}`
                         }
@@ -117,7 +117,7 @@ export const createChatUserContainer = (sender_id, res) =>{
                   <img src=${res["user_picture"]} alt="" onerror="this.onerror=null; this.src='/img/user.png';" class="chat_users-icon"> 
                   <div class="chat_users-list-flex">
                         <div class="chat_users-list-box" > 
-                              <p class="chat_name_txt" data-simplebar>${res["line_name"]}</p>
+                              <p class="chat_name_txt" data-simplebar>${FormatText.escapeHtml(res["line_name"])}</p>
                               <small class="chat_time js_update_message_time" data-id="${sender_id}">${res["latest_message_date"]}</small>
                         </div>  
                         <div class="chat__users-list-msg">

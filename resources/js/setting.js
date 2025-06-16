@@ -101,14 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               const hex = e.target.value
                               this.settings.theme.hex = hex
                               const rgb = this.hexToRgb(hex)
-
-                              // console.log("validatorForHex" + this.validatorForHex(hex));
-                              // console.log("validatorForRgb" + this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"]));
-                              
-
                               this.settings.isCorrectData = this.validatorForHex(hex) && this.validatorForRgb(rgb["r"], rgb["g"], rgb["b"])
-                              // console.log(`正確なデータか: ${this.settings.isCorrectData}`);
-
                               this.settings.theme.customColor.r = rgb["r"]
                               this.settings.theme.customColor.g = rgb["g"]
                               this.settings.theme.customColor.b = rgb["b"]
@@ -585,7 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     this.playBeepSound();
                               });
                         } catch (e) {
-                     
+
                               this.playBeepSound();
                         }
                   }

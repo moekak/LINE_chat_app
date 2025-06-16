@@ -10,9 +10,11 @@ use App\Models\LineAccount;
 use App\Models\LineDisplayText;
 use App\Models\PageTitle;
 use App\Models\UserEntity;
+use App\Models\UserMessageRead;
 use App\Services\Message\Admin\AdminMessageReadManager;
 use App\Services\Message\Common\MessageAggregationService;
 use App\Services\Message\Common\MessageService;
+use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
@@ -102,5 +104,16 @@ class ChatController extends Controller
             return response()->json([$group_message]);
         }catch (\Exception $e){
         }
+    }
+
+
+    public function fetchLatestMessage($userId, $adminId){
+        try{
+            $unread_message_data = UserMessageRead::where("admin_account_id", $adminId)->where("chat_user_id", $userId)->select("last_unread_message_id", "last_message_type", "unread_count")->first();
+            return response()->json($unread_message_data);
+        }catch(\Exception $e){
+            Log::debug($e);
+        }
+
     }
 }
