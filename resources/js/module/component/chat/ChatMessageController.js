@@ -189,7 +189,9 @@ class ChatMessageController{
 				const src = e.currentTarget.querySelector(".chat_users-icon").src
 				const name = e.currentTarget.querySelector(".simplebar-content").innerHTML
                         try{
-                              const response = await Fetch.fetchGetOperation(`${API_ENDPOINTS.GET_USER_CHATS}/${userId}/${adminId}`)
+                              const params = new URLSearchParams(window.location.search);
+                              const tab = params.get('tab');
+                              const response = await Fetch.fetchGetOperation(`${API_ENDPOINTS.GET_USER_CHATS}/${userId}/${adminId}?tab=${tab}`)
                               const chatLatesetData = await Fetch.fetchGetOperation(`${API_ENDPOINTS.FETCH_LATEST_MESSAGE}/${userId}/${adminId}`)
                               ChatMessageController.updateChatDisplay(response, userUuid)
                               ChatUIHelper.updateUserInfo(userUuid, src, name)

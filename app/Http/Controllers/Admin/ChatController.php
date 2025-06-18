@@ -14,17 +14,20 @@ use App\Services\Message\Common\MessageService;
 use App\Services\Message\User\UserMessageReadManager;
 use App\Services\Util\EntityUuidResolver;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
 
-    public function index($userId, $adminId)
+    public function index(Request $request, $userId, $adminId)
     {   
 
-        if (session()->has('userID')) {
-            $userId = session('userID');
-            $url = config('services.chat') . "/admin/chat/{$userId}/{$adminId}";
+        $tab = $request->query('tab');
+        Log::debug(session('userID_' .$tab));
+        if (session()->has('userID_' .$tab)) {
+            $userId = session('userID_' .$tab);
+            $url = config('services.chat') . "/admin/chat/{$userId}/{$adminId}?tab=" . $tab;
+            session()->forget('userID_' . $tab);
             return redirect($url);
         }
         // インスタンスの作成

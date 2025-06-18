@@ -15,6 +15,7 @@ use App\Services\Message\Admin\AdminMessageReadManager;
 use App\Services\Message\Common\MessageAggregationService;
 use App\Services\Message\Common\MessageService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
@@ -90,9 +91,11 @@ class ChatController extends Controller
         }catch (\Exception $e){
         }
     }
-    public function fetchChatMessages($userId, $adminId){
+    public function fetchChatMessages(Request $request, $userId, $adminId){
         try{
 
+            $tab = $request->query('tab');
+            Log::debug($tab);
             // // インスタンスの作成
             $messageService = new MessageService();
             $messageAggregationService = new MessageAggregationService();
@@ -100,7 +103,7 @@ class ChatController extends Controller
             // ユーザーアカウント情報を取得する
             $messages = $messageAggregationService->getUnifiedSortedMessages($userId, $adminId, "user", 0);
             $group_message  = $messageService->groupMessagesByDate($messages);
-            session()->flash('userID', $userId);
+            session()->put('userID_' . $tab, $userId);
 
               // 正しいJSON形式でレスポンスを返す
             return response()->json([$group_message]);

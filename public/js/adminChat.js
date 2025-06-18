@@ -8703,7 +8703,7 @@ var ChatMessageController = /*#__PURE__*/function () {
         btn.replaceWith(newBtn);
         newBtn.addEventListener("click", /*#__PURE__*/function () {
           var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
-            var userId, adminId, userUuid, adminUuid, src, name, response, chatLatesetData, data, target;
+            var userId, adminId, userUuid, adminUuid, src, name, params, tab, response, chatLatesetData, data, target;
             return _regeneratorRuntime().wrap(function _callee$(_context) {
               while (1) switch (_context.prev = _context.next) {
                 case 0:
@@ -8714,13 +8714,15 @@ var ChatMessageController = /*#__PURE__*/function () {
                   src = e.currentTarget.querySelector(".chat_users-icon").src;
                   name = e.currentTarget.querySelector(".simplebar-content").innerHTML;
                   _context.prev = 6;
-                  _context.next = 9;
-                  return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.GET_USER_CHATS, "/").concat(userId, "/").concat(adminId));
-                case 9:
+                  params = new URLSearchParams(window.location.search);
+                  tab = params.get('tab');
+                  _context.next = 11;
+                  return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.GET_USER_CHATS, "/").concat(userId, "/").concat(adminId, "?tab=").concat(tab));
+                case 11:
                   response = _context.sent;
-                  _context.next = 12;
+                  _context.next = 14;
                   return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.FETCH_LATEST_MESSAGE, "/").concat(userId, "/").concat(adminId));
-                case 12:
+                case 14:
                   chatLatesetData = _context.sent;
                   ChatMessageController.updateChatDisplay(response, userUuid);
                   _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserInfo(userUuid, src, name);
@@ -8738,17 +8740,17 @@ var ChatMessageController = /*#__PURE__*/function () {
                     }
                     _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
                   }
-                  _context.next = 24;
+                  _context.next = 26;
                   break;
-                case 21:
-                  _context.prev = 21;
+                case 23:
+                  _context.prev = 23;
                   _context.t0 = _context["catch"](6);
                   console.error(_context.t0);
-                case 24:
+                case 26:
                 case "end":
                   return _context.stop();
               }
-            }, _callee, null, [[6, 21]]);
+            }, _callee, null, [[6, 23]]);
           }));
           return function (_x) {
             return _ref6.apply(this, arguments);
@@ -13138,9 +13140,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 window.window.isON = {
   isSoundOn: false
 };
-window.addEventListener("load", function () {
-  // window.location.href = 'https://example.com/next-page';
-});
 document.addEventListener("DOMContentLoaded", function () {
   // チャット表示の無限スクロール
   var element = document.querySelector(".chat__message-main");
