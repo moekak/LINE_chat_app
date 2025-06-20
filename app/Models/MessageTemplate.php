@@ -25,6 +25,10 @@ class MessageTemplate extends Model
         return $this->belongsTo(MessageTemplatesCategory::class, "category_id", "id");
     }
 
+    
+    public function messageTemplatesLinks(){
+        return $this->hasMany(MessageTemplatesLink::class, "template_id", "id");
+    }
     public function messageTemplatesGroup(){
         return $this->belongsTo(MessageTemplatesGroup::class, "group_id");
     }

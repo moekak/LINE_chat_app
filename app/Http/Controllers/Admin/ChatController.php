@@ -23,7 +23,6 @@ class ChatController extends Controller
     {   
 
         $tab = $request->query('tab');
-        Log::debug(session('userID_' .$tab));
         if (session()->has('userID_' .$tab)) {
             $userId = session('userID_' .$tab);
             $url = config('services.chat') . "/admin/chat/{$userId}/{$adminId}?tab=" . $tab;
@@ -42,7 +41,7 @@ class ChatController extends Controller
         $unread_message_data = UserMessageRead::where("admin_account_id", $adminId)->where("chat_user_id", $userId)->select("last_unread_message_id", "last_message_type", "unread_count")->first();
 
         $templates_data = MessageTemplateContent::getMessageTemplatesForAdmin($adminId);
-        $template_categories = MessageTemplatesCategory::select("category_name", "id")->where("admin_id", $adminId)->get();
+        $template_categories = MessageTemplatesCategory::getTemplateCategories($adminId);
 
         // 管理者とユーザーのuuidを取得
         $uuid_admin =  EntityUuidResolver::getAdminEntity($adminId);

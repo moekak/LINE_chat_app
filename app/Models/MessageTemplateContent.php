@@ -31,9 +31,28 @@ class MessageTemplateContent extends Model
                     ->with(['messageTemplate','messageTemplate.messageTemplatesCategory', 'messageTemplate.messageTemplatesGroup', 'cropData']);
     }
 
-    public static function getMessageTemplatesForAdmin($admin_id)
-    {
-        return MessageTemplateContent::WithContentsForAdmin($admin_id)
+
+
+
+
+
+    public static function getMessageTemplatesForAdmin($admin_id){
+        return MessageTemplateContent::with([
+            'messageTemplate',
+            'messageTemplate.messageTemplatesCategory',
+            'messageTemplate.messageTemplatesGroup',
+            'messageTemplate.messageTemplatesLinks',
+            'cropData'
+        ])
+        ->where(function ($query) use ($admin_id) {
+            $query->whereHas('messageTemplate.messageTemplatesLinks', function ($q) use ($admin_id) {
+                $q->where('admin_id', $admin_id);
+            })
+            ->orWhereHas('messageTemplate', function ($q) use ($admin_id) {
+                $q->where('admin_id', $admin_id)
+                  ->whereDoesntHave('messageTemplatesLinks'); // ← links が存在しない場合
+            });
+        })
         ->get()
         ->groupBy("template_id")
         ->map(function ($group) {
@@ -70,12 +89,20 @@ class MessageTemplateContent extends Model
         ->values()
         ->all();
     }
-    public static function getMessageTemplatesByFilter($admin_id, $category_id)
+
+
+
+    
+    public static function getMessageTemplatesByFilter($category_id, $admin_id)
     {
-        return MessageTemplateContent::WithContentsForAdmin($admin_id)
-        ->whereHas('messageTemplate', function($query) use ($category_id) {
-            $query->whereHas('messageTemplatesCategory', function($subQuery) use ($category_id) {
-                $subQuery->where('id', $category_id);
+        return MessageTemplateContent::WithFilter($category_id)
+        ->where(function ($query) use ($admin_id) {
+            $query->whereHas('messageTemplate.messageTemplatesLinks', function ($q) use ($admin_id) {
+                $q->where('admin_id', $admin_id);
+            })
+            ->orWhereHas('messageTemplate', function ($q) use ($admin_id) {
+                $q->where('admin_id', $admin_id)
+                  ->whereDoesntHave('messageTemplatesLinks'); // ← links が存在しない場合
             });
         })
         ->get()
