@@ -680,14 +680,19 @@ class MessageRepository{
             // ユーザーに表示する初回メッセージメッセージを格納する配列
             $greetingMessagesAll = [];
             // resource_typeを削除し、他のクエリと同じ構造にする
-            $query = GreetingMessage::select(
-                  'id',
-                  'resource as content',  // messageカラムをcontentとしてエイリアス
-                  'created_at',
-                  'greeting_message_group_id',
-                  'resource_type'
+            $query =  GreetingMessage::select(
+                  'greeting_messages.id',
+                  'greeting_messages.resource as content',  // messageカラムをcontentとしてエイリアス
+                  'greeting_messages.created_at',
+                  'greeting_messages.greeting_message_group_id',
+                  'greeting_messages.resource_type',
+                  "greeting_messages_links.greeting_group_id"
             )
-            ->where('admin_id', $original_admin_id)
+            ->leftJoin("greeting_messages_links", "greeting_messages_links.greeting_group_id", "=", "greeting_messages.greeting_message_group_id")
+            ->where(function ($q) use ($original_admin_id) {
+                  $q->where('greeting_messages.admin_id', $original_admin_id)
+                        ->orWhere('greeting_messages_links.admin_id', $original_admin_id);
+            })
             ->selectSub(
                   DB::table('greeting_images_crop_areas')
                         ->selectRaw("JSON_OBJECT(
@@ -712,6 +717,7 @@ class MessageRepository{
             $line_name = $user->line_name;
 
             $greetingMessages = $query->get();
+
             $latestMessage = null;
             $latestCreatedAt = null;
             $messageGroupId = null;
