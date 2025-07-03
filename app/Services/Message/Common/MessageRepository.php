@@ -676,7 +676,6 @@ class MessageRepository{
                   $original_admin_id = $admin_id;
             }
 
-
             // ユーザーに表示する初回メッセージメッセージを格納する配列
             $greetingMessagesAll = [];
             // resource_typeを削除し、他のクエリと同じ構造にする
