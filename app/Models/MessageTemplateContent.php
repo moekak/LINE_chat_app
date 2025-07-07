@@ -39,9 +39,8 @@ class MessageTemplateContent extends Model
     public static function getMessageTemplatesForAdmin($admin_id){
         return MessageTemplateContent::with([
             'messageTemplate',
-            'messageTemplate.messageTemplatesCategory',
+            'messageTemplate.messageTemplatesCategory', 
             'messageTemplate.messageTemplatesGroup',
-            'messageTemplate.messageTemplatesLinks',
             'cropData'
         ])
         ->where(function ($query) use ($admin_id) {
@@ -49,8 +48,7 @@ class MessageTemplateContent extends Model
                 $q->where('admin_id', $admin_id);
             })
             ->orWhereHas('messageTemplate', function ($q) use ($admin_id) {
-                $q->where('admin_id', $admin_id)
-                  ->whereDoesntHave('messageTemplatesLinks'); // ← links が存在しない場合
+                $q->where('admin_id', $admin_id);
             });
         })
         ->get()
