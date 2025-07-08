@@ -95,7 +95,7 @@ class ChatController extends Controller
         try{
 
             $tab = $request->query('tab');
-            Log::debug($tab);
+
             // // インスタンスの作成
             $messageService = new MessageService();
             $messageAggregationService = new MessageAggregationService();
