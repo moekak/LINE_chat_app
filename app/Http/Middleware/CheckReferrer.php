@@ -25,12 +25,12 @@ class CheckReferrer
         $allowedReferers = [
 
             // 開発
-            'https://manager.line-chat-system-dev.tokyo',
-            'https://chat.line-chat-system-dev.tokyo/',
+            // 'https://manager.line-chat-system-dev.tokyo',
+            // 'https://chat.line-chat-system-dev.tokyo/',
 
             // 本番
-            // 'https://chat-manager.info/',
-            // 'https://chat-system.info/'
+            'https://chat-manager.info/',
+            'https://chat-system.info/'
             // 必要に応じて他のドメインを追加
         ];
         
