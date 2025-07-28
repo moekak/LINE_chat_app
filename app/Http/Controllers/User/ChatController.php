@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminMessageRead;
 use App\Models\BackgroundColor;
 use App\Models\ChatUser;
+use App\Models\ChatUserDetail;
 use App\Models\LineAccount;
 use App\Models\LineDisplayText;
 use App\Models\PageTitle;
@@ -21,7 +22,7 @@ class ChatController extends Controller
 {
     public function index($adminId, $userId)
     {
-        
+    
         // インスタンスの作成
         $messageService = new MessageService();
         $messageAggregationService = new MessageAggregationService();
@@ -55,6 +56,8 @@ class ChatController extends Controller
             return response()->view('errors.403');
         }
 
+
+
         // 未読数を取得する
         $unread_message_data = AdminMessageRead::where("admin_account_id", $admin_info["line_account_id"])->where("chat_user_id", $user_id["id"])->select("last_unread_message_id", "last_message_type", "unread_count")->first();
 
@@ -64,6 +67,9 @@ class ChatController extends Controller
         // 既読管理の処理
         // 0はチャットIDを入れる必要がないから、0に指定
         AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id["id"], $admin_info["line_account_id"], 0, "text", 0);
+
+        // アクセス回数を増やし、最新アクセス時間を更新する
+        ChatUserDetail::updateAccessData($user_id["id"]);
 
         // uuidを取得する
         $uuid_admin = UserEntity::where("entity_type", "admin")->where("related_id", $admin_info["line_account_id"])->value("entity_uuid");
