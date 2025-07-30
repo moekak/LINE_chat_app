@@ -424,7 +424,7 @@
             const backgroundColor = @json($background_color);
             
             if(backgroundColor){
-                  document.querySelector(".contents").style.backgroundColor = backgroundColor["hex"]
+                  document.querySelector(".main").style.backgroundColor = backgroundColor["hex"]
                   document.getElementById("red_slider").value = backgroundColor["r"]
                   document.getElementById("green_slider").value = backgroundColor["g"]
                   document.getElementById("blue_slider").value = backgroundColor["b"]
@@ -437,7 +437,7 @@
                   document.getElementById("hex_display").value = backgroundColor["hex"]
                   document.getElementById("color_preview_large").style.backgroundColor = backgroundColor["hex"]
             }else{
-                  document.querySelector(".contents").style.backgroundColor = "#f5f6fa"
+                  document.querySelector(".main").style.backgroundColor = "#f5f6fa"
                   document.getElementById("color_preview_large").style.backgroundColor = "#f5f6fa"
             }
             

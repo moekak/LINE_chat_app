@@ -28,6 +28,7 @@
                   <section class="chat__message-area">
                         @yield('chat-message')
                   </section>
+                  @include('components.panel')
             </main>
             
       </div>
