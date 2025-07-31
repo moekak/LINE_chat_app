@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BackgroundColor;
 use App\Models\ChatUser;
+use App\Models\ChatUserDetail;
 use App\Models\LineAccount;
 use App\Models\MessageTemplateContent;
 use App\Models\MessageTemplatesCategory;
@@ -51,6 +52,11 @@ class ChatController extends Controller
             throw new \Exception("必要なUUIDが見つかりません");
         }
 
+
+        $userDetail = ChatUserDetail::getUserDetails($userId);
+
+        print_r($userDetail->toArray());
+        exit;
         $messages= $messageAggregationService->getUnifiedSortedMessages($userId, $adminId, "admin", 0);
         // 既読管理の処理
         // 0はチャットIDを入れる必要がないから、0に指定
@@ -61,6 +67,7 @@ class ChatController extends Controller
 
         $backgroundColor = BackgroundColor::where("line_account_id",  $adminId)->first();
         return view("admin.chat", [
+            "userDetail" => $userDetail,
             "background_color" => $backgroundColor,
             "admin_info"=> $admin_info, 
             "mergedData" => $mergedData, 

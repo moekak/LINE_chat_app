@@ -317,7 +317,7 @@
         <div class="ad-code">
                 <div>
                     <div class="code-label">Campaign ID</div>
-                    <div class="code-value" id="adCode">AD-2024-LP-001</div>
+                    <div class="code-value" id="adCode">{{$userDetail->ad_code}}</div>
                 </div>
                 <button class="copy-btn" onclick="copyToClipboard('adCode')" title="コピー">
                     <i class="fas fa-copy"></i>
@@ -332,18 +332,12 @@
                 タグ情報
         </h4>
         <div class="tags-container" id="tagsContainer">
+            @foreach ($userDetail["chat_user"]["tag_users"] as $tag)
                 <span class="tag-item">
-                    <i class="fas fa-circle tag-icon"></i>
-                        優良顧客
+                    <i class="fas fa-circle tag-icon" style="background-color: {{$tag->tag_color}};"></i>
+                        {{$tag->tag_name}}
                 </span>
-                <span class="tag-item">
-                    <i class="fas fa-circle tag-icon"></i>
-                    リピーター
-                </span>
-                <span class="tag-item">
-                    <i class="fas fa-circle tag-icon"></i>
-                    高単価
-                </span>
+            @endforeach
         </div>
     </div>
 </div>

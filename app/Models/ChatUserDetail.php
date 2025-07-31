@@ -14,6 +14,10 @@ class ChatUserDetail extends Model
         "user_id"
     ];
 
+    public function chatUser(){
+        return $this->belongsTo(ChatUser::class, "user_id", "id");
+    }
+
 
     static public function updateAccessData($user_id){
         $chatUserDetail = static::where("user_id", $user_id)->first();
@@ -30,7 +34,15 @@ class ChatUserDetail extends Model
                 "user_id" => $user_id // ← 必要に応じて追加
             ]);
         }
-
-
     }
+
+    public function scopeWithRelations($query){
+        return $query->with("chatUser", "chatUser.tagUsers");
+    }
+
+    
+    static public function getUserDetails($user_id){
+        return  static::withRelations()->where("user_id", $user_id)->first();
+}
+
 }
