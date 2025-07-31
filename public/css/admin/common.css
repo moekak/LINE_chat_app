@@ -29,7 +29,7 @@ a{
 }
 
 .contents{
-     max-width: 1300px;
+     max-width: 1700px;
      width: 100%;
      margin: 0 auto;
      /* background-color: #f5f6fa; */
@@ -2031,5 +2031,6 @@ body {
      .control-icon {
           font-size: 14px;
      }
-}
 
+
+}

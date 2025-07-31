@@ -626,7 +626,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (response["status"] === 200) {
                 document.querySelector(".js_spinning_btn").classList.add("hidden");
                 document.querySelector(".js_saving_txt").classList.remove("hidden");
-                document.querySelector(".contents").style.backgroundColor = response["hex"];
+                document.querySelector(".main").style.backgroundColor = response["hex"];
               } else {
                 document.querySelector(".js_spinning_btn").classList.add("hidden");
                 document.querySelector(".js_saving_txt").classList.remove("hidden");

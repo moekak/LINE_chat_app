@@ -154,10 +154,10 @@
                   // 背景色設定
                   const backgroundColor = @json($background_color);
                   if(backgroundColor){
-                        document.querySelector(".contents").style.backgroundColor = backgroundColor["hex"]
+                        document.querySelector(".main").style.backgroundColor = backgroundColor["hex"]
                         document.querySelector(".chat__form").style.backgroundColor = backgroundColor["hex"]
                   }else{
-                        document.querySelector(".contents").style.backgroundColor = "#f5f6fa"
+                        document.querySelector(".main").style.backgroundColor = "#f5f6fa"
                         document.querySelector(".chat__form").style.backgroundColor = "#f5f6fa"
                   }
 
