@@ -246,6 +246,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
 	{
 		ChatMessageController.changeChatUser(infiniteScrollInstance)
 	}
+
+	// ユーザー情報メニュ表示切替
+	const userInfoBtn =document.querySelector(".view-user-info-btn")
+	const panel = document.getElementById("infoPanelDesktop")
+	const closeBtn = document.querySelector(".close-info-panel-btn")
+
+	userInfoBtn.addEventListener("click", ()=>{
+		panel.style.display = "block"
+	})
+
+	closeBtn.addEventListener("click", ()=>{
+		panel.style.display = "none"
+	})
 })
 
 

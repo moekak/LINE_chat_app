@@ -6,6 +6,10 @@
       <link rel="stylesheet" href="{{asset("css/admin/message-template.css")}}">
 @endsection
 
+@section('panel')
+      @include('components.panel')
+@endsection
+
 {{-- チャット画面左側のチャットユーザー一覧 --}}
 @section('user-list')
 <input type="hidden" id="js_uuid" value={{$uuid_admin}}>
@@ -86,10 +90,13 @@
 
 @section('chat-message')
 <div class="chat__message-top">
-      <input type="hidden" value={{$uuid_user}} id="js_chatuser_id">
-      <input type="hidden" value={{$chat_user->user_picture}} id="js_user_icon_img">
-      <img src={{$chat_user->user_picture}} alt=""  onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon js_user_icon"> 
-      <p class="chat_message_name">{{$chat_user->line_name}}</p>
+      <div class="chat__message-top-info">
+            <input type="hidden" value={{$uuid_user}} id="js_chatuser_id">
+            <input type="hidden" value={{$chat_user->user_picture}} id="js_user_icon_img">
+            <img src={{$chat_user->user_picture}} alt=""  onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon js_user_icon"> 
+            <p class="chat_message_name">{{$chat_user->line_name}}</p>
+      </div>
+      <button class="view-user-info-btn" onclick="viewUserInfo('{{ $uuid_user }}')">顧客情報を見る</button>
 </div>
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_admin" data-id={{$uuid_user}}>

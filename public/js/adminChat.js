@@ -8516,18 +8516,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // 本番用
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  SOCKET_URL: 'https://chat-socket.info:3000',
-  S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
-  CHAT_URL: "https://chat-system.info/admin/chat"
-});
+// export default {
+//     SOCKET_URL: 'https://chat-socket.info:3000',
+//     S3_URL: "https://line-chat-app.s3.ap-northeast-1.amazonaws.com/images",
+//     CHAT_URL: "https://chat-system.info/admin/chat"
+// };
 
 // 開発用
-// export default {
-//     SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
-//     S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
-//     CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
-// };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  SOCKET_URL: 'https://socket.line-chat-system-dev.tokyo:3000',
+  S3_URL: "https://line-chat-app-dev.s3.ap-northeast-1.amazonaws.com/images",
+  CHAT_URL: "https://chat.line-chat-system-dev.tokyo/admin/chat"
+});
 
 /***/ }),
 
@@ -13472,6 +13472,15 @@ document.addEventListener("DOMContentLoaded", function () {
   {
     _module_component_chat_ChatMessageController_js__WEBPACK_IMPORTED_MODULE_15__["default"].changeChatUser(infiniteScrollInstance);
   }
+
+  // ユーザー情報メニュ表示切替
+  var userInfoBtn = document.querySelector(".view-user-info-btn");
+  var panel = document.getElementById("infoPanelDesktop");
+  var clickCount = 0;
+  userInfoBtn.addEventListener("click", function () {
+    clickCount++;
+    panel.style.display = clickCount % 2 == 0 ? "none" : "block";
+  });
 });
 })();
 

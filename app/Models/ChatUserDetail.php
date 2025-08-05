@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Util\GenerateCode;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,7 @@ class ChatUserDetail extends Model
     protected $fillable = [
         "ad_code",
         "access_count",
+        "client_code",
         "last_accessed_at",
         "user_id"
     ];
@@ -19,7 +21,7 @@ class ChatUserDetail extends Model
     }
 
 
-    static public function updateAccessData($user_id){
+    static public function updateAccessData($user_id, $account_id){
         $chatUserDetail = static::where("user_id", $user_id)->first();
 
         if($chatUserDetail){
@@ -29,6 +31,7 @@ class ChatUserDetail extends Model
             ]);
         }else{
             ChatUserDetail::create([
+                "client_code" => GenerateCode::generateClientCode($account_id),
                 "access_count" => 1,
                 "last_accessed_at" => Carbon::now(),
                 "user_id" => $user_id // ← 必要に応じて追加
@@ -37,7 +40,7 @@ class ChatUserDetail extends Model
     }
 
     public function scopeWithRelations($query){
-        return $query->with("chatUser", "chatUser.tagUsers");
+        return $query->with("chatUser", "chatUser.tagUsers.tag");
     }
 
     

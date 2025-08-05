@@ -69,7 +69,7 @@ class ChatController extends Controller
         AdminMessageReadManager::updateOrCreateAdminReadStatus($user_id["id"], $admin_info["line_account_id"], 0, "text", 0);
 
         // アクセス回数を増やし、最新アクセス時間を更新する
-        ChatUserDetail::updateAccessData($user_id["id"]);
+        ChatUserDetail::updateAccessData($user_id["id"], $admin_info["line_account_id"]);
 
         // uuidを取得する
         $uuid_admin = UserEntity::where("entity_type", "admin")->where("related_id", $admin_info["line_account_id"])->value("entity_uuid");

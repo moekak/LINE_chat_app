@@ -53,10 +53,8 @@ class ChatController extends Controller
         }
 
 
-        $userDetail = ChatUserDetail::getUserDetails($userId);
+        $userDetail = ChatUserDetail::getUserDetails($userId)->toArray();
 
-        print_r($userDetail->toArray());
-        exit;
         $messages= $messageAggregationService->getUnifiedSortedMessages($userId, $adminId, "admin", 0);
         // 既読管理の処理
         // 0はチャットIDを入れる必要がないから、0に指定

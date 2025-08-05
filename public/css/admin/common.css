@@ -29,7 +29,7 @@ a{
 }
 
 .contents{
-     max-width: 1700px;
+     max-width: 1621px;
      width: 100%;
      margin: 0 auto;
      /* background-color: #f5f6fa; */
@@ -44,6 +44,7 @@ main{
      display: flex;
      align-items: start;
      height: 100%;
+     max-width: 1573px;
 }
 
 
@@ -238,8 +239,14 @@ width: -webkit-fill-available; /* Webkit対応のブラウザでのみ適用 */
      background-color: #f0f2f7;
      padding: 10px 20px;
      border-radius: 15px;
+     justify-content: space-between;
 
-     }
+}
+.chat__message-top-info{
+     display: flex;
+     gap: 10px;
+     align-items: center;
+}
 .chat__message-main{
      text-align: center;
      height: 78vh;
@@ -2033,4 +2040,29 @@ body {
      }
 
 
+}
+
+.view-user-info-btn {
+     background-color: #f1f1f1;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     padding: 4px 10px;
+     font-size: 12px;
+     cursor: pointer;
+     margin-left: 10px;
+     display: none;
+}
+
+@media (max-width: 1573px){
+     .view-user-info-btn{
+          display: block;
+     }
+     .main{
+          justify-content: center;
+     }
+}
+
+
+.view-user-info-btn:hover {
+     background-color: #e0e0e0;
 }

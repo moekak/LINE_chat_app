@@ -13,6 +13,11 @@
         overflow: hidden;
         height: 100%;
         margin-left: 30px;
+        width: 300px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 999;
     }
 
     /* チャット情報パネルのヘッダー */
@@ -165,15 +170,9 @@
         transition: all 0.2s ease;
     }
 
-    .tag-item:hover {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
-    }
-
     .tag-icon {
         font-size: 10px;
         margin-right: 6px;
-        color: #10b981;
     }
 
     .tag-remove {
@@ -279,6 +278,31 @@
     .toast.show {
         transform: translateX(0);
     }
+    .close-info-panel-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        color: #888;
+        cursor: pointer;
+        margin-left: auto;
+        padding: 4px 8px;
+        transition: color 0.2s ease;
+        display:none;
+    }
+
+.close-info-panel-btn:hover {
+    color: #000;
+}
+
+    @media (max-width: 1573px){
+        .chat-info-panel{
+            display: none;
+        }
+        .close-info-panel-btn{
+            display: block;
+        }
+    }
 </style>
 
 
@@ -289,6 +313,7 @@
                 <i class="fas fa-info-circle" style="margin-right: 8px; color: #4a90e2;"></i>
                 顧客情報
         </h3>
+        <button class="close-info-panel-btn">×</button>
     </div>
 
     <!-- 顧客情報セクション -->
@@ -298,13 +323,9 @@
                 顧客コード
         </h4>
         <div class="customer-code">
-                <div>
-                <div class="code-label">Customer ID</div>
-                <div class="code-value" id="customerCode">CUS-2024-001</div>
-                </div>
-                <button class="copy-btn" onclick="copyToClipboard('customerCode')" title="コピー">
-                <i class="fas fa-copy"></i>
-                </button>
+            <div>
+                <div class="code-value" id="customerCode">{{$userDetail["client_code"] ?? "なし"}}</div>
+            </div>
         </div>
     </div>
 
@@ -316,12 +337,8 @@
         </h4>
         <div class="ad-code">
                 <div>
-                    <div class="code-label">Campaign ID</div>
-                    <div class="code-value" id="adCode">{{$userDetail->ad_code}}</div>
+                    <div class="code-value" id="adCode">{{$userDetail["ad_code"] ?? "なし"}}</div>
                 </div>
-                <button class="copy-btn" onclick="copyToClipboard('adCode')" title="コピー">
-                    <i class="fas fa-copy"></i>
-                </button>
         </div>
     </div>
 
@@ -329,13 +346,13 @@
     <div class="info-section tags-info">
         <h4 class="info-section-title">
                 <i class="fas fa-tags section-icon"></i>
-                タグ情報
+                タグ情報({{count($userDetail["chat_user"]["tag_users"])}})
         </h4>
         <div class="tags-container" id="tagsContainer">
             @foreach ($userDetail["chat_user"]["tag_users"] as $tag)
                 <span class="tag-item">
-                    <i class="fas fa-circle tag-icon" style="background-color: {{$tag->tag_color}};"></i>
-                        {{$tag->tag_name}}
+                    <i class="fas fa-circle tag-icon" style="color: {{$tag["tag"]["tag_color"]}};"></i>
+                        {{$tag["tag"]["tag_name"]}}
                 </span>
             @endforeach
         </div>
