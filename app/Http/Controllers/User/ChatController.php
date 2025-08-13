@@ -126,4 +126,13 @@ class ChatController extends Controller
         }
 
     }
+
+    public function fetchUserDetail($userId){
+        try{
+            $userDetail = ChatUserDetail::getUserDetails($userId);
+            return response()->json($userDetail);
+        }catch(\Exception $e){
+            Log::debug($e);
+        }
+    }
 }

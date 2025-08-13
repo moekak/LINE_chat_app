@@ -8488,7 +8488,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
+var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty(_defineProperty({
   SEARCH_USERS: "/api/search/users",
   LOGIN: "/api/auth/login",
   REGISTER: "/api/auth/register",
@@ -8499,7 +8499,7 @@ var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
   UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
   GET_USER_CHATS: "/api/get/messages",
   ADMIN_MESSAGE_READ: "/api/admin/messages/read"
-}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages");
+}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages"), "FETCH_USER_DETAIL", "/api/user/detail");
 
 /***/ }),
 
@@ -8703,7 +8703,7 @@ var ChatMessageController = /*#__PURE__*/function () {
         btn.replaceWith(newBtn);
         newBtn.addEventListener("click", /*#__PURE__*/function () {
           var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
-            var userId, adminId, userUuid, adminUuid, src, name, params, tab, response, chatLatesetData, data, target;
+            var userId, adminId, userUuid, adminUuid, src, name, params, tab, response, chatLatesetData, userDetail, data, target;
             return _regeneratorRuntime().wrap(function _callee$(_context) {
               while (1) switch (_context.prev = _context.next) {
                 case 0:
@@ -8724,8 +8724,14 @@ var ChatMessageController = /*#__PURE__*/function () {
                   return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.FETCH_LATEST_MESSAGE, "/").concat(userId, "/").concat(adminId));
                 case 14:
                   chatLatesetData = _context.sent;
+                  _context.next = 17;
+                  return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.FETCH_USER_DETAIL, "/").concat(userId));
+                case 17:
+                  userDetail = _context.sent;
+                  console.log(userDetail);
                   ChatMessageController.updateChatDisplay(response, userUuid);
                   _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserInfo(userUuid, src, name);
+                  _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserDetail(userDetail);
                   ChatMessageController.displayUnreadMessage(chatLatesetData["last_unread_message_id"], chatLatesetData["last_message_type"], chatLatesetData["unread_count"]);
                   infiniteScrollInstance.updateElement(userUuid);
                   data = {
@@ -8740,17 +8746,17 @@ var ChatMessageController = /*#__PURE__*/function () {
                     }
                     _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
                   }
-                  _context.next = 26;
+                  _context.next = 31;
                   break;
-                case 23:
-                  _context.prev = 23;
+                case 28:
+                  _context.prev = 28;
                   _context.t0 = _context["catch"](6);
                   console.error(_context.t0);
-                case 26:
+                case 31:
                 case "end":
                   return _context.stop();
               }
-            }, _callee, null, [[6, 23]]);
+            }, _callee, null, [[6, 28]]);
           }));
           return function (_x) {
             return _ref6.apply(this, arguments);
@@ -9042,6 +9048,13 @@ var ChatUIHelper = /*#__PURE__*/function () {
         return icon.src = src;
       });
       document.querySelector(".chat_message_name").innerHTML = name;
+    }
+  }, {
+    key: "updateUserDetail",
+    value: function updateUserDetail(userDetail) {
+      var _userDetail$client_co, _userDetail$ad_code;
+      document.getElementById("customerCode").innerHTML = (_userDetail$client_co = userDetail.client_code) !== null && _userDetail$client_co !== void 0 ? _userDetail$client_co : "";
+      document.getElementById("adCode").innerHTML = (_userDetail$ad_code = userDetail.ad_code) !== null && _userDetail$ad_code !== void 0 ? _userDetail$ad_code : "";
     }
   }]);
 }();
@@ -13476,10 +13489,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // ユーザー情報メニュ表示切替
   var userInfoBtn = document.querySelector(".view-user-info-btn");
   var panel = document.getElementById("infoPanelDesktop");
-  var clickCount = 0;
+  var closeBtn = document.querySelector(".close-info-panel-btn");
   userInfoBtn.addEventListener("click", function () {
-    clickCount++;
-    panel.style.display = clickCount % 2 == 0 ? "none" : "block";
+    panel.style.display = "block";
+  });
+  closeBtn.addEventListener("click", function () {
+    panel.style.display = "none";
   });
 });
 })();

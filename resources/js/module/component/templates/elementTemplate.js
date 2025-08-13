@@ -128,3 +128,16 @@ export const createChatUserContainer = (sender_id, res) =>{
             </div>
       `
 }
+
+export const createUserTags = (tags) =>{
+      return tags.map((tag)=>{
+            const color = tag.tag.tag_color
+            return `
+                  <span class="tag-item">
+                  <i class="fas fa-circle tag-icon" style="color: ${color};"></i>
+                        ${tag.tag.tag_name}
+                  </span>
+            `
+      })
+      .join("");
+}

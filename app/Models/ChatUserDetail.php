@@ -13,6 +13,7 @@ class ChatUserDetail extends Model
         "access_count",
         "client_code",
         "last_accessed_at",
+        "inflow_action_id",
         "user_id"
     ];
 
@@ -32,6 +33,7 @@ class ChatUserDetail extends Model
         }else{
             ChatUserDetail::create([
                 "client_code" => GenerateCode::generateClientCode($account_id),
+                "inflow_action_id" => null,
                 "access_count" => 1,
                 "last_accessed_at" => Carbon::now(),
                 "user_id" => $user_id // ← 必要に応じて追加

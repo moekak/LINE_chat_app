@@ -12,4 +12,5 @@ export const API_ENDPOINTS = {
     ADMIN_MESSAGE_READ : "/api/admin/messages/read",
     USER_MESSAGE_READ : "/api/user/messages/read",
     FETCH_LATEST_MESSAGE : "/api/user/latest/messages",
+    FETCH_USER_DETAIL : "/api/user/detail",
 };

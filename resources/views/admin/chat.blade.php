@@ -96,7 +96,7 @@
             <img src={{$chat_user->user_picture}} alt=""  onerror="this.onerror=null; this.src='{{ asset('img/user-icon.png') }}';" class="chat_users-icon js_user_icon"> 
             <p class="chat_message_name">{{$chat_user->line_name}}</p>
       </div>
-      <button class="view-user-info-btn" onclick="viewUserInfo('{{ $uuid_user }}')">顧客情報を見る</button>
+      <button class="view-user-info-btn">顧客情報を見る</button>
 </div>
 <div class="chat__message-main">
       <div class="chat__message-wrapper js_append_admin" data-id={{$uuid_user}}>

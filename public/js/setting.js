@@ -16,7 +16,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
+var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty(_defineProperty({
   SEARCH_USERS: "/api/search/users",
   LOGIN: "/api/auth/login",
   REGISTER: "/api/auth/register",
@@ -27,7 +27,7 @@ var API_ENDPOINTS = _defineProperty(_defineProperty(_defineProperty({
   UPDATE_BACKGROUND_COLOLR: "/api/update/bgColor",
   GET_USER_CHATS: "/api/get/messages",
   ADMIN_MESSAGE_READ: "/api/admin/messages/read"
-}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages");
+}, "ADMIN_MESSAGE_READ", "/api/admin/messages/read"), "USER_MESSAGE_READ", "/api/user/messages/read"), "FETCH_LATEST_MESSAGE", "/api/user/latest/messages"), "FETCH_USER_DETAIL", "/api/user/detail");
 
 /***/ }),
 

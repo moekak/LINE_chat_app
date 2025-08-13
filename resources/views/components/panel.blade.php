@@ -346,15 +346,17 @@
     <div class="info-section tags-info">
         <h4 class="info-section-title">
                 <i class="fas fa-tags section-icon"></i>
-                タグ情報({{count($userDetail["chat_user"]["tag_users"])}})
+                タグ情報({{count($userDetail) > 0 ? count($userDetail["chat_user"]["tag_users"]) : 0}})
         </h4>
         <div class="tags-container" id="tagsContainer">
-            @foreach ($userDetail["chat_user"]["tag_users"] as $tag)
-                <span class="tag-item">
-                    <i class="fas fa-circle tag-icon" style="color: {{$tag["tag"]["tag_color"]}};"></i>
-                        {{$tag["tag"]["tag_name"]}}
-                </span>
-            @endforeach
+            @if (count($userDetail) > 0)
+                @foreach ($userDetail["chat_user"]["tag_users"] as $tag)
+                    <span class="tag-item">
+                        <i class="fas fa-circle tag-icon" style="color: {{$tag["tag"]["tag_color"]}};"></i>
+                            {{$tag["tag"]["tag_name"]}}
+                    </span>
+                @endforeach
+            @endif
         </div>
     </div>
 </div>

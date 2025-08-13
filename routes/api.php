@@ -43,3 +43,4 @@ Route::post("/template/select", [AdminMessageController::class, "insertTemplateD
 Route::post("/update/bgColor", [BackgroundColorController::class, "store"]);
 Route::middleware('web')->get("/get/messages/{userId}/{adminId}", [UserChatController::class, "fetchChatMessages"]);
 Route::get("/user/latest/messages/{userId}/{adminId}", [UserChatController::class, "fetchLatestMessage"]);
+Route::get("/user/detail/{userId}", [UserChatController::class, "fetchUserDetail"]);

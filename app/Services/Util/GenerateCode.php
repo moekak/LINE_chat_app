@@ -7,7 +7,11 @@ class GenerateCode
 {
 
       static public function generateClientCode($account_id){
-            $prefix = ChatUsersCodePrefixLink::getPrefix($account_id)->chatUserCodePrefix->prefix;
+            $prefix = ChatUsersCodePrefixLink::getPrefix($account_id);
+
+            if(!$prefix) return null;
+
+            $prefix = $prefix->chatUserCodePrefix->prefix;
             $fixedCode = "C1";
             $randomNumber = substr(str_shuffle('0123456789'), 0, 11);
 

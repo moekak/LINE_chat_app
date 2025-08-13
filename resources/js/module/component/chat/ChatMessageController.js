@@ -193,8 +193,13 @@ class ChatMessageController{
                               const tab = params.get('tab');
                               const response = await Fetch.fetchGetOperation(`${API_ENDPOINTS.GET_USER_CHATS}/${userId}/${adminId}?tab=${tab}`)
                               const chatLatesetData = await Fetch.fetchGetOperation(`${API_ENDPOINTS.FETCH_LATEST_MESSAGE}/${userId}/${adminId}`)
+                              const userDetail = await Fetch.fetchGetOperation(`${API_ENDPOINTS.FETCH_USER_DETAIL}/${userId}`)
+
+                              console.log(userDetail);
+                              
                               ChatMessageController.updateChatDisplay(response, userUuid)
                               ChatUIHelper.updateUserInfo(userUuid, src, name)
+                              ChatUIHelper.updateUserDetail(userDetail)
                               ChatMessageController.displayUnreadMessage(chatLatesetData["last_unread_message_id"], chatLatesetData["last_message_type"], chatLatesetData["unread_count"])
                               infiniteScrollInstance.updateElement(userUuid)
 

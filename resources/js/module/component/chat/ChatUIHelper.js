@@ -1,3 +1,4 @@
+import { createUserTags } from "../templates/elementTemplate";
 
 const DELAY_TIME = 500
 const MAX_LENGTH = 30
@@ -63,6 +64,17 @@ class ChatUIHelper{
         document.querySelector(".js_user_icon").src = src
         document.querySelectorAll(".chat_users-icon-message").forEach((icon)=> icon.src = src)
         document.querySelector(".chat_message_name").innerHTML = name
+    }
+
+    static updateUserDetail(userDetail){
+        document.getElementById("customerCode").innerHTML = userDetail.client_code ?? ""
+        document.getElementById("adCode").innerHTML = userDetail.ad_code ?? ""
+        document.getElementById("tagsContainer").innerHTML = ""
+        document.getElementById("tagsContainer").innerHTML = createUserTags(userDetail.chat_user.tag_users)
+
+        console.log(document.getElementById("tagsContainer").innerHTML);
+        
+
     }
 }
 
