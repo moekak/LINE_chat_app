@@ -7,7 +7,6 @@
 /storage/pail
 /vendor
 .env
-.env.development
 .env.backup
 .env.production
 .phpactor.json
@@ -22,3 +21,4 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.env.development
