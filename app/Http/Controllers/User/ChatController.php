@@ -15,6 +15,7 @@ use App\Models\UserMessageRead;
 use App\Services\Message\Admin\AdminMessageReadManager;
 use App\Services\Message\Common\MessageAggregationService;
 use App\Services\Message\Common\MessageService;
+use App\Services\Util\GenerateInheritedUrl;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,6 @@ class ChatController extends Controller
         // インスタンスの作成
         $messageService = new MessageService();
         $messageAggregationService = new MessageAggregationService();
-        $second_account_url = "";
         // 管理者アカウント情報を取得する
         $admin_info = LineAccount::leftJoin("second_accounts", "second_accounts.current_account_id", "=", "line_accounts.id")
                         ->where("line_accounts.account_id", $adminId)
@@ -41,10 +41,6 @@ class ChatController extends Controller
         }
 
 
-        if($admin_info->second_account_id){
-            $second_account_url = LineAccount::where("id", $admin_info->second_account_id)->value("account_url");  
-        }
-
         $background_color = BackgroundColor::where("line_account_id", $admin_info->line_account_id)->first();
 
         // ユーザーアカウント情報を取得する
@@ -56,13 +52,14 @@ class ChatController extends Controller
             return response()->view('errors.403');
         }
 
-
-
         // 未読数を取得する
         $unread_message_data = AdminMessageRead::where("admin_account_id", $admin_info["line_account_id"])->where("chat_user_id", $user_id["id"])->select("last_unread_message_id", "last_message_type", "unread_count")->first();
 
         $messages = $messageAggregationService->getUnifiedSortedMessages($user_id["id"], $admin_info["line_account_id"], "user", 0);
         $group_message  = $messageService->groupMessagesByDate($messages);
+
+        // バンされた後のアカウントURLを取得
+        $second_account_url = GenerateInheritedUrl::generateURL($admin_info, $user_id["id"]);
 
         // 既読管理の処理
         // 0はチャットIDを入れる必要がないから、0に指定

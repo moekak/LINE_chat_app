@@ -22,6 +22,7 @@ return [
     // 開発用
     'chat_manager' => env('API_URL', 'https://manager.line-chat-system-dev.tokyo'),
     'chat' => 'https://chat.line-chat-system-dev.tokyo',
+    'api'=>'https://step-api.tokyo',
 
 
     'postmark' => [
