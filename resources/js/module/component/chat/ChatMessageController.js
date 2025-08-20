@@ -195,8 +195,7 @@ class ChatMessageController{
                               const chatLatesetData = await Fetch.fetchGetOperation(`${API_ENDPOINTS.FETCH_LATEST_MESSAGE}/${userId}/${adminId}`)
                               const userDetail = await Fetch.fetchGetOperation(`${API_ENDPOINTS.FETCH_USER_DETAIL}/${userId}`)
 
-                              console.log(userDetail);
-                              
+
                               ChatMessageController.updateChatDisplay(response, userUuid)
                               ChatUIHelper.updateUserInfo(userUuid, src, name)
                               ChatUIHelper.updateUserDetail(userDetail)

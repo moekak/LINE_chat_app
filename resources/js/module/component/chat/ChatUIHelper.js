@@ -1,3 +1,4 @@
+import FormatText from "../../util/FormatText";
 import { createUserTags } from "../templates/elementTemplate";
 
 const DELAY_TIME = 500
@@ -67,13 +68,12 @@ class ChatUIHelper{
     }
 
     static updateUserDetail(userDetail){
-        document.getElementById("customerCode").innerHTML = userDetail.client_code ?? ""
-        document.getElementById("adCode").innerHTML = userDetail.ad_code ?? ""
+        document.getElementById("customerCode").innerHTML = FormatText.escapeHtml(userDetail.client_code ) ?? ""
+        document.getElementById("adCode").innerHTML = FormatText.escapeHtml(userDetail.ad_code) ?? ""
         document.getElementById("tagsContainer").innerHTML = ""
         document.getElementById("tagsContainer").innerHTML = createUserTags(userDetail.chat_user.tag_users)
+        document.getElementById("tag-count").innerHTML = `(${userDetail.chat_user.tag_users.length})`
 
-        console.log(document.getElementById("tagsContainer").innerHTML);
-        
 
     }
 }

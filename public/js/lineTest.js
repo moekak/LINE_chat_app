@@ -4933,7 +4933,6 @@ var ChatMessageController = /*#__PURE__*/function () {
                   return _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchGetOperation("".concat(_config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.FETCH_USER_DETAIL, "/").concat(userId));
                 case 17:
                   userDetail = _context.sent;
-                  console.log(userDetail);
                   ChatMessageController.updateChatDisplay(response, userUuid);
                   _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserInfo(userUuid, src, name);
                   _ChatUIHelper__WEBPACK_IMPORTED_MODULE_4__["default"].updateUserDetail(userDetail);
@@ -4951,17 +4950,17 @@ var ChatMessageController = /*#__PURE__*/function () {
                     }
                     _util_api_Fetch__WEBPACK_IMPORTED_MODULE_1__["default"].fetchPostOperation(data, _config_apiEndPoints__WEBPACK_IMPORTED_MODULE_0__.API_ENDPOINTS.USER_MESSAGE_READ);
                   }
-                  _context.next = 31;
+                  _context.next = 30;
                   break;
-                case 28:
-                  _context.prev = 28;
+                case 27:
+                  _context.prev = 27;
                   _context.t0 = _context["catch"](6);
                   console.error(_context.t0);
-                case 31:
+                case 30:
                 case "end":
                   return _context.stop();
               }
-            }, _callee, null, [[6, 28]]);
+            }, _callee, null, [[6, 27]]);
           }));
           return function (_x) {
             return _ref6.apply(this, arguments);
@@ -5168,12 +5167,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _util_FormatText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/FormatText */ "./resources/js/module/util/FormatText.js");
+/* harmony import */ var _templates_elementTemplate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../templates/elementTemplate */ "./resources/js/module/component/templates/elementTemplate.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
 var DELAY_TIME = 500;
 var MAX_LENGTH = 30;
 
@@ -5255,9 +5258,11 @@ var ChatUIHelper = /*#__PURE__*/function () {
   }, {
     key: "updateUserDetail",
     value: function updateUserDetail(userDetail) {
-      var _userDetail$client_co, _userDetail$ad_code;
-      document.getElementById("customerCode").innerHTML = (_userDetail$client_co = userDetail.client_code) !== null && _userDetail$client_co !== void 0 ? _userDetail$client_co : "";
-      document.getElementById("adCode").innerHTML = (_userDetail$ad_code = userDetail.ad_code) !== null && _userDetail$ad_code !== void 0 ? _userDetail$ad_code : "";
+      var _FormatText$escapeHtm, _FormatText$escapeHtm2;
+      document.getElementById("customerCode").innerHTML = (_FormatText$escapeHtm = _util_FormatText__WEBPACK_IMPORTED_MODULE_0__["default"].escapeHtml(userDetail.client_code)) !== null && _FormatText$escapeHtm !== void 0 ? _FormatText$escapeHtm : "";
+      document.getElementById("adCode").innerHTML = (_FormatText$escapeHtm2 = _util_FormatText__WEBPACK_IMPORTED_MODULE_0__["default"].escapeHtml(userDetail.ad_code)) !== null && _FormatText$escapeHtm2 !== void 0 ? _FormatText$escapeHtm2 : "";
+      document.getElementById("tagsContainer").innerHTML = "";
+      document.getElementById("tagsContainer").innerHTML = (0,_templates_elementTemplate__WEBPACK_IMPORTED_MODULE_1__.createUserTags)(_util_FormatText__WEBPACK_IMPORTED_MODULE_0__["default"].escapeHtml(userDetail.chat_user.tag_users));
     }
   }]);
 }();
@@ -5544,7 +5549,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createChatUserContainer: () => (/* binding */ createChatUserContainer),
 /* harmony export */   createLeftMessageContainer: () => (/* binding */ createLeftMessageContainer),
-/* harmony export */   createRightMessageContainer: () => (/* binding */ createRightMessageContainer)
+/* harmony export */   createRightMessageContainer: () => (/* binding */ createRightMessageContainer),
+/* harmony export */   createUserTags: () => (/* binding */ createUserTags)
 /* harmony export */ });
 /* harmony import */ var _util_messaging_messageService_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/messaging/messageService.js */ "./resources/js/module/util/messaging/messageService.js");
 /* harmony import */ var _config_config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../config/config.js */ "./resources/js/config/config.js");
@@ -5613,6 +5619,12 @@ var createChatUserContainer = function createChatUserContainer(sender_id, res) {
   var countDivStyle = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? "none" : "flex";
   var countinnerHTML = document.getElementById("js_chatuser_id").value == sender_id || res["unread_count"] == null || res["unread_count"] === 0 ? 0 : res["unread_count"];
   return "\n            <div class=\"chat__users-list-wraper js_chat_wrapper js_user_btn\" style=\"margin-top: 0\" data-uuid=\"".concat(sender_id, "\" data-id=\"").concat(res["id"], "\" data-admin-id=\"").concat(document.getElementById("js_admin_id").value, "\">\n                  <input type=\"hidden\" name=\"admin_id\" class=\"js_admin_el\">\n                  <input type=\"hidden\" name=\"user_id\" class=\"js_user_el\">\n                  <input type=\"hidden\" name=\"token\" class=\"js_token\">\n                  <img src=").concat(res["user_picture"], " alt=\"\" onerror=\"this.onerror=null; this.src='/img/user.png';\" class=\"chat_users-icon\"> \n                  <div class=\"chat_users-list-flex\">\n                        <div class=\"chat_users-list-box\" > \n                              <p class=\"chat_name_txt\" data-simplebar>").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["line_name"]), "</p>\n                              <small class=\"chat_time js_update_message_time\" data-id=\"").concat(sender_id, "\">").concat(res["latest_message_date"], "</small>\n                        </div>  \n                        <div class=\"chat__users-list-msg\">\n                              <small class=\"chat_message js_chatMessage_elment\" data-id=\"").concat(sender_id, "\">").concat(_util_FormatText_js__WEBPACK_IMPORTED_MODULE_2__["default"].escapeHtml(res["latest_all_message"]), "</small>\n                              <div class=\"message_count js_mesage_count\" data-id=\"").concat(sender_id, "\" style=\"display:").concat(countDivStyle, "\">").concat(countinnerHTML, "</div>\n                        </div>\n                  </div>\n            </div>\n      ");
+};
+var createUserTags = function createUserTags(tags) {
+  return tags.map(function (tag) {
+    var color = tag.tag.tag_color;
+    return "\n                  <span class=\"tag-item\">\n                  <i class=\"fas fa-circle tag-icon\" style=\"color: ".concat(color, ";\"></i>\n                        ").concat(tag.tag.tag_name, "\n                  </span>\n            ");
+  }).join("");
 };
 
 /***/ }),

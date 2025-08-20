@@ -10,7 +10,7 @@
         border-left: 1px solid #e0e0e0;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow-y: auto;
         height: 100%;
         margin-left: 30px;
         width: 300px;
@@ -346,7 +346,7 @@
     <div class="info-section tags-info">
         <h4 class="info-section-title">
                 <i class="fas fa-tags section-icon"></i>
-                タグ情報({{count($userDetail) > 0 ? count($userDetail["chat_user"]["tag_users"]) : 0}})
+                タグ情報<span id="tag-count">({{count($userDetail) > 0 ? count($userDetail["chat_user"]["tag_users"]) : 0}})</span>
         </h4>
         <div class="tags-container" id="tagsContainer">
             @if (count($userDetail) > 0)
