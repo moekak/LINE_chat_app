@@ -42,11 +42,14 @@
 (EC2)
 - chat-loadbalancer1
 - chat-loadbalancer2
+- 
 (ELB)
 - chat
+
 (キー名)
 - chat-loadbalancer1
 - chat-loadbalancer2
+  
 (ドメイン)
 - chat-system.info
 
