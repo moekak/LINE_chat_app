@@ -42,7 +42,7 @@
 (EC2)
 - chat-loadbalancer1
 - chat-loadbalancer2
-- 
+
 (ELB)
 - chat
 
