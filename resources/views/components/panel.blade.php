@@ -337,7 +337,7 @@
         </h4>
         <div class="ad-code">
                 <div>
-                    <div class="code-value" id="adCode">{{$userDetail["ad_code"] ?? "なし"}}</div>
+                    <div class="code-value" id="adCode">{{$userDetail["ad_code"]  ?? "なし"}}</div>
                 </div>
         </div>
     </div>
