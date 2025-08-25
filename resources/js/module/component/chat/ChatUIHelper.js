@@ -68,8 +68,7 @@ class ChatUIHelper{
     }
 
     static updateUserDetail(userDetail){
-        console.log(userDetail.ad_code);
-        
+
         document.getElementById("customerCode").innerHTML = FormatText.escapeHtml(userDetail.client_code ) ?? ""
         document.getElementById("adCode").innerHTML = userDetail.ad_code ?  FormatText.escapeHtml(userDetail.ad_code) : "なし"
         document.getElementById("tagsContainer").innerHTML = ""
