@@ -659,6 +659,7 @@ class MessageRepository{
 
             // 取得したメッセージが最後のデータだった場合、もしくはメッセージがない場合、２０件未満の場合は初回挨拶メッセージを取得する
             if((count($first_messages) <= 20 && count($first_messages) > 0) || ($start === 0 && (count($messages) === 0 || (count($messages) === count($first_messages))) )){
+
                   $greetingMessages = $this->getGreetingMessages($userId, $adminId);
                   $messages = array_merge($greetingMessages->toArray(), $messages->toArray());
             }
